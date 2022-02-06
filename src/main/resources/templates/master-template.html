@@ -4,14 +4,13 @@
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
-<heaer>
 
-</heaer>
 <body>
 
+<header th:replace="fragments/header.html"></header>
 
+<section th:include="${bodyContent}"></section>
+
+<footer th:replace="fragments/footer.html"></footer>
 </body>
-<footer>
-
-</footer>
 </html>
