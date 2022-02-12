@@ -1,5 +1,6 @@
 package project.bookingsite.Service.implementation;
 
+import org.springframework.stereotype.Service;
 import project.bookingsite.Model.Hotel;
 import project.bookingsite.Model.Reservation;
 import project.bookingsite.Model.RoomType;
@@ -13,6 +14,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Service
 public class ReservationServiceImpl implements ReservationService {
 
     private final HotelRepository hotelRepository;
@@ -25,27 +27,40 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public Reservation makeReservation(LocalDateTime pocetok, LocalDateTime kraj, Long hotelId, RoomType type) {
-        //TODO proverka za slobodni mesta vo hotelot proverka za dali ima slobodno mesto vo taa data vo toj hotel.
+
 
         Hotel hotel = hotelRepository.findById(hotelId).orElseThrow(PlaceDoesNotExistException::new);
         Reservation reservation = null;
         Duration duration = Duration.between(pocetok, kraj);
         Integer days = Math.toIntExact(duration.toDays());
+        Integer rooms;
         double price;
 
         if (type.equals(RoomType.VIP) && hotel.getVipRooms() >= 1) {
             price = days * hotel.getVipPrice();
             reservation = new Reservation(pocetok, kraj, hotel, type, price);
+            rooms = hotel.getVipRooms();
+            hotel.setVipRooms(rooms - 1);
         } else if (type.equals(RoomType.STANDARD) && hotel.getStandardRooms() >= 1) {
             price = days * hotel.getStandardPrice();
             reservation = new Reservation(pocetok, kraj, hotel, type, price);
+            rooms = hotel.getStandardRooms();
+            hotel.setStandardRooms(rooms - 1);
         }
+        //TODO finish ako sobite se 0 da dade error deka nema slobodni vip ili standard sobi
+
+        //dodaj rezervacija plus
+        List<Reservation> reservations = hotel.getReservationList();
+        reservations.add(reservation);
+        hotel.setReservationList(reservations);
+        hotelRepository.save(hotel);
+
         return reservation;
     }
 
     @Override
     public boolean cancelReservation(Long reservationId) {
-        //TODO kje mozhe da se prave cancel na rezervacija mozebi lol
+
         Reservation r = reservationRepository.findById(reservationId).orElseThrow(ReservationDoesNotExistException::new);
         reservationRepository.delete(r);
         return true;
