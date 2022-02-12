@@ -7,10 +7,7 @@ import java.time.LocalDateTime;
 public interface UserService {
     //TODO implement this
 
-    private User deleteUser(User user) {
+    public User deleteUser(User user);
 
-        return new User();
-    }
-
-
+    public User createUser(User user);
 }
