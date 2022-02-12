@@ -19,29 +19,30 @@ public class Hotel extends Place {
 
     private Integer vipRooms;
 
-    private Integer standardPrice;
+    private Double standardPrice;
 
-    private Integer vipPrice;
-    @OneToMany
-    private List<Room> rooms;
+    private Double vipPrice;
+//    @OneToMany
+//    private List<Room> rooms;
 
     @ManyToMany
     List<Reservation> reservationList;
 
-    public Hotel(String name, String location, String contactNumber,
-                 Integer standardRooms, Integer vipRooms, Integer standardPrice, Integer vipPrice) {
-        super(name, location, contactNumber);
-        this.vipRooms = vipRooms;
+    public Hotel(String name, String location, String contactNumber, User owner,
+                 Integer standardRooms, Integer vipRooms,
+                 Double standardPrice, Double vipPrice) {
+        super(name, location, contactNumber, owner);
         this.standardRooms = standardRooms;
+        this.vipRooms = vipRooms;
         this.standardPrice = standardPrice;
         this.vipPrice = vipPrice;
-        rooms = new ArrayList<>();
-        for (int i = 0; i < standardRooms; i++) {
-            rooms.add(new Room(RoomType.STANDARD));
-        }
-        for (int i = 0; i < vipRooms; i++) {
-            rooms.add(new Room(RoomType.VIP));
-        }
+//        this.rooms = new ArrayList<>();
+//        for (int i = 0; i < standardRooms; i++) {
+//            this.rooms.add(new Room(RoomType.STANDARD));
+//        }
+//        for (int i = 0; i < vipRooms; i++) {
+//            this.rooms.add(new Room(RoomType.VIP));
+//        }
     }
 
     public Hotel() {

@@ -22,14 +22,15 @@ public class Place {
 
     private String contactNumber;
 
-    @OneToOne
+    @ManyToOne
     private User owner;
 
 
-    public Place(String name, String location, String contactNumber) {
+    public Place(String name, String location, String contactNumber, User owner) {
         this.name = name;
         this.location = location;
         this.contactNumber = contactNumber;
+        this.owner = owner;
     }
 
     public Place() {

@@ -8,9 +8,9 @@ import java.time.LocalDateTime;
 
 public interface ReservationService {
 
-    public Reservation makeReservation(LocalDateTime pocetok, LocalDateTime kraj, Hotel hotel, RoomType type);
+    public Reservation makeReservation(LocalDateTime pocetok, LocalDateTime kraj, Long hotelId, RoomType type);
 
-    public boolean cancelReservation();
+    public boolean cancelReservation(Long reservationId);
 
 
 }

@@ -23,11 +23,14 @@ public class Reservation {
     @Enumerated(EnumType.STRING)
     private RoomType type;
 
-    public Reservation(LocalDateTime start, LocalDateTime kraj, Hotel hotel, RoomType type) {
+    private Double price;
+
+    public Reservation(LocalDateTime start, LocalDateTime kraj, Hotel hotel, RoomType type, Double price) {
         this.start = start;
         this.kraj = kraj;
         this.hotelid = hotel;
         this.type = type;
+        this.price = price;
     }
 
     public Reservation() {
