@@ -1,8 +1,12 @@
 package project.bookingsite.Model;
 
 
-import javax.persistence.*;
+import lombok.Data;
 
+import javax.persistence.*;
+import java.util.List;
+
+@Data
 @Entity
 @Table(name = "Users")
 public class User {
@@ -20,8 +24,8 @@ public class User {
     private String password;
 
     private String phoneNumber;
-
-
+//    @OneToMany
+//    private List<Reservation> reservations;
 
     public User(String name, String surname, String username, String password, String phoneNumber) {
         this.name = name;

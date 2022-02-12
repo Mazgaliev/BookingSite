@@ -1,7 +1,11 @@
 package project.bookingsite.Model;
 
-import javax.persistence.*;
+import lombok.Data;
 
+import javax.persistence.*;
+import java.util.List;
+
+@Data
 @MappedSuperclass
 public class Place {
     @Id
@@ -16,6 +20,8 @@ public class Place {
 
     @OneToOne
     private User owner;
+//    @ManyToMany
+//    List<Reservation> reservationList;
 
     public Place(String name, String location, String contactNumber) {
         this.name = name;
