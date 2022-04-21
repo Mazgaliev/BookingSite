@@ -15,10 +15,10 @@ public class Hotel extends Place{
     Integer priceVipRoom;
     Integer priceStandardRoom;
 
-    public Hotel(String name, String location, String contactNumber,
-                 Person owner, Integer vipRooms, Integer standardRooms, Integer priceVipRoom,
-                 Integer priceStandardRoom) {
-        super(name, location, contactNumber, owner);
+    public Hotel(String name, String location, String description, String contactNumber,
+                 Person owner, Integer vipRooms, Integer standardRooms,
+                 Integer priceVipRoom, Integer priceStandardRoom) {
+        super(name, location, description, contactNumber, owner);
         this.vipRooms = vipRooms;
         this.standardRooms = standardRooms;
         this.priceVipRoom = priceVipRoom;

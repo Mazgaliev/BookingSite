@@ -15,12 +15,11 @@ public class Villa extends Place {
 
     Integer pricePerNight;
 
-    public Villa(String name, String location, String contactNumber, Person owner,Integer pricePerNight) {
-        super(name, location, contactNumber, owner);
-        this.pricePerNight=pricePerNight;
-        this.reserved=false;
+    public Villa(String name, String location, String description, String contactNumber, Person owner, Integer pricePerNight) {
+        super(name, location, description, contactNumber, owner);
+        this.pricePerNight = pricePerNight;
+        this.reserved = false;
     }
-
 
     public Villa() {
 

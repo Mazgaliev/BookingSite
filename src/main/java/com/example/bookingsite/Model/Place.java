@@ -21,10 +21,10 @@ public class Place {
 
     String description;
 
-//    @ElementCollection
-//    @CollectionTable(name = "Images", joinColumns = @JoinColumn(name = "id"))
-//    @Column(name = "Images")
-//    List<String> image;
+    @ElementCollection
+    @CollectionTable(name = "Images", joinColumns = @JoinColumn(name = "id"))
+    @Column(name = "Images")
+    List<String> image;
 
     String location;
 
@@ -35,7 +35,7 @@ public class Place {
     @ManyToOne
     Person owner;
 
-    public Place(String name, String location, String contactNumber, Person owner) {
+    public Place(String name, String location, String description, String contactNumber, Person owner) {
         this.name = name;
         this.location = location;
         this.contactNumber = contactNumber;
