@@ -16,6 +16,14 @@ public interface PlaceService {
     Optional<Villa> createVilla(String name, String location, String contactNumber,
                                 Person owner, String description, Integer pricePerNight);
 
+    Optional<Hotel> updateHotel(String name, String location, String contactNumber,
+                                Person owner, String description, Integer vipRooms, Integer standardRooms,
+                                Integer priceVipRoom, Integer priceStandardRoom);
+
+    Optional<Hotel> updateVilla(String name, String location, String contactNumber,
+                                Person owner, String description, Integer vipRooms, Integer standardRooms,
+                                Integer priceVipRoom, Integer priceStandardRoom);
+
     void removePlace(Long id);
 
     Optional<Place> findById(Long id);
