@@ -27,12 +27,11 @@ public class Reservation {
 
     private Integer price;
 
-    public Reservation(LocalDateTime start, LocalDateTime finish, Integer price, Person person, Place place) {
+    public Reservation(LocalDateTime start, LocalDateTime finish, Person person, Place place) {
         this.placeId = place;
         this.personId = person;
         this.start = start;
         this.finish = finish;
-        this.price = price;
     }
 
     public Reservation() {
