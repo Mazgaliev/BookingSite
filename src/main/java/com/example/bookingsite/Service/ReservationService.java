@@ -1,5 +1,4 @@
 package com.example.bookingsite.Service;
 
-public interface PersonService {
-
+public interface ReservationService {
 }
