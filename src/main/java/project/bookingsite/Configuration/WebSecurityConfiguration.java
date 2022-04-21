@@ -8,7 +8,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 @Configuration
 
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
-//TODO implementiraj database authentication
+    //TODO implementiraj database authentication
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable();
