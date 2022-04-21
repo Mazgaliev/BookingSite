@@ -1,5 +1,6 @@
 package com.example.bookingsite.Model;
 
+import com.example.bookingsite.Model.CompositeKey.ReservationId;
 import lombok.Getter;
 import lombok.Setter;
 

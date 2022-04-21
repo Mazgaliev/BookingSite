@@ -1,4 +1,4 @@
-package com.example.bookingsite.Model;
+package com.example.bookingsite.Model.CompositeKey;
 
 import com.example.bookingsite.Model.Person;
 import com.example.bookingsite.Model.Place;
