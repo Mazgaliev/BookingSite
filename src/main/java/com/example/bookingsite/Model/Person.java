@@ -18,6 +18,8 @@ public class Person {
 
     String name;
 
+    String surname;
+
     String username;
 
     String password;
@@ -32,12 +34,13 @@ public class Person {
     @OneToMany(mappedBy = "personId")
     List<Reservation> reservations;
 
-    public Person(String name, String username, String password, String phoneNumber, Role userRole) {
+    public Person(String name, String surname, String username, String password, String phoneNumber, Role userRole) {
         this.name = name;
         this.username = username;
         this.password = password;
         this.phoneNumber = phoneNumber;
         this.userRole = userRole;
+        this.surname = surname;
     }
 
     public Person() {
