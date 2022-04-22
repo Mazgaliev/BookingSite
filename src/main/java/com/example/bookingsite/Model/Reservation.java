@@ -1,6 +1,7 @@
 package com.example.bookingsite.Model;
 
 import com.example.bookingsite.Model.CompositeKey.ReservationId;
+import com.example.bookingsite.Model.Enum.RoomType;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -26,6 +27,9 @@ public class Reservation {
     private LocalDateTime finish;
 
     private Integer price;
+
+    @Enumerated(EnumType.STRING)
+    private RoomType roomType;
 
     public Reservation(LocalDateTime start, LocalDateTime finish, Person person, Place place) {
         this.placeId = place;

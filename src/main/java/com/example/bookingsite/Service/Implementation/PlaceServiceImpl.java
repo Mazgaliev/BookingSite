@@ -118,9 +118,9 @@ public class PlaceServiceImpl implements PlaceService {
     @Override
     public Optional<Place> addImages(Long placeId, List<String> images) {
         Place place = this.placeRepository.findById(placeId).orElseThrow(PlaceDoesNotExistException::new);
-        List<String> imgs = place.getImage();
+        List<String> imgs = place.getImages();
         imgs.addAll(images);
-        place.setImage(imgs);
+        place.setImages(imgs);
         return Optional.of(place);
     }
 
