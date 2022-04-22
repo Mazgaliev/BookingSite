@@ -28,4 +28,7 @@ public class PersonDto {
         this.owns = owns;
         this.reservations = reservations;
     }
+
+    public PersonDto() {
+    }
 }

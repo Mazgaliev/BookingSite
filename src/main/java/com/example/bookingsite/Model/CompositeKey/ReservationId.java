@@ -24,4 +24,7 @@ public class ReservationId implements Serializable {
         this.placeId = placeId;
         this.personId = personId;
     }
+
+    public ReservationId() {
+    }
 }
