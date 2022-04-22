@@ -11,14 +11,12 @@ import java.util.List;
 @Setter
 public class Villa extends Place {
 
-    Boolean reserved;
 
     Integer pricePerNight;
 
     public Villa(String name, String location, String description, String contactNumber, Person owner, Integer pricePerNight) {
         super(name, location, description, contactNumber, owner);
         this.pricePerNight = pricePerNight;
-        this.reserved = false;
     }
 
     public Villa() {

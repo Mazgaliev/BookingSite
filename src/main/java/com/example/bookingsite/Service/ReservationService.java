@@ -9,9 +9,13 @@ import java.util.Optional;
 
 public interface ReservationService {
 
-    Optional<Reservation> createReservation(LocalDateTime start, LocalDateTime finish, Person person, Place place);
+    Optional<Reservation> createHotelReservation(LocalDateTime start, LocalDateTime finish, Long personId, Long hotelId);
 
-    Optional<Reservation> deleteReservation(Long id);
+    Optional<Reservation> createVillaReservation(LocalDateTime start, LocalDateTime finish, Long personId, Long villaId);
 
-    Optional<Reservation> updateReservation(Long id, LocalDateTime start, LocalDateTime finish, Person person, Place place);
+    Optional<Reservation> updateHotelReservation(LocalDateTime start, LocalDateTime finish, Long personId, Long hotelId);
+
+    Optional<Reservation> updateVillaReservation(LocalDateTime start, LocalDateTime finish, Long personId, Long villaId);
+
+    Optional<Reservation> deleteReservation(Long personId, Long placeId);
 }
