@@ -13,11 +13,14 @@ import java.io.Serializable;
 @EqualsAndHashCode
 public class ReservationId implements Serializable {
 
+    private Long id;
+
     private Place placeId;
 
     private Person personId;
 
-    public ReservationId(Place placeId, Person personId) {
+    public ReservationId(Long id, Place placeId, Person personId) {
+        this.id=id;
         this.placeId = placeId;
         this.personId = personId;
     }

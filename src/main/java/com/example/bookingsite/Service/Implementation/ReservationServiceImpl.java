@@ -81,12 +81,12 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     @Transactional
-    public Optional<Reservation> updateHotelReservation(LocalDateTime start, LocalDateTime finish,
+    public Optional<Reservation> updateHotelReservation(Long Id, LocalDateTime start, LocalDateTime finish,
                                                         Long personId, Long hotelId, RoomType roomType) {
         Hotel hotel = this.hotelRepository.findById(hotelId).orElseThrow(PlaceDoesNotExistException::new);
         Person person = this.personRepository.findById(personId).orElseThrow(PersonDoesNotExistException::new);
 
-        ReservationId reservationId = new ReservationId(hotel, person);
+        ReservationId reservationId = new ReservationId(Id, hotel, person);
         Reservation reservation_old = this.reservationRepository.findById(reservationId).orElseThrow(ReservationDoesNotExist::new);
         reservationRepository.delete(reservation_old);
 
@@ -114,12 +114,12 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     @Transactional
-    public Optional<Reservation> updateVillaReservation(LocalDateTime start, LocalDateTime finish,
+    public Optional<Reservation> updateVillaReservation(Long Id, LocalDateTime start, LocalDateTime finish,
                                                         Long personId, Long villaId) {
         Villa villa = this.villaRepository.findById(villaId).orElseThrow(PlaceDoesNotExistException::new);
         Person person = this.personRepository.findById(personId).orElseThrow(PersonDoesNotExistException::new);
 
-        ReservationId reservationId = new ReservationId(villa, person);
+        ReservationId reservationId = new ReservationId(Id, villa, person);
         Reservation reservation_old = this.reservationRepository.findById(reservationId).orElseThrow(ReservationDoesNotExist::new);
         reservationRepository.delete(reservation_old);
 
@@ -140,10 +140,10 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public Optional<Reservation> deleteReservation(Long personId, Long placeId) {
+    public Optional<Reservation> deleteReservation(Long Id, Long personId, Long placeId) {
         Place place = this.placeRepository.findById(placeId).orElseThrow(PlaceDoesNotExistException::new);
         Person person = this.personRepository.findById(personId).orElseThrow(PersonDoesNotExistException::new);
-        ReservationId reservationId = new ReservationId(place, person);
+        ReservationId reservationId = new ReservationId(Id, place, person);
         Reservation reservation = this.reservationRepository.findById(reservationId).orElseThrow(ReservationDoesNotExist::new);
         reservationRepository.delete(reservation);
         return Optional.of(reservation);

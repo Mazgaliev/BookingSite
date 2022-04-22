@@ -15,6 +15,10 @@ import java.time.LocalDateTime;
 public class Reservation {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    Long id;
+
+    @Id
     @ManyToOne
     private Place placeId;
 
