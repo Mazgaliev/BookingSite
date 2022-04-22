@@ -25,7 +25,6 @@ public class PersonServiceImpl implements PersonService {
         this.modelMapper = modelMapper;
     }
 
-
     @Override
     public Optional<PersonDto> createPerson(String name, String surname, String username, String password, String phoneNumber, Role role) {
         if (this.personRepository.findByUsername(username).isPresent()) {
@@ -70,6 +69,12 @@ public class PersonServiceImpl implements PersonService {
         Person person = this.personRepository.findByUsername(username).orElseThrow(PersonDoesNotExistException::new);
         PersonDto personDto = modelMapper.map(person, PersonDto.class);
         return Optional.of(personDto);
+    }
+
+    //To test
+    public Long findByUsernameTest(String username) {
+        Person person = this.personRepository.findByUsername(username).orElseThrow(PersonDoesNotExistException::new);
+        return person.getId();
     }
 
     @Override
