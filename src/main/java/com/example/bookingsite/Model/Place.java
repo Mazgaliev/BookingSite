@@ -3,6 +3,7 @@ package com.example.bookingsite.Model;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.repository.cdi.Eager;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -21,7 +22,7 @@ public class Place {
 
     String description;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "Images", joinColumns = @JoinColumn(name = "id"))
     @Column(name = "Images")
     List<String> images;

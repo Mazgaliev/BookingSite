@@ -121,6 +121,7 @@ public class PlaceServiceImpl implements PlaceService {
         List<String> imgs = place.getImages();
         imgs.addAll(images);
         place.setImages(imgs);
+        this.placeRepository.save(place);
         return Optional.of(place);
     }
 
@@ -133,5 +134,10 @@ public class PlaceServiceImpl implements PlaceService {
     @Override
     public Optional<Place> findById(Long id) {
         return this.placeRepository.findById(id);
+    }
+
+    @Override
+    public List<Place> findAll() {
+        return this.placeRepository.findAll();
     }
 }

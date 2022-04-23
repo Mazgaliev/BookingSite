@@ -30,4 +30,6 @@ public interface PlaceService {
 
     Optional<Place> findById(Long id);
 
+    List<Place> findAll();
+
 }
