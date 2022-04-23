@@ -1,7 +1,9 @@
 package com.example.bookingsite.Service.Implementation;
 
-import com.example.bookingsite.Model.Enum.Role;
-import com.example.bookingsite.Model.Exception.*;
+import com.example.bookingsite.Model.Exception.PersonAlreadyOwnsThePlaceException;
+import com.example.bookingsite.Model.Exception.PersonDoesNotExistException;
+import com.example.bookingsite.Model.Exception.PlaceAlreadyExistsException;
+import com.example.bookingsite.Model.Exception.PlaceDoesNotExistException;
 import com.example.bookingsite.Model.Hotel;
 import com.example.bookingsite.Model.Person;
 import com.example.bookingsite.Model.Place;
@@ -36,10 +38,7 @@ public class PlaceServiceImpl implements PlaceService {
                                        String description, Integer vipRooms, Integer standardRooms,
                                        Integer priceVipRoom, Integer priceStandardRoom) {
 
-        Person owner = this.personRepository.findById(ownerId).orElseThrow(PersonDoesNotExistException::new);
-        if (owner.getUserRole() != Role.OWNER){
-            throw new UserIsNotOwner();
-        }
+        Person person = this.personRepository.findById(ownerId).orElseThrow(PersonDoesNotExistException::new);
         Place p = this.placeRepository.findByName(name).orElse(null);
 
         if (p != null && p.getName().equals(name)) {
@@ -48,7 +47,7 @@ public class PlaceServiceImpl implements PlaceService {
             throw new PersonAlreadyOwnsThePlaceException();
         }
 
-        Hotel hotel = new Hotel(name, location, description, contactNumber, owner, vipRooms, standardRooms, priceVipRoom, priceStandardRoom);
+        Hotel hotel = new Hotel(name, location, description, contactNumber, person, vipRooms, standardRooms, priceVipRoom, priceStandardRoom);
         this.hotelRepository.save(hotel);
         return Optional.of(hotel);
     }
@@ -57,11 +56,7 @@ public class PlaceServiceImpl implements PlaceService {
     public Optional<Villa> createVilla(String name, String location, String contactNumber, Long ownerId,
                                        String description, Integer pricePerNight) {
 
-        Person owner = this.personRepository.findById(ownerId).orElseThrow(PersonDoesNotExistException::new);
-        if (owner.getUserRole() != Role.OWNER){
-            throw new UserIsNotOwner();
-        }
-
+        Person person = this.personRepository.findById(ownerId).orElseThrow(PersonDoesNotExistException::new);
         Place p = this.placeRepository.findByName(name).orElse(null);
 
         if (p != null && p.getName().equals(name)) {
@@ -70,7 +65,7 @@ public class PlaceServiceImpl implements PlaceService {
             throw new PersonAlreadyOwnsThePlaceException();
         }
 
-        Villa villa = new Villa(name, location, description, contactNumber, owner, pricePerNight);
+        Villa villa = new Villa(name, location, description, contactNumber, person, pricePerNight);
         this.villaRepository.save(villa);
         return Optional.of(villa);
     }
@@ -82,10 +77,6 @@ public class PlaceServiceImpl implements PlaceService {
 
         Hotel hotel = this.hotelRepository.findById(id).orElseThrow(PlaceDoesNotExistException::new);
         Person owner = this.personRepository.findById(ownerId).orElseThrow(PersonDoesNotExistException::new);
-        if (owner.getUserRole() != Role.OWNER){
-            throw new UserIsNotOwner();
-        }
-
         if (this.placeRepository.findByName(name).isPresent()) {
             throw new PlaceAlreadyExistsException();
         }
@@ -109,10 +100,6 @@ public class PlaceServiceImpl implements PlaceService {
 
         Villa villa = this.villaRepository.findById(id).orElseThrow(PlaceDoesNotExistException::new);
         Person owner = this.personRepository.findById(ownerId).orElseThrow(PersonDoesNotExistException::new);
-        if (owner.getUserRole() != Role.OWNER){
-            throw new UserIsNotOwner();
-        }
-
         if (this.placeRepository.findByName(name).isPresent()) {
             throw new PlaceAlreadyExistsException();
         }
