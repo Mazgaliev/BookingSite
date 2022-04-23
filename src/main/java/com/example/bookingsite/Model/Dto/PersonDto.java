@@ -9,6 +9,7 @@ import java.util.List;
 @Data
 public class PersonDto {
 
+    private Long id;
     private String name;
 
     private String surname;
@@ -21,7 +22,8 @@ public class PersonDto {
 
     private List<Reservation> reservations;
 
-    public PersonDto(String name, String username, String phoneNumber, List<Place> owns, List<Reservation> reservations) {
+    public PersonDto(Long id, String name, String username, String phoneNumber, List<Place> owns, List<Reservation> reservations) {
+        this.id = id;
         this.name = name;
         this.username = username;
         this.phoneNumber = phoneNumber;

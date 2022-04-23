@@ -1,6 +1,5 @@
 package com.example.bookingsite.Model;
 
-import com.example.bookingsite.Model.CompositeKey.ReservationId;
 import com.example.bookingsite.Model.Enum.RoomType;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,18 +10,16 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @Setter
-@IdClass(ReservationId.class)
 public class Reservation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     Long id;
 
-    @Id
     @ManyToOne
     private Place placeId;
 
-    @Id
+
     @ManyToOne
     private Person personId;
 

@@ -18,5 +18,5 @@ public interface ReservationService {
 
     Optional<Reservation> updateVillaReservation(Long Id, LocalDateTime start, LocalDateTime finish, Long personId, Long villaId);
 
-    Optional<Reservation> deleteReservation(Long Id, Long personId, Long placeId);
+    Optional<Reservation> deleteReservation(Long Id);
 }

@@ -1,6 +1,5 @@
 package com.example.bookingsite.Repository;
 
-import com.example.bookingsite.Model.CompositeKey.ReservationId;
 import com.example.bookingsite.Model.Enum.RoomType;
 import com.example.bookingsite.Model.Place;
 import com.example.bookingsite.Model.Reservation;
@@ -8,9 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
-public interface ReservationRepository extends JpaRepository<Reservation, ReservationId> {
+public interface ReservationRepository extends JpaRepository<Reservation, Long> {
     List<Reservation> findByPlaceIdAndStartGreaterThanEqualAndStartLessThanEqualAndRoomType
             (Place place, LocalDateTime start, LocalDateTime finish, RoomType roomType);
 
