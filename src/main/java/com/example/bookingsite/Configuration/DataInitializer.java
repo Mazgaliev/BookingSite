@@ -1,9 +1,11 @@
 package com.example.bookingsite.Configuration;
 
+import com.example.bookingsite.Model.Enum.Role;
 import com.example.bookingsite.Model.Enum.RoomType;
 import com.example.bookingsite.Model.Hotel;
 import com.example.bookingsite.Model.Person;
 import com.example.bookingsite.Model.Reservation;
+import com.example.bookingsite.Model.Villa;
 import com.example.bookingsite.Repository.HotelRepository;
 import com.example.bookingsite.Repository.PersonRepository;
 import com.example.bookingsite.Repository.ReservationRepository;
@@ -22,6 +24,7 @@ public class DataInitializer {
     private final VillaRepository villaRepository;
 
     private final HotelRepository hotelRepository;
+
     private final ReservationRepository reservationRepository;
 
     private final ReservationService reservationService;
@@ -41,20 +44,18 @@ public class DataInitializer {
     @PostConstruct
     public void initData() {
 //        this.personRepository.save(new Person("name", "surname", "username", "password", "phoneNum", Role.OWNER));
-
-//        Person person = this.personRepository.getById(13L);
+//
+//        Person person = this.personRepository.getById(2L);
 //        this.villaRepository.save(new Villa("name", "location", "description", "contactNumber", person, 1500));
-//        Villa villa = this.villaRepository.getById(14L);
-
-//        this.reservationService.createVillaReservation(LocalDateTime.now().plusDays(1L), LocalDateTime.now().plusDays(9L), 13L, 14L);
+//        //Villa villa = this.villaRepository.getById(14L);
+//
+//        this.reservationService.createVillaReservation(LocalDateTime.now().plusDays(1L), LocalDateTime.now().plusDays(9L), 1L, 5L);
 //        this.hotelRepository.save(new Hotel("hotel", "location", "description", "contactNum", person, 5, 5, 2000, 500));
-//        this.reservationRepository.save(new Reservation(LocalDateTime.now(), LocalDateTime.now().plusDays(10L), person, place));
-//        this.reservationService.createHotelReservation(LocalDateTime.now(), LocalDateTime.now().plusDays(4L), 13L, 16L, RoomType.VIP);
-//        this.reservationService.createHotelReservation(LocalDateTime.now().plusDays(2L),LocalDateTime.now().plusDays(4L),13L,16L, RoomType.VIP);
-//        this.reservationService.createHotelReservation(LocalDateTime.now().minusDays(1L),LocalDateTime.now().plusDays(1),13L,16L, RoomType.VIP);
-//        this.reservationService.createHotelReservation(LocalDateTime.now().minusDays(2L),LocalDateTime.now().plusDays(5),13L,16L, RoomType.VIP);
-        this.reservationService.updateHotelReservation(25L, LocalDateTime.now(), LocalDateTime.now().plusDays(2), 13L, 16L, RoomType.STANDARD);
-
+//        this.reservationService.createHotelReservation(LocalDateTime.now(), LocalDateTime.now().plusDays(4L), 1L, 6L, RoomType.VIP);
+//        this.reservationService.createHotelReservation(LocalDateTime.now().plusDays(2L),LocalDateTime.now().plusDays(4L),1L,6L, RoomType.VIP);
+//        this.reservationService.createHotelReservation(LocalDateTime.now().minusDays(1L),LocalDateTime.now().plusDays(1),1L,6L, RoomType.VIP);
+//        this.reservationService.createHotelReservation(LocalDateTime.now().minusDays(2L),LocalDateTime.now().plusDays(5),1L,6L, RoomType.VIP);
+//        this.reservationService.updateHotelReservation(25L, LocalDateTime.now(), LocalDateTime.now().plusDays(2), 1L, 6L, RoomType.STANDARD);
     }
 }
 

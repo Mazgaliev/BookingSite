@@ -33,29 +33,20 @@ public class ReservationServiceImpl implements ReservationService {
     @Transactional
     public Optional<Reservation> createHotelReservation(LocalDateTime start, LocalDateTime finish,
                                                         Long personId, Long hotelId, RoomType roomType) {
-        //TODO napri specficini exceptions za sobite
         Hotel hotel = this.hotelRepository.findById(hotelId).orElseThrow(PlaceDoesNotExistException::new);
         Person person = this.personRepository.findById(personId).orElseThrow(PersonDoesNotExistException::new);
-        long days = ChronoUnit.DAYS.between(start, finish);
+
         int numberOfRooms = calculateNumberOdRooms(hotel, start, finish, roomType);
 
-        if (roomType == RoomType.STANDARD && hotel.getStandardRooms() > numberOfRooms) {
-            Reservation reservation = new Reservation(start, finish, person, hotel);
-            int price = hotel.getPriceStandardRoom();
-            reservation.setRoomType(roomType);
-            reservation.setPrice((int) (price * days));
-            this.reservationRepository.save(reservation);
-            return Optional.of(reservation);
+        Optional<Reservation> reservation = getReservation(start, finish, roomType, hotel, person, numberOfRooms);
+        if (reservation != null && reservation.isPresent()) return reservation;
+
+        if(roomType == RoomType.STANDARD) {
+            throw new StandardRoomNotAvaiable();
         }
-        if (roomType == RoomType.VIP && hotel.getVipRooms() > numberOfRooms) {
-            Reservation reservation = new Reservation(start, finish, person, hotel);
-            int price = hotel.getPriceVipRoom();
-            reservation.setRoomType(roomType);
-            reservation.setPrice((int) (price * days));
-            this.reservationRepository.save(reservation);
-            return Optional.of(reservation);
+        else {
+            throw new VipRoomNotAvaiable();
         }
-        throw new HotelRoomNotAvaiable();
     }
 
     @Override
@@ -75,6 +66,7 @@ public class ReservationServiceImpl implements ReservationService {
         long days = ChronoUnit.DAYS.between(start, finish);
 
         Reservation reservation = new Reservation(start, finish, person, villa);
+
         reservation.setPrice((int) (villa.getPricePerNight() * days));
 
         this.reservationRepository.save(reservation);
@@ -94,27 +86,17 @@ public class ReservationServiceImpl implements ReservationService {
         reservationRepository.delete(reservation_old);
 
         int numberOfRooms = calculateNumberOdRooms(hotel, start, finish, roomType);
-        long days = ChronoUnit.DAYS.between(start, finish);
 
-        if (roomType == RoomType.STANDARD && hotel.getStandardRooms() > numberOfRooms) {
-            Reservation reservation = new Reservation(start, finish, person, hotel);
-            int price = hotel.getPriceStandardRoom();
-            reservation.setRoomType(roomType);
-            reservation.setPrice((int) (price * days));
-            this.reservationRepository.save(reservation);
-            return Optional.of(reservation);
-        }
-        if (roomType == RoomType.VIP && hotel.getVipRooms() > numberOfRooms) {
-            Reservation reservation = new Reservation(start, finish, person, hotel);
-            int price = hotel.getPriceVipRoom();
-            reservation.setRoomType(roomType);
-            reservation.setPrice((int) (price * days));
-            this.reservationRepository.save(reservation);
-            return Optional.of(reservation);
-        }
+        Optional<Reservation> reservation = getReservation(start, finish, roomType, hotel, person, numberOfRooms);
+        if (reservation != null && reservation.isPresent()) return reservation;
 
         reservationRepository.save(reservation_old);
-        throw new HotelRoomNotAvaiable();
+        if(roomType == RoomType.STANDARD) {
+            throw new StandardRoomNotAvaiable();
+        }
+        else {
+            throw new VipRoomNotAvaiable();
+        }
     }
 
 
@@ -167,5 +149,27 @@ public class ReservationServiceImpl implements ReservationService {
                 .findByPlaceIdAndStartGreaterThanEqualAndFinishLessThanEqualAndRoomType(hotel, start, finish, roomType);
 
         return reservations_1.size() + reservations_2.size() + reservations_3.size() - reservations_4.size();
+    }
+
+    private Optional<Reservation> getReservation(LocalDateTime start, LocalDateTime finish, RoomType roomType,
+                                                 Hotel hotel, Person person, int numberOfRooms) {
+        long days = ChronoUnit.DAYS.between(start, finish);
+        if (roomType == RoomType.STANDARD && hotel.getStandardRooms() > numberOfRooms) {
+            Reservation reservation = new Reservation(start, finish, person, hotel);
+            int price = hotel.getPriceStandardRoom();
+            reservation.setRoomType(roomType);
+            reservation.setPrice((int) (price * days));
+            this.reservationRepository.save(reservation);
+            return Optional.of(reservation);
+        }
+        if (roomType == RoomType.VIP && hotel.getVipRooms() > numberOfRooms) {
+            Reservation reservation = new Reservation(start, finish, person, hotel);
+            int price = hotel.getPriceVipRoom();
+            reservation.setRoomType(roomType);
+            reservation.setPrice((int) (price * days));
+            this.reservationRepository.save(reservation);
+            return Optional.of(reservation);
+        }
+        return Optional.empty();
     }
 }
