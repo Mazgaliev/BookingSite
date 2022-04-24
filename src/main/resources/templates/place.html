@@ -26,13 +26,17 @@
                            aria-placeholder="End date">
                     <label for="end"></label>
                 </div>
-                <div class="md-form md-outline input-with-post-icon datepicker col-6" th:if="${price2} > 0">
-                    <input placeholder="Standard Room" type="radio" id="roomType1" name="roomType" class="form-control"
-                           aria-placeholder="End date" th:value="STANDARD" th:text="'Standard room' ">
-                    <label for="end"></label>
-                    <input placeholder="Vip Room" type="radio" id="roomType2" name="roomType" class="form-control"
-                           aria-placeholder="End date" th:value="VIP" th:text="'VIP room' ">
-                    <label for="end"></label>
+                <div class="card shadow justify-content-center" th:if="${price2} > 0">
+                    <div class="card-body">
+                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                            <input type="radio" id="roomType1" name="roomType"
+                                   th:value="STANDARD">
+                            <label for="roomType1" class="btn btn-primary">Standard room</label>
+                            <input type="radio" id="roomType2" name="roomType"
+                                   th:value="VIP">
+                            <label for="roomType2" class="btn btn-primary">VIP room</label>
+                        </div>
+                    </div>
                 </div>
                 <input hidden th:value="${place.getId()}" th:id="placeId" th:name="placeId">
 
