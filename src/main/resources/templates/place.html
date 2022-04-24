@@ -15,15 +15,18 @@
         <form method="post" action="/reserve">
             <div class="row">
                 <div class="md-form md-outline input-with-post-icon datepicker col-6">
-                    <input placeholder="Select date" type="date" id="from" class="form-control"
+                    <input placeholder="Select date" type="date" id="from" name="from" class="form-control"
                            aria-placeholder="Starting date">
                     <label for="from"></label>
                 </div>
                 <div class="md-form md-outline input-with-post-icon datepicker col-6">
-                    <input placeholder="Select date" type="date" id="end" class="form-control"
+                    <input placeholder="Select date" type="date" id="end" name="end" class="form-control"
                            aria-placeholder="End date">
                     <label for="end"></label>
                 </div>
+                <input hidden th:value="${place.getId()}" th:id="placeId" th:name="placeId">
+
+                </input>
             </div>
             <button type="submit" class="btn btn-outline-primary w-100">Make reservation</button>
         </form>
