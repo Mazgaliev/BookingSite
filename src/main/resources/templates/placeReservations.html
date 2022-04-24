@@ -1,0 +1,24 @@
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <h3 th:text="${PlaceName}"></h3>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-2">Arrival date</div>
+        <div class="col-2">Leaving date</div>
+        <div class="col-5">Person Information</div>
+    </div>
+    <hr>
+    <th:block th:each="reservation:${reservations}">
+        <div class="row">
+            <div class="col-2" th:text="${reservation.getStart()}"></div>
+            <div class="col-2" th:text="${reservation.getFinish()}"></div>
+            <div class="col-6"
+                 th:text="${reservation.getPersonId().getName()} + ' '+ ${reservation.getPersonId().getSurname()} "></div>
+            <a class="col-2 btn btn-danger"
+               th:href="@{'/person/reservations/delete/{id}'(id=${reservation.getId()})}">Cancel reservation
+            </a>
+        </div>
+    </th:block>
+</div>

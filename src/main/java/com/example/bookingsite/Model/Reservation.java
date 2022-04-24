@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -19,20 +20,19 @@ public class Reservation {
     @ManyToOne
     private Place placeId;
 
-
     @ManyToOne
     private Person personId;
 
-    private LocalDateTime start;
+    private LocalDate start;
 
-    private LocalDateTime finish;
+    private LocalDate finish;
 
     private Integer price;
 
     @Enumerated(EnumType.STRING)
     private RoomType roomType;
 
-    public Reservation(LocalDateTime start, LocalDateTime finish, Person person, Place place) {
+    public Reservation(LocalDate start, LocalDate finish, Person person, Place place) {
         this.placeId = place;
         this.personId = person;
         this.start = start;

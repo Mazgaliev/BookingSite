@@ -8,6 +8,7 @@ import com.example.bookingsite.Service.ReservationService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -31,13 +32,13 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     @Transactional
-    public Optional<Reservation> createHotelReservation(LocalDateTime start, LocalDateTime finish,
+    public Optional<Reservation> createHotelReservation(LocalDate start, LocalDate finish,
                                                         Long personId, Long hotelId, RoomType roomType) {
         //TODO napri specficini exceptions za sobite
         Hotel hotel = this.hotelRepository.findById(hotelId).orElseThrow(PlaceDoesNotExistException::new);
         Person person = this.personRepository.findById(personId).orElseThrow(PersonDoesNotExistException::new);
         long days = ChronoUnit.DAYS.between(start, finish);
-        int numberOfRooms = calculateNumberOdRooms(hotel, start, finish, roomType);
+        int numberOfRooms = calculateNumberOdRooms(hotel, start.atStartOfDay(), finish.atStartOfDay(), roomType);
 
         if (roomType == RoomType.STANDARD && hotel.getStandardRooms() > numberOfRooms) {
             Reservation reservation = new Reservation(start, finish, person, hotel);
@@ -60,7 +61,7 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     @Transactional
-    public Optional<Reservation> createVillaReservation(LocalDateTime start, LocalDateTime finish,
+    public Optional<Reservation> createVillaReservation(LocalDate start, LocalDate finish,
                                                         Long personId, Long villaId) {
         Villa villa = this.villaRepository.findById(villaId).orElseThrow(PlaceDoesNotExistException::new);
         Person person = this.personRepository.findById(personId).orElseThrow(PersonDoesNotExistException::new);
@@ -84,7 +85,7 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     @Transactional
-    public Optional<Reservation> updateHotelReservation(Long Id, LocalDateTime start, LocalDateTime finish,
+    public Optional<Reservation> updateHotelReservation(Long Id, LocalDate start, LocalDate finish,
                                                         Long personId, Long hotelId, RoomType roomType) {
         Hotel hotel = this.hotelRepository.findById(hotelId).orElseThrow(PlaceDoesNotExistException::new);
         Person person = this.personRepository.findById(personId).orElseThrow(PersonDoesNotExistException::new);
@@ -93,7 +94,7 @@ public class ReservationServiceImpl implements ReservationService {
         Reservation reservation_old = this.reservationRepository.findById(Id).orElseThrow(ReservationDoesNotExist::new);
         reservationRepository.delete(reservation_old);
 
-        int numberOfRooms = calculateNumberOdRooms(hotel, start, finish, roomType);
+        int numberOfRooms = calculateNumberOdRooms(hotel, start.atStartOfDay(), finish.atStartOfDay(), roomType);
         long days = ChronoUnit.DAYS.between(start, finish);
 
         if (roomType == RoomType.STANDARD && hotel.getStandardRooms() > numberOfRooms) {
@@ -120,7 +121,7 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     @Transactional
-    public Optional<Reservation> updateVillaReservation(Long Id, LocalDateTime start, LocalDateTime finish,
+    public Optional<Reservation> updateVillaReservation(Long Id, LocalDate start, LocalDate finish,
                                                         Long personId, Long villaId) {
         Villa villa = this.villaRepository.findById(villaId).orElseThrow(PlaceDoesNotExistException::new);
         Person person = this.personRepository.findById(personId).orElseThrow(PersonDoesNotExistException::new);

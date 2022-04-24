@@ -54,24 +54,22 @@ public class ReservationController {
         }
 
         Place place = this.placeService.findById(placeId).get();
-        LocalDateTime for1 = from.atStartOfDay();
-        LocalDateTime end1 = end.atStartOfDay();
         try {
-            if (for1.isBefore(end1)) {
+            if (from.isBefore(end)) {
                 if (this.placeService.placeType(place) == PlaceType.VILLA) {
-                    this.reservationService.createVillaReservation(for1, end1, personId, place.getId());
+                    this.reservationService.createVillaReservation(from, end, personId, place.getId());
                 } else if (this.placeService.placeType(place) == PlaceType.HOTEL) {
-                    this.reservationService.createHotelReservation(for1, end1, personId, place.getId(), roomType);
+                    this.reservationService.createHotelReservation(from, end, personId, place.getId(), roomType);
                 }
-            } else if (for1.isAfter(LocalDateTime.now())) {
+            } else if (from.isAfter(LocalDate.now())) {
                 String string = placeId + "?hasError=true&error=Date+from+is+before+today";
                 return "redirect:/place/" + string;
             } else {
                 String string = placeId + "?hasError=true&error=Date+from+is+after+date+end";
                 return "redirect:/place/" + string;
             }
-        }catch (HotelRoomNotAvaiable|VillaIsAlreadyReservedException e) {
-            String string = placeId + "?hasError=true&error="+e.getMessage();
+        } catch (HotelRoomNotAvaiable | VillaIsAlreadyReservedException e) {
+            String string = placeId + "?hasError=true&error=" + e.getMessage();
             return "redirect:/place/" + string;
         }
         return "redirect:/home";

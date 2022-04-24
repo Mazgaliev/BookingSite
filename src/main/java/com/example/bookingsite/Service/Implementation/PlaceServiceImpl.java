@@ -41,7 +41,6 @@ public class PlaceServiceImpl implements PlaceService {
 
         Person person = this.personRepository.findById(ownerId).orElseThrow(PersonDoesNotExistException::new);
         Place p = this.placeRepository.findByName(name).orElse(null);
-
         if (p != null && p.getName().equals(name)) {
             throw new PlaceAlreadyExistsException();
         } else if (p != null && p.getOwner().getId().equals(ownerId)) {
@@ -49,6 +48,10 @@ public class PlaceServiceImpl implements PlaceService {
         }
 
         Hotel hotel = new Hotel(name, location, description, contactNumber, person, vipRooms, standardRooms, priceVipRoom, priceStandardRoom);
+        List<Place> ownedPlaces = person.getOwns();
+        ownedPlaces.add(hotel);
+        person.setOwns(ownedPlaces);
+        this.personRepository.save(person);
         this.hotelRepository.save(hotel);
         return Optional.of(hotel);
     }
@@ -134,9 +137,9 @@ public class PlaceServiceImpl implements PlaceService {
 
     @Override
     public Optional<Place> findById(Long id) {
-        if(this.hotelRepository.findById(id).isPresent())
+        if (this.hotelRepository.findById(id).isPresent())
             return Optional.of((Place) this.hotelRepository.findById(id).get());
-        if(this.villaRepository.findById(id).isPresent())
+        if (this.villaRepository.findById(id).isPresent())
             return Optional.of((Place) this.villaRepository.findById(id).get());
         throw new PlaceDoesNotExistException();
     }
@@ -148,7 +151,7 @@ public class PlaceServiceImpl implements PlaceService {
 
     @Override
     public PlaceType placeType(Place place) {
-        if(place instanceof Hotel){
+        if (place instanceof Hotel) {
             return PlaceType.HOTEL;
         }
         return PlaceType.VILLA;
