@@ -3,15 +3,19 @@ package com.example.bookingsite.Model;
 import com.example.bookingsite.Model.Enum.Role;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 
 @Entity
 @Getter
 @Setter
-public class Person {
+public class Person implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     Long id;
@@ -34,6 +38,12 @@ public class Person {
     @OneToMany(mappedBy = "personId")
     List<Reservation> reservations;
 
+    private boolean isAccountNonExpired = true;
+    private boolean isAccountNonLocked = true;
+    private boolean isCredentialsNonExpired = true;
+    private boolean isEnabled = true;
+
+
     public Person(String name, String surname, String username, String password, String phoneNumber, Role userRole) {
         this.name = name;
         this.username = username;
@@ -45,5 +55,30 @@ public class Person {
 
     public Person() {
 
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return Collections.singletonList(userRole);
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return isAccountNonExpired;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return isAccountNonLocked;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return isCredentialsNonExpired;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return isEnabled;
     }
 }
