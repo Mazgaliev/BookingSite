@@ -6,7 +6,24 @@
     <link rel="stylesheet" href="../static/css/bootstrap.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script>
+        function activate() {
+            let label1 = document.getElementById('label1');
+            label1.className = "btn btn-primary active";
+            let label2 = document.getElementById('label2');
+            label2.className = "btn btn-primary"
+        }
 
+        function deactivate() {
+            let label1 = document.getElementById('label1');
+            label1.className = "btn btn-primary";
+            let label2 = document.getElementById('label2');
+            label2.className = "btn btn-primary active"
+        }
+    </script>
 </head>
 <body>
 <header th:replace="fragments/header"></header>

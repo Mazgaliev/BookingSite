@@ -1,3 +1,4 @@
+
 <div class="container">
     <h1 th:text="${place.getName()}"></h1>
     <div class="row">
@@ -15,6 +16,25 @@
     </div>
     <div class="border-1" th:if="${#request.getRemoteUser()!=null}">
         <form method="post" action="/reserve">
+
+            <div class="row  justify-content-center align-content-center m-5">
+                <div class="card shadow card-" th:if="${price2} > 0">
+                    <div class="card-body">
+                        <div class="btn-group btn-group-toggle"
+                             data-toggle="buttons">
+                            <label class="btn btn-primary" id="label1" onclick="activate()">
+                                <input type="radio" id="roomType1" name="roomType"
+                                       th:value="STANDARD" autocomplete="off" onclick="activate()">Standard room
+                            </label>
+                            <label class="btn btn-primary" id="label2" onclick="deactivate()">
+                                <input type="radio" id="roomType2" name="roomType"
+                                       th:value="VIP" autocomplete="off" onclick="deactivate()">VIP room
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="row">
                 <div class="md-form md-outline input-with-post-icon datepicker col-6">
                     <input placeholder="Select date" type="date" id="from" name="from" class="form-control"
@@ -26,21 +46,10 @@
                            aria-placeholder="End date">
                     <label for="end"></label>
                 </div>
-                <div class="card shadow justify-content-center" th:if="${price2} > 0">
-                    <div class="card-body">
-                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                            <input type="radio" id="roomType1" name="roomType"
-                                   th:value="STANDARD">
-                            <label for="roomType1" class="btn btn-primary">Standard room</label>
-                            <input type="radio" id="roomType2" name="roomType"
-                                   th:value="VIP">
-                            <label for="roomType2" class="btn btn-primary">VIP room</label>
-                        </div>
-                    </div>
-                </div>
-                <input hidden th:value="${place.getId()}" th:id="placeId" th:name="placeId">
+            </div>
 
-                </input>
+            <div class="row">
+                <input hidden th:value="${place.getId()}" th:id="placeId" th:name="placeId">
             </div>
             <button type="submit" class="btn btn-outline-primary w-100">Make reservation</button>
             <th:block th:if="${param.hasError}">
