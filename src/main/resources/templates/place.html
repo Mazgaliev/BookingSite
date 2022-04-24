@@ -1,0 +1,31 @@
+<div class="container">
+    <h1 th:text="${place.getName()}"></h1>
+    <div class="row">
+        <div class="col-5">
+            <h3 th:text="${place.getLocation()}"></h3>
+            <h5 th:text="${place.getDescription()}"></h5>
+        </div>
+        <div class="col-7">
+            <th:block th:each="image:${images}">
+                <img th:src="${image}">
+            </th:block>
+        </div>
+    </div>
+    <div class="border-1" th:if="${#request.getRemoteUser()!=null}">
+        <form method="post" action="/reserve">
+            <div class="row">
+                <div class="md-form md-outline input-with-post-icon datepicker col-6">
+                    <input placeholder="Select date" type="date" id="from" class="form-control"
+                           aria-placeholder="Starting date">
+                    <label for="from"></label>
+                </div>
+                <div class="md-form md-outline input-with-post-icon datepicker col-6">
+                    <input placeholder="Select date" type="date" id="end" class="form-control"
+                           aria-placeholder="End date">
+                    <label for="end"></label>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-outline-primary w-100">Make reservation</button>
+        </form>
+    </div>
+</div>
