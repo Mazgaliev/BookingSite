@@ -1,9 +1,11 @@
-<div class="container">
+<div class="container" xmlns:th="http://www.w3.org/1999/html">
     <h1 th:text="${place.getName()}"></h1>
     <div class="row">
         <div class="col-5">
             <h3 th:text="${place.getLocation()}"></h3>
             <h5 th:text="${place.getDescription()}"></h5>
+            <h3 th:text="${price1}"></h3>
+            <h3 th:text="${place2}" th:if="${place2} > 0">
         </div>
         <div class="col-7">
             <th:block th:each="image:${images}">
@@ -24,11 +26,22 @@
                            aria-placeholder="End date">
                     <label for="end"></label>
                 </div>
+                <div class="md-form md-outline input-with-post-icon datepicker col-6" th:if="${place2} > 0">
+                    <input placeholder="Standard Room" type="radio" id="roomType1" name="roomType" class="form-control"
+                           aria-placeholder="End date" th:value="STANDARD">
+                    <label for="end"></label>
+                    <input placeholder="Vip Room" type="radio" id="roomType2" name="roomType" class="form-control"
+                           aria-placeholder="End date" th:value="VIP">
+                    <label for="end"></label>
+                </div>
                 <input hidden th:value="${place.getId()}" th:id="placeId" th:name="placeId">
 
                 </input>
             </div>
             <button type="submit" class="btn btn-outline-primary w-100">Make reservation</button>
+            <th:block th:if="${hasError}">
+                <h2 class="text-danger" th:text="${error}"></h2>
+            </th:block>
         </form>
     </div>
 </div>

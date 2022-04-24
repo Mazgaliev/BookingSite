@@ -1,5 +1,6 @@
 package com.example.bookingsite.Service.Implementation;
 
+import com.example.bookingsite.Model.Enum.PlaceType;
 import com.example.bookingsite.Model.Exception.PersonAlreadyOwnsThePlaceException;
 import com.example.bookingsite.Model.Exception.PersonDoesNotExistException;
 import com.example.bookingsite.Model.Exception.PlaceAlreadyExistsException;
@@ -133,11 +134,23 @@ public class PlaceServiceImpl implements PlaceService {
 
     @Override
     public Optional<Place> findById(Long id) {
-        return this.placeRepository.findById(id);
+        if(this.hotelRepository.findById(id).isPresent())
+            return Optional.of((Place) this.hotelRepository.findById(id).get());
+        if(this.villaRepository.findById(id).isPresent())
+            return Optional.of((Place) this.villaRepository.findById(id).get());
+        throw new PlaceDoesNotExistException();
     }
 
     @Override
     public List<Place> findAll() {
         return this.placeRepository.findAll();
+    }
+
+    @Override
+    public PlaceType placeType(Place place) {
+        if(place instanceof Hotel){
+            return PlaceType.HOTEL;
+        }
+        return PlaceType.VILLA;
     }
 }
