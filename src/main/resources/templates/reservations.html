@@ -1,0 +1,28 @@
+<div class="container">
+    <div class="container-fluid">
+        <hr>
+        <div class="row">
+            <div class="col-3">Start</div>
+            <div class="col-3">End</div>
+            <div class="col-2">Place</div>
+            <div class="col-2">Total amount</div>
+        </div>
+        <hr>
+        <th:block th:each="reservation:${reservations}">
+            <div class="row">
+                <div class="col-2" th:text="${reservation.getStart()}"></div>
+                <div class="col-2" th:text="${reservation.getFinish()}"></div>
+                <div class="col-1" th:text="${reservation.getPlaceId().getName()}"></div>
+                <div class="col-1" th:text="${reservation.getPrice()}"></div>
+                <div class="col-1">
+                    <a class=" btn btn-danger"
+                       th:href="@{'/person/reservations/delete/{id}'(id=${reservation.getId()})}"
+                    >Cancel reservation
+                    </a>
+                </div>
+            </div>
+            <div class="col-1 btn btn-primary">Edit</div>
+            <hr>
+        </th:block>
+    </div>
+</div>

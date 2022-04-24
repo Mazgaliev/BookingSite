@@ -67,7 +67,7 @@ public class ReservationServiceImpl implements ReservationService {
         List<Reservation> reservationList = villa.getReservations();
 
         for (Reservation reserv : reservationList) {
-            if ((start.isAfter(reserv.getStart()) || start.equals(reserv.getStart())) ||
+            if ((start.isAfter(reserv.getStart()) || start.equals(reserv.getStart())) &&
                     (finish.isBefore(reserv.getFinish()) || finish.equals(reserv.getFinish()))) {
                 throw new VillaIsAlreadyReservedException();
             }

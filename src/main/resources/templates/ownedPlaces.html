@@ -1,0 +1,19 @@
+<div class="container">
+
+    <div class="row">
+        <div class="col-2">Name</div>
+        <div class="col-2">Location</div>
+        <div class="col-2">Contact Number</div>
+        <div class="col-2">View</div>
+    </div>
+    <hr>
+    <th:block th:each="place:${places}">
+        <div class="row">
+            <div class="col-2" th:text="${place.getName()}"></div>
+            <div class="col-2" th:text="${place.getLocation()()}"></div>
+            <div class="col-2" th:text="${place.getContactNumber()}"></div>
+            <div class="col-2"><a class="btn btn-primary">View Reservations</a></div>
+        </div>
+        <hr>
+    </th:block>
+</div>

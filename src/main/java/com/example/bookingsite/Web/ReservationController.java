@@ -16,7 +16,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Controller
 @RequestMapping("/reserve")
@@ -35,10 +37,10 @@ public class ReservationController {
     @PostMapping
     public String makeReservation(Model model,
                                   Authentication authentication,
-                                  @RequestParam Long id,
-                                  @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime from,
-                                  @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end,
-                                  @RequestParam (required = false) RoomType roomType){
+                                  @RequestParam Long placeId,
+                                  @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
+                                  @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate end,
+                                  @RequestParam(required = false) RoomType roomType) {
         UserDetails userPrincipal;
         Long personId = 0L;
 
@@ -49,20 +51,21 @@ public class ReservationController {
             model.addAttribute("person", person);
         }
 
-        Place place = this.placeService.findById(id).get();
-
-        if(from.isBefore(end)){
-            if(this.placeService.placeType(place) == PlaceType.VILLA){
-                this.reservationService.createVillaReservation(from,end,personId,place.getId());
-            }else if(this.placeService.placeType(place) == PlaceType.HOTEL){
-                this.reservationService.createHotelReservation(from,end,personId,place.getId(),roomType);
+        Place place = this.placeService.findById(placeId).get();
+        LocalDateTime for1 = from.atStartOfDay();
+        LocalDateTime end1 = end.atStartOfDay();
+        if (for1.isBefore(end1)) {
+            if (this.placeService.placeType(place) == PlaceType.VILLA) {
+                this.reservationService.createVillaReservation(for1, end1, personId, place.getId());
+            } else if (this.placeService.placeType(place) == PlaceType.HOTEL) {
+                this.reservationService.createHotelReservation(for1, end1, personId, place.getId(), roomType);
             }
-        }else {
-            model.addAttribute("hasError",true);
-            model.addAttribute("error","Date from is after date end");
-            return "redirect:/place/"+id;
+        } else {
+            model.addAttribute("hasError", true);
+            model.addAttribute("error", "Date from is after date end");
+            return "/place/" + placeId;
         }
-        return "/home";
+        return "redirect:/home";
     }
 
 }
