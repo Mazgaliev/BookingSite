@@ -34,11 +34,11 @@ public class ReservationServiceImpl implements ReservationService {
     @Transactional
     public Optional<Reservation> createHotelReservation(LocalDate start, LocalDate finish,
                                                         Long personId, Long hotelId, RoomType roomType) {
-        //TODO napri specficini exceptions za sobite
+
         Hotel hotel = this.hotelRepository.findById(hotelId).orElseThrow(PlaceDoesNotExistException::new);
         Person person = this.personRepository.findById(personId).orElseThrow(PersonDoesNotExistException::new);
         long days = ChronoUnit.DAYS.between(start, finish);
-        int numberOfRooms = calculateNumberOdRooms(hotel, start.atStartOfDay(), finish.atStartOfDay(), roomType);
+        int numberOfRooms = calculateNumberOdRooms(hotel, start, finish, roomType);
 
         if (roomType == RoomType.STANDARD && hotel.getStandardRooms() > numberOfRooms) {
             Reservation reservation = new Reservation(start, finish, person, hotel);
@@ -94,7 +94,7 @@ public class ReservationServiceImpl implements ReservationService {
         Reservation reservation_old = this.reservationRepository.findById(Id).orElseThrow(ReservationDoesNotExist::new);
         reservationRepository.delete(reservation_old);
 
-        int numberOfRooms = calculateNumberOdRooms(hotel, start.atStartOfDay(), finish.atStartOfDay(), roomType);
+        int numberOfRooms = calculateNumberOdRooms(hotel, start, finish, roomType);
         long days = ChronoUnit.DAYS.between(start, finish);
 
         if (roomType == RoomType.STANDARD && hotel.getStandardRooms() > numberOfRooms) {
@@ -154,7 +154,7 @@ public class ReservationServiceImpl implements ReservationService {
         return Optional.of(reservation);
     }
 
-    Integer calculateNumberOdRooms(Hotel hotel, LocalDateTime start, LocalDateTime finish, RoomType roomType) {
+    Integer calculateNumberOdRooms(Hotel hotel, LocalDate start, LocalDate finish, RoomType roomType) {
         List<Reservation> reservations_1 = reservationRepository
                 .findByPlaceIdAndStartGreaterThanEqualAndStartLessThanEqualAndRoomType(hotel, start, finish, roomType);
 
