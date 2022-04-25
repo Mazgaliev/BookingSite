@@ -81,4 +81,10 @@ public class PersonController {
 
         return "Master-Template";
     }
+
+    @GetMapping("/settings")
+    public String loadPersonSettings() {
+        //TODO implement person settings page
+        return null;
+    }
 }
