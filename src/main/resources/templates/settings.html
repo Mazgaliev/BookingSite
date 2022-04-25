@@ -1,10 +1,74 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<section id="header" class="jumbotron text-center">
+    <h1 class="display-3">User Settings</h1>
+    <p class="lead">In this section you can modify all your information</p>
+</section>
 
-</body>
-</html>
+
+<div class="container">
+    <form th:method="post" th:action="@{'/person/settings'}">
+        <div class="row">
+            <div class="col-6">
+                <h5>Name</h5>
+                <label for="name"></label> <input id="name" name="name" class="input-group-text bg-transparent w-100"
+                                                  th:value="${person.getName()}"
+                                                  th:placeholder="${person.getName()}">
+            </div>
+            <div class="col-6">
+                <h5>Surname</h5>
+                <label for="surname"></label><input id="surname" name="surname"
+                                                    class="input-group-text bg-transparent w-100"
+                                                    th:value="${person.getSurname()}"
+                                                    th:placeholder="${person.getSurname()}">
+            </div>
+            <label hidden for="id"></label><input type="text" hidden id="id" name="id" th:value="${person.getId()}">
+        </div>
+        <div class="row">
+            <div class="col-4">
+                <h5>Old password</h5>
+                <label for="oldPassword"></label><input required type="password"
+                                                        class="input-group-text bg-transparent w-100"
+                                                        id="oldPassword" name="oldPassword"
+                                                        placeholder="Old Password">
+            </div>
+            <div class="col-4 ">
+                <h5>Password</h5>
+                <label for="password"></label> <input required id="password" name="password"
+                                                      class="input-group-text bg-transparent w-100"
+                                                      type="password" th:placeholder="'Password'">
+            </div>
+            <div class="col-4 ">
+                <h5>Repeat password</h5>
+                <label for="repeatPassword"></label><input required id="repeatPassword" name="repeatPassword"
+
+                                                           class="input-group-text bg-transparent w-100" type="password"
+                                                           th:placeholder="'Repeat password'">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <h5>Phone Number</h5>
+                <label for="phoneNumber"></label><input id="phoneNumber" name="phoneNumber"
+                                                        class="input-group-text bg-transparent w-100"
+                                                        type="tel"
+                                                        th:value="${person.getPhoneNumber()}"
+                                                        th:placeholder="${person.getPhoneNumber()}">
+            </div>
+            <div class="col-6">
+                <h5>Username</h5>
+                <label for="username"></label><input id="username" name="username"
+                                                     class="input-group-text bg-transparent w-100"
+                                                     th:value="${person.getUsername()}"
+                                                     th:placeholder="${person.getUsername()}">
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-12">
+                <button class="btn btn-outline-dark w-100" type="submit">Change information</button>
+            </div>
+        </div>
+    </form>
+    <div>
+        <p>Note: you will be logged out if this action is successful</p>
+    </div>
+</div>

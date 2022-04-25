@@ -44,12 +44,12 @@ public class Person implements UserDetails {
     private boolean isEnabled = true;
 
 
-    public Person(String name, String surname, String username, String password, String phoneNumber, Role userRole) {
+    public Person(String name, String surname, String username, String password, String phoneNumber) {
         this.name = name;
         this.username = username;
         this.password = password;
         this.phoneNumber = phoneNumber;
-        this.userRole = userRole;
+        this.userRole = Role.ROLE_OWNER;
         this.surname = surname;
     }
 

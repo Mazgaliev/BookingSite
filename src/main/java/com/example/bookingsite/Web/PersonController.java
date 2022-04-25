@@ -1,17 +1,20 @@
 package com.example.bookingsite.Web;
 
 import com.example.bookingsite.Model.Dto.PersonDto;
+import com.example.bookingsite.Model.Enum.Role;
 import com.example.bookingsite.Model.Place;
 import com.example.bookingsite.Service.PersonService;
 import com.example.bookingsite.Service.PlaceService;
 import com.example.bookingsite.Service.ReservationService;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/person")
@@ -83,8 +86,36 @@ public class PersonController {
     }
 
     @GetMapping("/settings")
-    public String loadPersonSettings() {
-        //TODO implement person settings page
-        return null;
+    public String loadPersonSettings(Model model, Authentication authentication) {
+        UserDetails userPrincipal = (UserDetails) authentication.getPrincipal();
+        List<String> roles = userPrincipal.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
+        List<String> allRoles = this.personService.getAllRoles();
+
+        PersonDto person = this.personService.findByUsername(userPrincipal.getUsername());
+
+        model.addAttribute("currentRole", roles.get(0));
+        model.addAttribute("roles", allRoles);
+        model.addAttribute("person", person);
+        model.addAttribute("bodyContent", "settings");
+
+        return "Master-Template";
+    }
+
+    @PostMapping("/settings")
+    public String updatePerson(@RequestParam Long id,
+                               @RequestParam String name,
+                               @RequestParam String surname,
+                               @RequestParam String oldPassword,
+                               @RequestParam String password,
+                               @RequestParam String repeatPassword,
+                               @RequestParam String phoneNumber,
+                               @RequestParam String username) {
+
+        try {
+            this.personService.update(id, name, surname, username, password, repeatPassword, oldPassword, phoneNumber);
+        } catch (Exception exception) {
+            return "redirect:/home";
+        }
+        return "redirect:/logout";
     }
 }

@@ -2,10 +2,7 @@ package com.example.bookingsite.Service.Implementation;
 
 import com.example.bookingsite.Model.Dto.PersonDto;
 import com.example.bookingsite.Model.Enum.Role;
-import com.example.bookingsite.Model.Exception.InvalidUsernameOrPasswordException;
-import com.example.bookingsite.Model.Exception.PasswordsDoNotMatchException;
-import com.example.bookingsite.Model.Exception.PersonDoesNotExistException;
-import com.example.bookingsite.Model.Exception.UsernameAlreadyExistsException;
+import com.example.bookingsite.Model.Exception.*;
 import com.example.bookingsite.Model.Person;
 import com.example.bookingsite.Repository.PersonRepository;
 import com.example.bookingsite.Service.PersonService;
@@ -15,12 +12,14 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
 public class PersonServiceImpl implements PersonService {
 
-    //Private final PasswordEncoder passwordEncoder;
     private final PersonRepository personRepository;
     private final ModelMapper modelMapper;
 
@@ -33,7 +32,7 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
-    public Person register(String name, String surname, String username, String password, String repeatPassword, String phoneNumber, Role role) {
+    public Person register(String name, String surname, String username, String password, String repeatPassword, String phoneNumber) {
 
         if (username == null || username.isEmpty() || password == null || password.isEmpty())
             throw new InvalidUsernameOrPasswordException();
@@ -43,7 +42,7 @@ public class PersonServiceImpl implements PersonService {
             throw new UsernameAlreadyExistsException();
 
         String encodedPassword = passwordEncoder.encode(password);
-        Person person = new Person(name, surname, username, encodedPassword, phoneNumber, role);
+        Person person = new Person(name, surname, username, encodedPassword, phoneNumber);
 
         this.personRepository.save(person);
 
@@ -51,21 +50,23 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
-    public PersonDto update(Long personId, String name, String surname, String username, String password, String phoneNumber, Role role) {
+    public PersonDto update(Long personId, String name, String surname, String username, String password, String repeatPassword, String oldPassword, String phoneNumber) {
         Person person = this.personRepository.findById(personId).orElseThrow(PersonDoesNotExistException::new);
-        person.setName(name);
-        if (this.personRepository.findByUsername(username).isPresent())
+        if (!person.getUsername().equals(username) && this.personRepository.findByUsername(username).isPresent()) {
             throw new UsernameAlreadyExistsException();
-        else {
-            person.setUsername(username);
         }
-        person.setSurname(surname);
-        person.setUserRole(role);
-        person.setPhoneNumber(phoneNumber);
-        person.setPassword(password);
+        if (!password.equals(repeatPassword))
+            throw new PasswordsDoNotMatchException();
+        if (!passwordEncoder.matches(oldPassword, person.getPassword()))
+            throw new WrongOldPasswordException();
 
-        PersonDto personDto = modelMapper.map(person, PersonDto.class);
-        return personDto;
+        person.setUsername(username);
+        person.setName(name);
+        person.setSurname(surname);
+        person.setPhoneNumber(phoneNumber);
+        person.setPassword(passwordEncoder.encode(password));
+        this.personRepository.save(person);
+        return modelMapper.map(person, PersonDto.class);
     }
 
     @Override
@@ -80,6 +81,11 @@ public class PersonServiceImpl implements PersonService {
         Person person = this.personRepository.findByUsername(username).orElseThrow(PersonDoesNotExistException::new);
         PersonDto personDto = modelMapper.map(person, PersonDto.class);
         return personDto;
+    }
+
+    @Override
+    public List<String> getAllRoles() {
+        return Arrays.asList("ROLE_OWNER", "ROLE_STANDARD");
     }
 
     //To test

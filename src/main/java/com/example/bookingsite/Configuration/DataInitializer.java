@@ -44,7 +44,7 @@ public class DataInitializer {
     }
 
 
-    @PostConstruct
+//    @PostConstruct
     public void initData() {
 //        this.personService.register("ivan", "surname", "Ivan", "pass","pass", "phoneNum", Role.ROLE_OWNER);
 
@@ -61,7 +61,8 @@ public class DataInitializer {
 //        this.reservationService.createHotelReservation(LocalDateTime.now().minusDays(2L),LocalDateTime.now().plusDays(5),13L,16L, RoomType.VIP);
 //        this.reservationService.updateHotelReservation(25L, LocalDateTime.now(), LocalDateTime.now().plusDays(2), 13L, 16L, RoomType.STANDARD);
 //        this.personService.createPerson("Mite", "Mazgaliev", "Mazgaliev123", "password", "075277544", Role.OWNER);
-
+//        this.personService.register("name", "surname", "username", "password", "password", "1234567");
+//        this.personService.update(29L, "Mite", "Mazgaliev", "Mazgaliev123", "password", "password", "075277544");
     }
 }
 
