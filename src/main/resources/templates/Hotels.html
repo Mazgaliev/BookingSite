@@ -1,9 +1,26 @@
-<div class="container">
+<section id="header" class="jumbotron text-center">
+    <h1 class="display-3">HOTELS</h1>
+    <p class="lead">In this section you will find all the nearby hotels</p>
+</section>
 
-    <div>
-        <div>
-
+<section id="gallery">
+    <th:block th:each="mapEntity, row :${hotels}">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-4">
+                    <div class="card">
+                        <img th:src="${mapEntity.getValue()}"
+                             alt="" class="card-img-top">
+                        <div class="card-body">
+                            <h5 class="card-title" th:text="${mapEntity.key.getName()}"></h5>
+                            <p class=" card-text" th:text="${mapEntity.key.getDescription()}"></p>
+                            <a th:href="@{'/place/{id}' (id = ${mapEntity.key.getId()})}"
+                               class="btn btn-outline-dark btn-sm">Go to page</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
+    </th:block>
 
-</div>
+</section>

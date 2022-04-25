@@ -34,6 +34,8 @@ public interface PlaceService {
 
     List<Villa> findAllVillas();
 
+    List<Hotel> findAllHotels();
+
     PlaceType placeType(Place place);
 
 }

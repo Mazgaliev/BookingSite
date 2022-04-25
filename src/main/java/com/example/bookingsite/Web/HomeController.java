@@ -1,6 +1,7 @@
 package com.example.bookingsite.Web;
 
 import com.example.bookingsite.Model.Dto.PersonDto;
+import com.example.bookingsite.Model.Hotel;
 import com.example.bookingsite.Model.Place;
 import com.example.bookingsite.Model.Villa;
 import com.example.bookingsite.Repository.VillaRepository;
@@ -71,6 +72,30 @@ public class HomeController {
 
         model.addAttribute("villas", villas);
         model.addAttribute("bodyContent", "Villas");
+
+        return "Master-Template";
+    }
+
+    @GetMapping("/hotels")
+    public String loadHotels(Model model, Authentication authentication) {
+        UserDetails userPrincipal;
+        if (authentication != null) {
+            userPrincipal = (UserDetails) authentication.getPrincipal();
+            PersonDto person = this.personService.findByUsername(userPrincipal.getUsername());
+            model.addAttribute("person", person);
+        }
+        List<Hotel> hotelList = this.placeService.findAllHotels();
+        HashMap<Hotel, String> hotels = new HashMap<>();
+        for (Hotel hotel : hotelList) {
+            if (hotel.getImages() == null || hotel.getImages().isEmpty()) {
+                hotels.put(hotel, "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse1.mm.bing.net%2Fth%3Fid%3DOIP.mQSPWpQZPJ3szYgasgF40wHaFj%26pid%3DApi&f=1");
+            } else {
+                hotels.put(hotel, hotel.getImages().get(0));
+            }
+        }
+
+        model.addAttribute("hotels", hotels);
+        model.addAttribute("bodyContent", "Hotels");
 
         return "Master-Template";
     }

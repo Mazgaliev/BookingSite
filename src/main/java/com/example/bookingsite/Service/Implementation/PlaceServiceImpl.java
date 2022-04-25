@@ -155,6 +155,11 @@ public class PlaceServiceImpl implements PlaceService {
     }
 
     @Override
+    public List<Hotel> findAllHotels() {
+        return this.hotelRepository.findAll();
+    }
+
+    @Override
     public PlaceType placeType(Place place) {
         if (place instanceof Hotel) {
             return PlaceType.HOTEL;
