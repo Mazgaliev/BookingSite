@@ -14,6 +14,8 @@ import com.example.bookingsite.Repository.PersonRepository;
 import com.example.bookingsite.Repository.PlaceRepository;
 import com.example.bookingsite.Repository.VillaRepository;
 import com.example.bookingsite.Service.PlaceService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -157,6 +159,21 @@ public class PlaceServiceImpl implements PlaceService {
     @Override
     public List<Hotel> findAllHotels() {
         return this.hotelRepository.findAll();
+    }
+
+    @Override
+    public Page<Place> findPage(Pageable pageable) {
+        return this.placeRepository.findAll(pageable);
+    }
+
+    @Override
+    public Page<Villa> findPageVillas(Pageable pageable) {
+        return this.villaRepository.findAll(pageable);
+    }
+
+    @Override
+    public Page<Hotel> findPageHotels(Pageable pageable) {
+        return this.hotelRepository.findAll(pageable);
     }
 
     @Override

@@ -2,9 +2,8 @@
     <h1 class="display-3">Welcome</h1>
     <p class="lead">Take a look at what peaks your interest</p>
 
-
-    <th:block th:each="mapEntity, row :${placeMap}">
-        <div class="container">
+    <div class="container">
+        <th:block th:each="mapEntity, row :${placeMap}">
             <hr/>
             <div class="card" style="width: 500px;">
                 <div class="row no-gutters">
@@ -22,8 +21,27 @@
                     </div>
                 </div>
             </div>
-        </div>
-    </th:block>
+        </th:block>
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center">
+                <li class="page-item">
+                    <a class="page-link" href="#" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                <li class="page-item active"><a class="page-link" href="?page=0&size=2">1</a></li>
+                <li class="page-item"><a class="page-link" href="?page=1&size=2">2</a></li>
+                <li class="page-item"><a class="page-link" href="?page=2&size=2">3</a></li>
+                <li class="page-item"><a class="page-link" href="?page=3&size=2">4</a></li>
+                <li class="page-item"><a class="page-link" href="?page=4&size=2">5</a></li>
+                <li class="page-item">
+                    <a class="page-link" href="#" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
 </section>
 
 <!--<div class="container">-->

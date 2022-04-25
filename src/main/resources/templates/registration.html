@@ -1,10 +1,58 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<div class="container" xmlns:th="http://www.thymeleaf.org" xmlns:background-color="http://www.w3.org/1999/xhtml">
+    <form class="form-signin mt-xl-5" method="post" action="/register">
+        <p>
+            <input type="text" id="name" name="name" class="form-control" placeholder="Name" required=""
+                   autofocus="">
+        </p>
+        <p>
+            <input type="text" id="surname" name="surname" class="form-control" placeholder="Surname" required=""
+                   autofocus="">
+        </p>
+        <p>
+            <input type="text" id="username" name="username" class="form-control" placeholder="Username" required=""
+                   autofocus="">
+        </p>
+        <p>
+            <input type="password" id="password" name="password" class="form-control" placeholder="Password"
+                   required="">
+        </p>
+        <p>
+            <input type="password" id="repeatPassword" name="repeatPassword" class="form-control"
+                   placeholder="Repeat Password"
+                   required="">
+        </p>
+        <p>
+            <input type="text" id="phoneNumber" name="phoneNumber" class="form-control" placeholder="Phone Number"
+                   required=""
+                   autofocus="">
+        </p>
 
-</body>
-</html>
+        <div class="row justify-content-center align-content-center">
+            <label style="color: #6c757d">Chose Role</label>
+        </div>
+
+        <div class="row justify-content-center align-content-center mb-3">
+<!--            <div class="card form-control" style="background-color: #eee">-->
+<!--                <div class="card-body">-->
+                    <div class="btn-group btn-group-toggle"
+                         data-toggle="buttons">
+                        <label class="btn btn-light" style="color: #6c757d" id="label1" onclick="activate_2()">
+                            <input type="radio" id="role1" name="role"
+                                   th:value="ROLE_STANDARD" autocomplete="off">Standard
+                        </label>
+                        <label class="btn btn-light" style="color: #6c757d" id="label2" onclick="deactivate_2()">
+                            <input type="radio" id="role2" name="role"
+                                   th:value="ROLE_OWNER" autocomplete="off">Owner
+                        </label>
+                    </div>
+<!--                </div>-->
+<!--            </div>-->
+        </div>
+
+        <button id="submit" class="btn btn-lg btn-primary btn-block" type="submit">Register</button>
+        <th:block th:if="${param.hasError}">
+            <h2 class="text-danger" th:text="${param.error}"></h2>
+        </th:block>
+    </form>
+
+</div>

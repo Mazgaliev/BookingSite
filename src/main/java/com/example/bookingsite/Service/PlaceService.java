@@ -4,6 +4,8 @@ import com.example.bookingsite.Model.Enum.PlaceType;
 import com.example.bookingsite.Model.Hotel;
 import com.example.bookingsite.Model.Place;
 import com.example.bookingsite.Model.Villa;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
@@ -35,6 +37,12 @@ public interface PlaceService {
     List<Villa> findAllVillas();
 
     List<Hotel> findAllHotels();
+
+    Page<Place> findPage(Pageable pageable);
+
+    Page<Villa> findPageVillas(Pageable pageable);
+
+    Page<Hotel> findPageHotels(Pageable pageable);
 
     PlaceType placeType(Place place);
 
