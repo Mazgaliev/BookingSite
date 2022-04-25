@@ -67,7 +67,7 @@
             </div>
             <button type="submit" class="btn btn-outline-primary w-100">Make reservation</button>
             <th:block th:if="${param.hasError}">
-                <h2 class="text-danger" th:text="${error}"></h2>
+                <h2 class="text-danger" th:text="${param.error}"></h2>
             </th:block>
         </form>
     </div>

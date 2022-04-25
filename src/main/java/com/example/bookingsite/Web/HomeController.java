@@ -7,13 +7,16 @@ import com.example.bookingsite.Model.Villa;
 import com.example.bookingsite.Repository.VillaRepository;
 import com.example.bookingsite.Service.PersonService;
 import com.example.bookingsite.Service.PlaceService;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import java.awt.print.Pageable;
 import java.util.HashMap;
 import java.util.List;
 
@@ -30,14 +33,24 @@ public class HomeController {
     }
 
     @GetMapping
-    public String loadPlaces(Model model, Authentication authentication) {
+    public String loadPlaces(Model model,
+                             Authentication authentication,
+                             @RequestParam(required = false) Integer page,
+                             @RequestParam(required = false) Integer size) {
         UserDetails userPrincipal;
         if (authentication != null) {
             userPrincipal = (UserDetails) authentication.getPrincipal();
             PersonDto person = this.personService.findByUsername(userPrincipal.getUsername());
             model.addAttribute("person", person);
         }
-        List<Place> placeList = this.placeService.findAll();
+
+        List<Place> placeList;
+        if(page == null || size == null) {
+            placeList = this.placeService.findAll();
+        }else {
+            placeList = this.placeService.findPage(PageRequest.of(page,size)).toList();
+        }
+
         HashMap<Place, String> placeMap = new HashMap<>();
         for (Place place : placeList) {
             if (place.getImages() == null || place.getImages().isEmpty()) {
@@ -53,14 +66,24 @@ public class HomeController {
     }
 
     @GetMapping("/villas")
-    public String loadVillas(Model model, Authentication authentication) {
+    public String loadVillas(Model model,
+                             Authentication authentication,
+                             @RequestParam(required = false) Integer page,
+                             @RequestParam(required = false) Integer size) {
         UserDetails userPrincipal;
         if (authentication != null) {
             userPrincipal = (UserDetails) authentication.getPrincipal();
             PersonDto person = this.personService.findByUsername(userPrincipal.getUsername());
             model.addAttribute("person", person);
         }
-        List<Villa> villasList = this.placeService.findAllVillas();
+
+        List<Villa> villasList;
+        if(page == null || size == null) {
+            villasList = this.placeService.findAllVillas();;
+        }else {
+            villasList = this.placeService.findPageVillas(PageRequest.of(page,size)).toList();
+        }
+
         HashMap<Villa, String> villas = new HashMap<>();
         for (Villa villa : villasList) {
             if (villa.getImages() == null || villa.getImages().isEmpty()) {
@@ -77,14 +100,24 @@ public class HomeController {
     }
 
     @GetMapping("/hotels")
-    public String loadHotels(Model model, Authentication authentication) {
+    public String loadHotels(Model model,
+                             Authentication authentication,
+                             @RequestParam(required = false) Integer page,
+                             @RequestParam(required = false) Integer size) {
         UserDetails userPrincipal;
         if (authentication != null) {
             userPrincipal = (UserDetails) authentication.getPrincipal();
             PersonDto person = this.personService.findByUsername(userPrincipal.getUsername());
             model.addAttribute("person", person);
         }
-        List<Hotel> hotelList = this.placeService.findAllHotels();
+
+        List<Hotel> hotelList;
+        if(page == null || size == null) {
+            hotelList = this.placeService.findAllHotels();
+        }else {
+            hotelList = this.placeService.findPageHotels(PageRequest.of(page,size)).toList();
+        }
+
         HashMap<Hotel, String> hotels = new HashMap<>();
         for (Hotel hotel : hotelList) {
             if (hotel.getImages() == null || hotel.getImages().isEmpty()) {
