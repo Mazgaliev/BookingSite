@@ -1,3 +1,10 @@
+<link rel="stylesheet" href="../static/css/bootstrap.css">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+
+<link rel="stylesheet" href="../../static/css/bootstrap.css">
+
 <nav class="navbar navbar-expand-lg navbar-light bg-light shadow fixed-top">
     <div class="container">
         <a class="navbar-brand" th:href="@{'/home'}">Home</a>
@@ -5,14 +12,9 @@
                 aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarResponsive">
+        <div class="collapse navbar-collapse">
             <ul class="navbar-nav ms-auto">
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{'/home/villas'}">Villa</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{'/home/hotels'}">Hotels</a>
-                </li>
+
                 <li class="nav-item" th:if="${#request.getRemoteUser()!=null}" sec:authorize="hasRole('ROLE_OWNER')">
                     <a class="nav-link" th:href="@{'/person/places'}">Owned places</a>
                 </li>
@@ -22,9 +24,25 @@
                 <li class="nav-item" th:if="${#request.getRemoteUser()==null}">
                     <a class="nav-link" th:href="@{'/login'}">Login</a>
                 </li>
-                <li class="nav-item" th:if="${#request.getRemoteUser()!=null}">
-                    <a class="nav-link" th:href="@{'/logout'}">Logout</a>
-                </li>
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">
+                        Explore
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <a class="nav-link dropdown-item" th:href="@{'/home/villas'}">Villa</a>
+                        <a class="nav-link dropdown-item" th:href="@{'/home/hotels'}">Hotels</a>
+                    </div>
+                <li class="nav-item dropdown" th:if="${#request.getRemoteUser()!=null}">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">
+                        More
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <a class="nav-link dropdown-item" th:href="@{'/person/settings'}">Settings</a>
+                        <a class="nav-link dropdown-item" th:href="@{'/logout'}">Logout</a>
+                    </div>
             </ul>
         </div>
     </div>
