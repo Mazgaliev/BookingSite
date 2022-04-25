@@ -1,19 +1,33 @@
-
-<div class="container">
+<section id="header" class="jumbotron text-center text-black-80">
     <h1 th:text="${place.getName()}"></h1>
-    <div class="row">
-        <div class="col-5">
+    <div class="row text-center">
+        <div class="col-12">
             <h3 th:text="${place.getLocation()}"></h3>
             <h5 th:text="${place.getDescription()}"></h5>
-            <h3 th:text="'Standard price:' + ${price1}"></h3>
-            <h3 th:if="${price2}>0" th:text="'VIP price:' + ${price2}"></h3>
+            <h6 th:text="'Standard price:' + ${price1}"></h6>
+            <h5 th:if="${price2}>0" th:text="'VIP price:' + ${price2}"></h5>
         </div>
-        <div class="col-7">
+        <div class="col-2">
             <th:block th:each="image:${images}">
-                <img th:src="${image}">
+                <img th:src="${image}" style="width: 10em; height: 13em">
             </th:block>
         </div>
     </div>
+</section>
+<div class="container">
+    <!--    <div class="row">-->
+    <!--        <div class="col-5">-->
+    <!--            <h3 th:text="${place.getLocation()}"></h3>-->
+    <!--            <h5 th:text="${place.getDescription()}"></h5>-->
+    <!--            <h3 th:text="'Standard price:' + ${price1}"></h3>-->
+    <!--            <h3 th:if="${price2}>0" th:text="'VIP price:' + ${price2}"></h3>-->
+    <!--        </div>-->
+    <!--        <div class="col-7">-->
+    <!--            <th:block th:each="image:${images}">-->
+    <!--                <img th:src="${image}">-->
+    <!--            </th:block>-->
+    <!--        </div>-->
+    <!--    </div>-->
     <div class="border-1" th:if="${#request.getRemoteUser()!=null}">
         <form method="post" action="/reserve">
 

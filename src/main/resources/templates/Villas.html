@@ -1,8 +1,6 @@
 <section id="header" class="jumbotron text-center">
     <h1 class="display-3">VILLAS</h1>
     <p class="lead">In this section you will find all the nearby villas</p>
-    <a href="" class="btn btn-primary">Click</a>
-    <a href="" class="btn btn-secondary">Click</a>
 </section>
 
 <section id="gallery">
@@ -17,7 +15,7 @@
                             <h5 class="card-title" th:text="${mapEntity.key.getName()}"></h5>
                             <p class=" card-text" th:text="${mapEntity.key.getDescription()}"></p>
                             <a th:href="@{'/place/{id}' (id = ${mapEntity.key.getId()})}"
-                               class="btn btn-outline-primary btn-sm">Go to page</a>
+                               class="btn btn-outline-dark btn-sm">Go to page</a>
                         </div>
                     </div>
                 </div>
