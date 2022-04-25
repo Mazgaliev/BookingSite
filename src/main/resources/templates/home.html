@@ -1,15 +1,65 @@
-<div class="container">
-    <th:block th:each="mapEntity, row : ${placeMap}">
-        <th:block th:if="${row.index} == 0">
-            <div class="row">
-        </th:block>
-            <div class="card col-4 p-2" style="width: 18rem;">
-                <img th:src="${mapEntity.value}" class="card-img-top" alt="../static/default_image.jpg">
-                <div class="card-body">
-                    <h5 class="card-title" th:text="${mapEntity.key.getName()}">Card title</h5>
-                    <p class="card-text" th:text="${mapEntity.key.getDescription()}"></p>
-                    <a th:href="@{'/place/{id}' (id = ${mapEntity.key.getId()})}" class="btn btn-primary">Go somewhere</a>
+<section id="header" class="jumbotron text-center">
+    <h1 class="display-3">Welcome</h1>
+    <p class="lead">Take a look at what peaks your interest</p>
+
+
+    <th:block th:each="mapEntity, row :${placeMap}">
+        <div class="container">
+            <hr/>
+            <div class="card" style="width: 500px;">
+                <div class="row no-gutters">
+                    <div class="col-sm-5">
+                        <img class="card-img" th:src="${mapEntity.getValue()}" alt="">
+                    </div>
+                    <div class="col-sm-7">
+                        <div class="card-body">
+                            <h5 class="card-title" th:text="${mapEntity.key.getName()}"></h5>
+                            <p class="card-text" th:text="${mapEntity.key.getDescription()}"></p>
+                            <a th:href="@{'/place/{id}' (id = ${mapEntity.key.getId()})}" class="btn btn-primary">Go to
+                                page</a>
+                        </div>
+                    </div>
                 </div>
             </div>
+        </div>
     </th:block>
-</div>
+</section>
+
+<!--<div class="container">-->
+<!--    <th:block th:each="mapEntity, row : ${placeMap}">-->
+<!--        <th:block th:if="${row.index} == 0">-->
+<!--            <div class="row">-->
+<!--        </th:block>-->
+<!--        <div class="card col-4 p-2" style="width: 18rem;">-->
+<!--            <img th:src="${mapEntity.value}" class="card-img-top" alt="../static/default_image.jpg">-->
+<!--            <div class="card-body">-->
+<!--                <h5 class="card-title" th:text="${mapEntity.key.getName()}">Card title</h5>-->
+<!--                <p class="card-text" th:text="${mapEntity.key.getDescription()}"></p>-->
+<!--                <a th:href="@{'/place/{id}' (id = ${mapEntity.key.getId()})}" class="btn btn-outline-primary">Go to-->
+<!--                    page</a>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </th:block>-->
+<!--</div>-->
+<!--<section id="gallery">-->
+<!--    <th:block th:each="mapEntity, row :${placeMap}">-->
+<!--        <div class="container">-->
+<!--            <div class="row">-->
+<!--                <div class="col-lg-4 mb-4">-->
+<!--                    <div class="card">-->
+<!--                        <img th:src="${mapEntity.getValue()}"-->
+<!--                             alt="" class="card-img-top">-->
+<!--                        <div class="card-body">-->
+<!--                            <h5 class="card-title" th:text="${mapEntity.key.getName()}"></h5>-->
+<!--                            <p class=" card-text" th:text="${mapEntity.key.getDescription()}"></p>-->
+<!--                            <a th:href="@{'/place/{id}' (id = ${mapEntity.key.getId()})}"-->
+<!--                               class="btn btn-outline-primary btn-sm">Go to page</a>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </th:block>-->
+
+<!--</section>-->
+

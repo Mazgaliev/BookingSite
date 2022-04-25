@@ -2,7 +2,6 @@ package com.example.bookingsite.Service;
 
 import com.example.bookingsite.Model.Enum.PlaceType;
 import com.example.bookingsite.Model.Hotel;
-import com.example.bookingsite.Model.Person;
 import com.example.bookingsite.Model.Place;
 import com.example.bookingsite.Model.Villa;
 
@@ -32,6 +31,8 @@ public interface PlaceService {
     Optional<Place> findById(Long id);
 
     List<Place> findAll();
+
+    List<Villa> findAllVillas();
 
     PlaceType placeType(Place place);
 

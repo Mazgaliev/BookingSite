@@ -1,59 +1,90 @@
-<link rel="stylesheet" href="../../static/css/bootstrap.css">
+<!--<header>-->
+<!--    <nav class="navbar navbar-expand-md navbar-dark bg-dark">-->
+<!--        <div class="container">-->
+<!--            <a class="navbar-brand" href="/home">Booking Site</a>-->
+<!--            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault"-->
+<!--                    aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">-->
+<!--                <span class="navbar-toggler-icon"></span>-->
+<!--            </button>-->
 
-<header>
-    <nav class="navbar navbar-expand-md navbar-dark bg-dark">
-        <div class="container">
-            <a class="navbar-brand" href="/home">Booking Site</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault"
-                    aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <div class="collapse navbar-collapse justify-content-end" id="navbarsExampleDefault">
-                <ul class="navbar-nav m-auto">
-                    <li class="nav-item m-auto">
-                        <a class="nav-link active" href="/villas">Villas</a>
-                    </li>
-                    <li class="nav-item m-auto">
-                        <a class="nav-link active" href="/hotels">Hotels</a>
-                    </li>
-                </ul>
+<!--            <div class="collapse navbar-collapse justify-content-end" id="navbarsExampleDefault">-->
+<!--                <ul class="navbar-nav m-auto">-->
+<!--                    <li class="nav-item m-auto">-->
+<!--                        <a class="nav-link active" th:href="@{'/villas'}">Villas</a>-->
+<!--                    </li>-->
+<!--                    <li class="nav-item m-auto">-->
+<!--                        <a class="nav-link active" th:href="@{'/hotels'}">Hotels</a>-->
+<!--                    </li>-->
+<!--                </ul>-->
 
 
-                <form class="form-inline my-2 my-lg-0">
-                    <div class="input-group input-group-sm">
-                        <div class="input-group-append">
-                        </div>
-                    </div>
-                </form>
-                <li class="nav-item" th:if="${#request.getRemoteUser()!=null}">
-                    <a class="btn btn-success btn-sm ml-3"
-                       th:href="@{'/person/reservations'}">
-                        <i class="fa fa-shopping-cart"> Your </i> Reservations
-                    </a>
+<!--                <form class="form-inline my-2 my-lg-0">-->
+<!--                    <div class="input-group input-group-sm">-->
+<!--                        <div class="input-group-append">-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </form>-->
+<!--                <li class="nav-item" th:if="${#request.getRemoteUser()!=null}">-->
+<!--                    <a class="btn btn-success btn-sm ml-3"-->
+<!--                       th:href="@{'/person/reservations'}">-->
+<!--                        <i class="fa fa-shopping-cart"> Your </i> Reservations-->
+<!--                    </a>-->
+<!--                </li>-->
+<!--                <li class="nav-item" th:if="${#request.getRemoteUser()!=null}" sec:authorize="hasRole('ROLE_OWNER')">-->
+<!--                    <a class="btn btn-success btn-sm ml-3" th:href="@{'/person/places'}">-->
+<!--                        <i class="fa fa-shopping-cart">-->
+<!--                            <th:block th:if="${#request.getRemoteUser()!=null}" th:text="${#request.getRemoteUser()}">-->
+<!--                            </th:block>-->
+<!--                        </i> Owned Places-->
+<!--                    </a>-->
+<!--                </li>-->
+<!--                <li class=" nav-item" th:if="${#request.getRemoteUser()!=null}">-->
+<!--                    <a class="btn btn-light btn-sm ml-3" href="/logout">-->
+<!--                        &lt;!&ndash;                        if is authenticated&ndash;&gt;-->
+<!--                        <i class="fa fa-shopping-cart"></i> Logout-->
+<!--                    </a>-->
+<!--                </li>-->
+<!--                <li class="nav-item" th:if="${#request.getRemoteUser()==null}">-->
+<!--                    <a class="btn btn-light btn-sm ml-3" href="/login">-->
+<!--                        &lt;!&ndash;                        if is authenticated&ndash;&gt;-->
+<!--                        <i class="fa fa-shopping-cart"></i> Login-->
+<!--                    </a>-->
+<!--                </li>-->
+<!--                </ul>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </nav>-->
+<!--</header>-->
+Navigation
+<nav class="navbar navbar-expand-lg navbar-light bg-light shadow fixed-top">
+    <div class="container">
+        <a class="navbar-brand" th:href="@{'/home'}">Home</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive"
+                aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="/home/villas">Villa</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Hotels</a>
                 </li>
                 <li class="nav-item" th:if="${#request.getRemoteUser()!=null}" sec:authorize="hasRole('ROLE_OWNER')">
-                    <a class="btn btn-success btn-sm ml-3" th:href="@{'/person/places'}">
-                        <i class="fa fa-shopping-cart">
-                            <th:block th:if="${#request.getRemoteUser()!=null}" th:text="${#request.getRemoteUser()}">
-                            </th:block>
-                        </i> Owned Places
-                    </a>
+                    <a class="nav-link" th:href="@{'/person/places'}">Owned places</a>
                 </li>
-                <li class=" nav-item" th:if="${#request.getRemoteUser()!=null}">
-                    <a class="btn btn-light btn-sm ml-3" href="/logout">
-                        <!--                        if is authenticated-->
-                        <i class="fa fa-shopping-cart"></i> Logout
-                    </a>
+                <li class="nav-item" th:if="${#request.getRemoteUser()!=null}" sec:authorize="hasRole('ROLE_STANDARD')">
+                    <a class="nav-link" th:href="@{'/person/reservations'}">Your reservations</a>
                 </li>
                 <li class="nav-item" th:if="${#request.getRemoteUser()==null}">
-                    <a class="btn btn-light btn-sm ml-3" href="/login">
-                        <!--                        if is authenticated-->
-                        <i class="fa fa-shopping-cart"></i> Login
-                    </a>
+                    <a class="nav-link" th:href="@{'/login'}">Login</a>
                 </li>
-                </ul>
-            </div>
+                <li class="nav-item" th:if="${#request.getRemoteUser()!=null}">
+                    <a class="nav-link" th:href="@{'/logout'}">Logout</a>
+                </li>
+            </ul>
         </div>
-    </nav>
-</header>
+    </div>
+</nav>
+
