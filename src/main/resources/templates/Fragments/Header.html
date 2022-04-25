@@ -41,6 +41,8 @@
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                         <a class="nav-link dropdown-item" th:href="@{'/person/settings'}">Settings</a>
+                        <a class="nav-link dropdown-item" sec:authenticate="hasRole('ROLE_OWNER')"
+                           th:href="@{'/person/create'}">Put your own place</a>
                         <a class="nav-link dropdown-item" th:href="@{'/logout'}">Logout</a>
                     </div>
             </ul>
