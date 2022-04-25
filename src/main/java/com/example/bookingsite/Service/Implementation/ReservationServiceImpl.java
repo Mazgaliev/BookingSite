@@ -68,8 +68,7 @@ public class ReservationServiceImpl implements ReservationService {
         List<Reservation> reservationList = villa.getReservations();
 
         for (Reservation reserv : reservationList) {
-            if ((start.isAfter(reserv.getStart()) || start.equals(reserv.getStart())) &&
-                    (finish.isBefore(reserv.getFinish()) || finish.equals(reserv.getFinish()))) {
+            if (isBetween(start, finish, reserv)) {
                 throw new VillaIsAlreadyReservedException();
             }
         }
@@ -81,6 +80,14 @@ public class ReservationServiceImpl implements ReservationService {
         this.reservationRepository.save(reservation);
 
         return Optional.of(reservation);
+    }
+
+    public boolean isBetween(LocalDate start, LocalDate end, Reservation reservation) {
+        if ((start.isAfter(reservation.getStart()) || start.isEqual(reservation.getStart())) && (start.isEqual(reservation.getFinish()) || start.isBefore(reservation.getFinish()))) {
+            return true;
+        }
+        return false;
+
     }
 
     @Override

@@ -7,10 +7,10 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
             <ul class="navbar-nav ms-auto">
-                <li class="nav-item active">
+                <li class="nav-item">
                     <a class="nav-link" th:href="@{'/home/villas'}">Villa</a>
                 </li>
-                <li class="nav-item-active">
+                <li class="nav-item">
                     <a class="nav-link" th:href="@{'/home/hotels'}">Hotels</a>
                 </li>
                 <li class="nav-item" th:if="${#request.getRemoteUser()!=null}" sec:authorize="hasRole('ROLE_OWNER')">
