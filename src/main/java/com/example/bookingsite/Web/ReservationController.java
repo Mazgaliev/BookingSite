@@ -14,9 +14,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -73,6 +71,12 @@ public class ReservationController {
             return "redirect:/place/" + string;
         }
         return "redirect:/home";
+    }
+
+    @GetMapping("/edit/{id}")
+    public String editReservation(@PathVariable Long id) {
+        //TODO edit na rezervacija
+        return null;
     }
 
 }
