@@ -1,10 +1,95 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<section id="header" class="jumbotron text-center">
+    <h1 class="display-3">Create your own place</h1>
+</section>
 
-</body>
-</html>
+
+<div class="container">
+    <form th:method="post" th:action="@{'/place/create'}">
+        <div class="row justify-content-center align-content-center mb-3">
+            <!--            <div class="card form-control" style="background-color: #eee">-->
+            <!--                <div class="card-body">-->
+            <div class="btn-group btn-group-toggle"
+                 data-toggle="buttons">
+                <label class="btn btn-light" style="color: #6c757d" id="label1" onclick="activate_2()">
+                    <input type="radio" id="role1" name="role"
+                           th:value="VILLA" autocomplete="off">Villa
+                </label>
+                <label class="btn btn-light" style="color: #6c757d" id="label2" onclick="deactivate_2()">
+                    <input type="radio" id="role2" name="role"
+                           th:value="HOTEL" autocomplete="off">Hotel
+                </label>
+            </div>
+            <!--                </div>-->
+            <!--            </div>-->
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <label for="name"></label><input required class="input-group-text w-100" type="text" id="name"
+                                                 name="name"
+                                                 placeholder="Name">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <label for="description"></label><input required class="input-group-text w-100" type="text"
+                                                        id="description"
+                                                        name="description"
+                                                        placeholder="Description">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <label for="contactNumber"></label><input required class="input-group-text w-100" id="contactNumber"
+                                                          name="contactNumber" placeholder="Contact Number">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <label for="location"></label><input required class="input-group-text w-100" id="location"
+                                                     name="location" placeholder="Location">
+            </div>
+            <div class="col-6">
+                <label hidden for="id"></label><input hidden id="id" name="id" th:value="${person.getId()}">
+            </div>
+        </div>
+        <div class="row" th:if="${isVilla}">
+            <div class="col-12">
+                <label for="pricePerNight"></label><input class="input-group-text w-100" id="pricePerNight"
+                                                          name="pricePerNight" placeholder="Price per night">
+            </div>
+        </div>
+        <div th:if="${!isVilla}">
+            <div class="row">
+                <div class="col-12">
+                    <label for="vipRooms"></label><input class="input-group-text w-100" id="vipRooms" name="vipRooms"
+                                                         placeholder="Number of VIP rooms">
+                </div>
+                <div class="col-12">
+                    <label for="priceVipRoom"></label><input class="input-group-text w-100" id="priceVipRoom"
+                                                             name="priceVipRoom" placeholder="Price for VIP rooms">
+                </div>
+                <div class="col-12">
+                    <label for="standardRooms"></label><input class="input-group-text w-100" id="standardRooms"
+                                                              name="standardRooms"
+                                                              placeholder="Number of Standard rooms">
+                </div>
+                <div class="col-12">
+                    <label for="priceStandardRoom"></label><input class="input-group-text w-100" id="priceStandardRoom"
+                                                                  name="priceStandardRoom"
+                                                                  placeholder="Standard Room Price">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <label for="images"></label><input required class="input-group-text w-100" id="images"
+                                                   placeholder="Paste your image links" name="images">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <button class="btn btn-outline-dark w-100">Create place</button>
+            </div>
+        </div>
+    </form>
+</div>

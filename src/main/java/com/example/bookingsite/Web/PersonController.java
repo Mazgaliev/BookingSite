@@ -1,6 +1,7 @@
 package com.example.bookingsite.Web;
 
 import com.example.bookingsite.Model.Dto.PersonDto;
+import com.example.bookingsite.Model.Enum.PlaceType;
 import com.example.bookingsite.Model.Enum.Role;
 import com.example.bookingsite.Model.Enum.RoomType;
 import com.example.bookingsite.Model.Place;
@@ -61,15 +62,10 @@ public class PersonController {
     }
 
     @PostMapping("/edit/reservation")
-    public String editReservation(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate start,
-                                  @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate end,
-                                  @RequestParam Long id,
-                                  @RequestParam(required = false) RoomType roomType) {
+    public String editReservation(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate start, @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate end, @RequestParam Long id, @RequestParam(required = false) RoomType roomType) {
 
-        if (roomType == null)
-            this.reservationService.updateVillaReservation(id, start, end);
-        else
-            this.reservationService.updateHotelReservation(id, start, end, roomType);
+        if (roomType == null) this.reservationService.updateVillaReservation(id, start, end);
+        else this.reservationService.updateHotelReservation(id, start, end, roomType);
 
         return "redirect:/home";
     }
@@ -170,14 +166,7 @@ public class PersonController {
     }
 
     @PostMapping("/settings")
-    public String updatePerson(@RequestParam Long id,
-                               @RequestParam String name,
-                               @RequestParam String surname,
-                               @RequestParam String oldPassword,
-                               @RequestParam String password,
-                               @RequestParam String repeatPassword,
-                               @RequestParam String phoneNumber,
-                               @RequestParam String username) {
+    public String updatePerson(@RequestParam Long id, @RequestParam String name, @RequestParam String surname, @RequestParam String oldPassword, @RequestParam String password, @RequestParam String repeatPassword, @RequestParam String phoneNumber, @RequestParam String username) {
 
         try {
             this.personService.update(id, name, surname, username, password, repeatPassword, oldPassword, phoneNumber);
@@ -236,5 +225,25 @@ public class PersonController {
             pageNumbers.add(0, 1);
             model.addAttribute("pageNumbers", pageNumbers);
         }
+    }
+
+    @GetMapping("/create")
+    public String viewCreatePage(Model model, Authentication authentication, @RequestParam(required = false) PlaceType placeType) {
+
+        UserDetails userPrincipal;
+        if (authentication != null) {
+            userPrincipal = (UserDetails) authentication.getPrincipal();
+            PersonDto person = this.personService.findByUsername(userPrincipal.getUsername());
+            model.addAttribute("person", person);
+        }
+        if (placeType == null || placeType == PlaceType.VILLA) {
+            model.addAttribute("isVilla", true);
+        } else {
+            model.addAttribute("isVilla", false);
+        }
+
+        model.addAttribute("bodyContent", "create-place");
+        return "Master-Template";
+
     }
 }

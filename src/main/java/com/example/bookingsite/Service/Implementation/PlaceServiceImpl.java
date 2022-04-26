@@ -36,7 +36,7 @@ public class PlaceServiceImpl implements PlaceService {
     @Override
     public Optional<Hotel> createHotel(String name, String location, String contactNumber, Long ownerId,
                                        String description, Integer vipRooms, Integer standardRooms,
-                                       Integer priceVipRoom, Integer priceStandardRoom) {
+                                       Integer priceVipRoom, Integer priceStandardRoom, List<String> images) {
 
         Person person = this.personRepository.findById(ownerId).orElseThrow(PersonDoesNotExistException::new);
         Place p = this.placeRepository.findByName(name).orElse(null);
@@ -47,9 +47,7 @@ public class PlaceServiceImpl implements PlaceService {
         }
 
         Hotel hotel = new Hotel(name, location, description, contactNumber, person, vipRooms, standardRooms, priceVipRoom, priceStandardRoom);
-        List<Place> ownedPlaces = person.getOwns();
-        ownedPlaces.add(hotel);
-        person.setOwns(ownedPlaces);
+        hotel.setImages(images);
         this.personRepository.save(person);
         this.hotelRepository.save(hotel);
         return Optional.of(hotel);
@@ -57,7 +55,7 @@ public class PlaceServiceImpl implements PlaceService {
 
     @Override
     public Optional<Villa> createVilla(String name, String location, String contactNumber, Long ownerId,
-                                       String description, Integer pricePerNight) {
+                                       String description, Integer pricePerNight, List<String> images) {
 
         Person person = this.personRepository.findById(ownerId).orElseThrow(PersonDoesNotExistException::new);
         Place p = this.placeRepository.findByName(name).orElse(null);

@@ -15,10 +15,10 @@ public interface PlaceService {
 
     Optional<Hotel> createHotel(String name, String location, String contactNumber,
                                 Long ownerId, String description, Integer vipRooms, Integer standardRooms,
-                                Integer priceVipRoom, Integer priceStandardRoom);
+                                Integer priceVipRoom, Integer priceStandardRoom, List<String> images);
 
     Optional<Villa> createVilla(String name, String location, String contactNumber,
-                                Long ownerId, String description, Integer pricePerNight);
+                                Long ownerId, String description, Integer pricePerNight, List<String> images);
 
     Optional<Hotel> updateHotel(Long id, String name, String location, String contactNumber,
                                 Long ownerId, String description, Integer vipRooms, Integer standardRooms,

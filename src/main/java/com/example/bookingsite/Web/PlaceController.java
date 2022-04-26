@@ -2,6 +2,7 @@ package com.example.bookingsite.Web;
 
 import com.example.bookingsite.Model.Dto.PersonDto;
 import com.example.bookingsite.Model.Enum.PlaceType;
+import com.example.bookingsite.Model.Enum.RoomType;
 import com.example.bookingsite.Model.Hotel;
 import com.example.bookingsite.Model.Place;
 import com.example.bookingsite.Model.Villa;
@@ -11,10 +12,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/place")
@@ -28,6 +28,29 @@ public class PlaceController {
         this.placeService = placeService;
     }
 
+
+    @PostMapping("/create")
+    public String createPlace(@RequestParam String name,
+                              @RequestParam String description,
+                              @RequestParam String contactNumber,
+                              @RequestParam String location,
+                              @RequestParam Long id,
+                              @RequestParam List<String> images,
+                              @RequestParam(required = false) Integer pricePerNight,
+                              @RequestParam(required = false) Integer vipRooms,
+                              @RequestParam(required = false) Integer priceVipRoom,
+                              @RequestParam(required = false) Integer standardRooms,
+                              @RequestParam(required = false) Integer priceStandardRoom
+    ) {
+
+        if (pricePerNight == null) {
+            this.placeService.createHotel(name, location, contactNumber, id, description, vipRooms, standardRooms, priceVipRoom, priceStandardRoom, images);
+        } else {
+            this.placeService.createVilla(name, location, contactNumber, id, description, pricePerNight, images);
+        }
+
+        return "redirect:/home";
+    }
 
     @GetMapping("/{id}")
     public String viewPlace(@PathVariable Long id, Authentication authentication,
@@ -43,6 +66,7 @@ public class PlaceController {
         Place place = this.placeService.findById(id).get();
         if (this.placeService.placeType(place) == PlaceType.VILLA) {
             Villa villa = (Villa) place;
+
             model.addAttribute("price1", villa.getPricePerNight());
             model.addAttribute("price2", 0);
         } else {

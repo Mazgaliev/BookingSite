@@ -26,11 +26,13 @@
             let label2 = document.getElementById('label2');
             label2.className = "btn btn-primary active"
         }
+
         function activate_2() {
             let label1 = document.getElementById('label1');
             label1.className = "btn btn-light active";
             let label2 = document.getElementById('label2');
             label2.className = "btn btn-light"
+            window.location.replace("/person/create?placeType=VILLA")
         }
 
         function deactivate_2() {
@@ -38,6 +40,7 @@
             label1.className = "btn btn-light";
             let label2 = document.getElementById('label2');
             label2.className = "btn btn-light active"
+            window.location.replace("/person/create?placeType=HOTEL")
         }
     </script>
 </head>
