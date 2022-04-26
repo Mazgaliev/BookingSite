@@ -32,7 +32,7 @@ public class Person implements UserDetails {
     @Enumerated(EnumType.STRING)
     Role userRole;
 
-    @OneToMany
+    @OneToMany()
     List<Place> owns;
 
     @OneToMany(mappedBy = "personId")

@@ -4,12 +4,14 @@ import com.example.bookingsite.Model.Enum.RoomType;
 import com.example.bookingsite.Model.Exception.*;
 import com.example.bookingsite.Model.*;
 import com.example.bookingsite.Repository.*;
+import com.example.bookingsite.Service.PlaceService;
 import com.example.bookingsite.Service.ReservationService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
@@ -20,13 +22,19 @@ public class ReservationServiceImpl implements ReservationService {
     private final PersonRepository personRepository;
     private final HotelRepository hotelRepository;
     private final VillaRepository villaRepository;
+    private final PlaceService placeService;
 
 
-    public ReservationServiceImpl(ReservationRepository reservationRepository, PersonRepository personRepository, HotelRepository hotelRepository, VillaRepository villaRepository) {
+    public ReservationServiceImpl(ReservationRepository reservationRepository,
+                                  PersonRepository personRepository,
+                                  HotelRepository hotelRepository,
+                                  VillaRepository villaRepository,
+                                  PlaceService placeService) {
         this.reservationRepository = reservationRepository;
         this.personRepository = personRepository;
         this.hotelRepository = hotelRepository;
         this.villaRepository = villaRepository;
+        this.placeService = placeService;
     }
 
 
@@ -156,6 +164,23 @@ public class ReservationServiceImpl implements ReservationService {
         Reservation reservation = this.reservationRepository.findById(id).orElseThrow(ReservationDoesNotExist::new);
         reservationRepository.delete(reservation);
         return Optional.of(reservation);
+    }
+
+    @Override
+    public Page<Reservation> findReservationPage(Long placeId, Pageable pageable) {
+        return this.reservationRepository.findByPlaceId(placeId,pageable);
+    }
+
+    @Override
+    public long countPlaceReservations(Long placeId) {
+        Optional<Place> placeOptional = this.placeService.findById(placeId);
+        Place place;
+        if (placeOptional.isPresent()){
+            place = placeOptional.get();
+        }else {
+            throw new PlaceDoesNotExistException();
+        }
+        return this.reservationRepository.countByPlaceId(place);
     }
 
     @Override

@@ -20,4 +20,30 @@
             </a>
         </div>
     </th:block>
+
+    <nav aria-label="Page navigation example" class="mt-5">
+        <ul class="pagination justify-content-center">
+            <li class="page-item">
+                <a class="page-link"
+                   th:href="@{/places/{id}/reservations (size=${placePageSize}, page=${placePageNumber+1}, state=previous)}"
+                   aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            <li class="page-item"
+                th:each="pageNumber : ${pageNumbers}"
+                th:classappend="${pageNumber==placePageNumber + 1} ? active">
+                <a class="page-link"
+                   th:href="@{/places/{id}/reservations (size=${placePageSize}, page=${pageNumber})}"
+                   th:text="${pageNumber}"></a>
+            </li>
+            <li class="page-item">
+                <a class="page-link"
+                   th:href="@{/places/{id}/reservations (size=${placePageSize}, page=${placePageNumber + 1}, state=next)}"
+                   aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
 </div>

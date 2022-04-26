@@ -3,6 +3,7 @@ package com.example.bookingsite.Service;
 import com.example.bookingsite.Model.Enum.PlaceType;
 import com.example.bookingsite.Model.Hotel;
 import com.example.bookingsite.Model.Place;
+import com.example.bookingsite.Model.Reservation;
 import com.example.bookingsite.Model.Villa;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -40,9 +41,15 @@ public interface PlaceService {
 
     Page<Place> findPage(Pageable pageable);
 
+    long countPlaces();
+
     Page<Villa> findPageVillas(Pageable pageable);
 
+    long countVillas();
+
     Page<Hotel> findPageHotels(Pageable pageable);
+
+    long countHotels();
 
     PlaceType placeType(Place place);
 

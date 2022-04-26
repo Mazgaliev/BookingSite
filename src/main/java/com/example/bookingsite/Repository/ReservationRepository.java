@@ -3,6 +3,8 @@ package com.example.bookingsite.Repository;
 import com.example.bookingsite.Model.Enum.RoomType;
 import com.example.bookingsite.Model.Place;
 import com.example.bookingsite.Model.Reservation;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDate;
@@ -21,4 +23,8 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 
     List<Reservation> findByPlaceIdAndStartGreaterThanEqualAndFinishLessThanEqualAndRoomType
             (Place place, LocalDate start, LocalDate finish, RoomType roomType);
+
+    Page<Reservation> findByPlaceId(Long id,Pageable pageable);
+
+    long countByPlaceId(Place place);
 }

@@ -1,14 +1,11 @@
 package com.example.bookingsite.Service.Implementation;
 
+import com.example.bookingsite.Model.*;
 import com.example.bookingsite.Model.Enum.PlaceType;
 import com.example.bookingsite.Model.Exception.PersonAlreadyOwnsThePlaceException;
 import com.example.bookingsite.Model.Exception.PersonDoesNotExistException;
 import com.example.bookingsite.Model.Exception.PlaceAlreadyExistsException;
 import com.example.bookingsite.Model.Exception.PlaceDoesNotExistException;
-import com.example.bookingsite.Model.Hotel;
-import com.example.bookingsite.Model.Person;
-import com.example.bookingsite.Model.Place;
-import com.example.bookingsite.Model.Villa;
 import com.example.bookingsite.Repository.HotelRepository;
 import com.example.bookingsite.Repository.PersonRepository;
 import com.example.bookingsite.Repository.PlaceRepository;
@@ -167,14 +164,23 @@ public class PlaceServiceImpl implements PlaceService {
     }
 
     @Override
+    public long countPlaces(){ return this.placeRepository.count(); }
+
+    @Override
     public Page<Villa> findPageVillas(Pageable pageable) {
         return this.villaRepository.findAll(pageable);
     }
 
     @Override
+    public long countVillas() { return this.villaRepository.count(); }
+
+    @Override
     public Page<Hotel> findPageHotels(Pageable pageable) {
         return this.hotelRepository.findAll(pageable);
     }
+
+    @Override
+    public long countHotels() { return this.hotelRepository.count(); }
 
     @Override
     public PlaceType placeType(Place place) {

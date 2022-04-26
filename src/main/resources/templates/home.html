@@ -22,20 +22,26 @@
                 </div>
             </div>
         </th:block>
-        <nav aria-label="Page navigation example">
+        <nav aria-label="Page navigation example" class="mt-5">
             <ul class="pagination justify-content-center">
                 <li class="page-item">
-                    <a class="page-link" href="#" aria-label="Previous">
+                    <a class="page-link"
+                       th:href="@{/home (size=${placePageSize}, page=${placePageNumber+1}, state=previous)}"
+                       aria-label="Previous">
                         <span aria-hidden="true">&laquo;</span>
                     </a>
                 </li>
-                <li class="page-item active"><a class="page-link" href="?page=0&size=2">1</a></li>
-                <li class="page-item"><a class="page-link" href="?page=1&size=2">2</a></li>
-                <li class="page-item"><a class="page-link" href="?page=2&size=2">3</a></li>
-                <li class="page-item"><a class="page-link" href="?page=3&size=2">4</a></li>
-                <li class="page-item"><a class="page-link" href="?page=4&size=2">5</a></li>
+                <li class="page-item"
+                    th:each="pageNumber : ${pageNumbers}"
+                    th:classappend="${pageNumber==placePageNumber + 1} ? active">
+                    <a class="page-link"
+                       th:href="@{/home(size=${placePageSize}, page=${pageNumber})}"
+                       th:text="${pageNumber}"></a>
+                </li>
                 <li class="page-item">
-                    <a class="page-link" href="#" aria-label="Next">
+                    <a class="page-link"
+                       th:href="@{/home (size=${placePageSize}, page=${placePageNumber + 1}, state=next)}"
+                       aria-label="Next">
                         <span aria-hidden="true">&raquo;</span>
                     </a>
                 </li>

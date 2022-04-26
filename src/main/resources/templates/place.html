@@ -32,17 +32,17 @@
         <form method="post" action="/reserve">
 
             <div class="row  justify-content-center align-content-center m-5">
-                <div class="card shadow card-" th:if="${price2} > 0">
+                <div class="card shadow" th:if="${price2} > 0">
                     <div class="card-body">
                         <div class="btn-group btn-group-toggle"
                              data-toggle="buttons">
                             <label class="btn btn-primary" id="label1" onclick="activate()">
                                 <input type="radio" id="roomType1" name="roomType"
-                                       th:value="STANDARD" autocomplete="off" onclick="activate()">Standard room
+                                       th:value="STANDARD" autocomplete="off">Standard room
                             </label>
                             <label class="btn btn-primary" id="label2" onclick="deactivate()">
                                 <input type="radio" id="roomType2" name="roomType"
-                                       th:value="VIP" autocomplete="off" onclick="deactivate()">VIP room
+                                       th:value="VIP" autocomplete="off">VIP room
                             </label>
                         </div>
                     </div>

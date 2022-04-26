@@ -7,6 +7,7 @@ import com.example.bookingsite.Model.Villa;
 import com.example.bookingsite.Repository.VillaRepository;
 import com.example.bookingsite.Service.PersonService;
 import com.example.bookingsite.Service.PlaceService;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.awt.print.Pageable;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Controller
 @RequestMapping(value = {"/home", "/"})
@@ -36,8 +39,10 @@ public class HomeController {
     public String loadPlaces(Model model,
                              Authentication authentication,
                              @RequestParam(required = false) Integer page,
-                             @RequestParam(required = false) Integer size) {
+                             @RequestParam(required = false) Integer size,
+                             @RequestParam(required = false) String state) {
         UserDetails userPrincipal;
+
         if (authentication != null) {
             userPrincipal = (UserDetails) authentication.getPrincipal();
             PersonDto person = this.personService.findByUsername(userPrincipal.getUsername());
@@ -45,10 +50,22 @@ public class HomeController {
         }
 
         List<Place> placeList;
-        if(page == null || size == null) {
-            placeList = this.placeService.findAll();
-        }else {
-            placeList = this.placeService.findPage(PageRequest.of(page,size)).toList();
+        Page<Place> placePage;
+
+        if (page == null) {
+            placePage = this.placeService.findPage(PageRequest.of(0, 5));
+            placeList = placePage.toList();
+
+            makePaginationBar(model,size,placePage,-1);
+        } else {
+            int countPlaces = (int) this.placeService.countPlaces();
+
+            page = getPageNumberFromState(page, size, state, countPlaces);
+
+            placePage = this.placeService.findPage(PageRequest.of(page - 1, size));
+            placeList = placePage.toList();
+
+            makePaginationBar(model, size, placePage, countPlaces);
         }
 
         HashMap<Place, String> placeMap = new HashMap<>();
@@ -59,7 +76,7 @@ public class HomeController {
                 placeMap.put(place, place.getImages().get(0));
             }
         }
-        //model.addAttribute("n",placeMap.size());
+
         model.addAttribute("placeMap", placeMap);
         model.addAttribute("bodyContent", "home");
         return "Master-Template";
@@ -69,7 +86,8 @@ public class HomeController {
     public String loadVillas(Model model,
                              Authentication authentication,
                              @RequestParam(required = false) Integer page,
-                             @RequestParam(required = false) Integer size) {
+                             @RequestParam(required = false) Integer size,
+                             @RequestParam(required = false) String state) {
         UserDetails userPrincipal;
         if (authentication != null) {
             userPrincipal = (UserDetails) authentication.getPrincipal();
@@ -78,10 +96,22 @@ public class HomeController {
         }
 
         List<Villa> villasList;
-        if(page == null || size == null) {
-            villasList = this.placeService.findAllVillas();;
-        }else {
-            villasList = this.placeService.findPageVillas(PageRequest.of(page,size)).toList();
+        Page<Villa> placePage;
+
+        if (page == null) {
+            placePage = this.placeService.findPageVillas(PageRequest.of(0, 5));
+            villasList = placePage.toList();
+
+            makePaginationBar(model,size,placePage,-1);
+        } else {
+            int countPlaces = (int) this.placeService.countVillas();
+
+            page = getPageNumberFromState(page, size, state, countPlaces);
+
+            placePage = this.placeService.findPageVillas(PageRequest.of(page - 1, size));
+            villasList = placePage.toList();
+
+            makePaginationBar(model, size, placePage, countPlaces);
         }
 
         HashMap<Villa, String> villas = new HashMap<>();
@@ -103,7 +133,8 @@ public class HomeController {
     public String loadHotels(Model model,
                              Authentication authentication,
                              @RequestParam(required = false) Integer page,
-                             @RequestParam(required = false) Integer size) {
+                             @RequestParam(required = false) Integer size,
+                             @RequestParam(required = false) String state) {
         UserDetails userPrincipal;
         if (authentication != null) {
             userPrincipal = (UserDetails) authentication.getPrincipal();
@@ -112,10 +143,22 @@ public class HomeController {
         }
 
         List<Hotel> hotelList;
-        if(page == null || size == null) {
-            hotelList = this.placeService.findAllHotels();
-        }else {
-            hotelList = this.placeService.findPageHotels(PageRequest.of(page,size)).toList();
+        Page<Hotel> placePage;
+
+        if (page == null) {
+            placePage = this.placeService.findPageHotels(PageRequest.of(0, 5));
+            hotelList = placePage.toList();
+
+            makePaginationBar(model,size,placePage,-1);
+        } else {
+            int countPlaces = (int) this.placeService.countHotels();
+
+            page = getPageNumberFromState(page, size, state, countPlaces);
+
+            placePage = this.placeService.findPageHotels(PageRequest.of(page - 1, size));
+            hotelList = placePage.toList();
+
+            makePaginationBar(model, size, placePage, countPlaces);
         }
 
         HashMap<Hotel, String> hotels = new HashMap<>();
@@ -131,5 +174,56 @@ public class HomeController {
         model.addAttribute("bodyContent", "Hotels");
 
         return "Master-Template";
+    }
+
+    private Integer getPageNumberFromState(Integer page, Integer size, String state, int countPlaces) {
+        if (state != null) {
+            if (state.equals("previous") && page > 1) {
+                page = page -1;
+            } else if (state.equals("next") && page < countPlaces / size) {
+                page = page +1;
+            }
+        }
+        return page;
+    }
+
+    private void makePaginationBar(Model model, Integer size, Page<? extends Place> placePage, int countPlaces) {
+
+        if(countPlaces == -1){
+            List<Integer> pageNumbers = IntStream.rangeClosed(1, 5)
+                    .boxed()
+                    .collect(Collectors.toList());
+            model.addAttribute("pageNumbers", pageNumbers);
+            model.addAttribute("placePageSize", placePage.getSize());
+            model.addAttribute("placePageNumber", placePage.getNumber());
+            return;
+        }
+
+        model.addAttribute("placePageSize", placePage.getSize());
+        model.addAttribute("placePageNumber", placePage.getNumber());
+        int pageNumber = placePage.getNumber();
+
+        if (pageNumber < 3) {
+            List<Integer> pageNumbers = IntStream.rangeClosed(1, 5)
+                    .boxed()
+                    .collect(Collectors.toList());
+            model.addAttribute("pageNumbers", pageNumbers);
+        } else {
+            int fromPage = pageNumber;
+            int toPage = pageNumber + 3;
+            if (countPlaces / size < toPage){
+                toPage = countPlaces / size;
+                fromPage = toPage - 3;
+                if(fromPage <2){
+                    makePaginationBar(model,size,placePage,-1);
+                    return;
+                }
+            }
+            List<Integer> pageNumbers = IntStream.rangeClosed(fromPage, toPage)
+                    .boxed()
+                    .collect(Collectors.toList());
+            pageNumbers.add(0, 1);
+            model.addAttribute("pageNumbers", pageNumbers);
+        }
     }
 }

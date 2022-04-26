@@ -28,7 +28,7 @@ public class RegistrationController {
         model.addAttribute("bodyContent", "registration");
         return "Master-Template";
     }
-
+//TODO roles
 
     @PostMapping
     public String registerUser(@RequestParam String name,
