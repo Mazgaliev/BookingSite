@@ -24,7 +24,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     List<Reservation> findByPlaceIdAndStartGreaterThanEqualAndFinishLessThanEqualAndRoomType
             (Place place, LocalDate start, LocalDate finish, RoomType roomType);
 
-    Page<Reservation> findByPlaceId(Long id,Pageable pageable);
+    Page<Reservation> findByPlaceId(Place place, Pageable pageable);
 
     long countByPlaceId(Place place);
 }

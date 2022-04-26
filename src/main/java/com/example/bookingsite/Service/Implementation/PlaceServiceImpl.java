@@ -67,6 +67,8 @@ public class PlaceServiceImpl implements PlaceService {
         }
 
         Villa villa = new Villa(name, location, description, contactNumber, person, pricePerNight);
+        villa.setImages(images);
+
         this.villaRepository.save(villa);
         return Optional.of(villa);
     }
@@ -162,7 +164,9 @@ public class PlaceServiceImpl implements PlaceService {
     }
 
     @Override
-    public long countPlaces(){ return this.placeRepository.count(); }
+    public long countPlaces() {
+        return this.placeRepository.count();
+    }
 
     @Override
     public Page<Villa> findPageVillas(Pageable pageable) {
@@ -170,7 +174,9 @@ public class PlaceServiceImpl implements PlaceService {
     }
 
     @Override
-    public long countVillas() { return this.villaRepository.count(); }
+    public long countVillas() {
+        return this.villaRepository.count();
+    }
 
     @Override
     public Page<Hotel> findPageHotels(Pageable pageable) {
@@ -178,7 +184,9 @@ public class PlaceServiceImpl implements PlaceService {
     }
 
     @Override
-    public long countHotels() { return this.hotelRepository.count(); }
+    public long countHotels() {
+        return this.hotelRepository.count();
+    }
 
     @Override
     public PlaceType placeType(Place place) {

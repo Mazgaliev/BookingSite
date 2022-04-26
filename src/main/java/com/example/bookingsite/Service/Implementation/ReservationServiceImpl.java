@@ -168,7 +168,14 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public Page<Reservation> findReservationPage(Long placeId, Pageable pageable) {
-        return this.reservationRepository.findByPlaceId(placeId,pageable);
+        Optional<Place> placeOptional = this.placeService.findById(placeId);
+        Place place;
+        if (placeOptional.isPresent()){
+            place = placeOptional.get();
+        }else {
+            throw new PlaceDoesNotExistException();
+        }
+        return this.reservationRepository.findByPlaceId(place,pageable);
     }
 
     @Override

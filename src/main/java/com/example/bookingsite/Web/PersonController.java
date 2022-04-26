@@ -119,6 +119,7 @@ public class PersonController {
             userPrincipal = (UserDetails) authentication.getPrincipal();
             PersonDto person = this.personService.findByUsername(userPrincipal.getUsername());
             Place place = this.placeService.findById(id).get();
+            model.addAttribute("placeId", place.getId());
             model.addAttribute("PlaceName", place.getName());
             model.addAttribute("person", person);
 
@@ -129,7 +130,7 @@ public class PersonController {
                 reservationPage = this.reservationService.findReservationPage(id, PageRequest.of(0, 5));
                 reservationList = reservationPage.toList();
 
-                makePaginationBar(model,size,reservationPage,-1);
+                makePaginationBar(model, size, reservationPage, -1);
             } else {
                 int countReservations = (int) this.reservationService.countPlaceReservations(id);
 
@@ -140,8 +141,7 @@ public class PersonController {
 
                 makePaginationBar(model, size, reservationPage, countReservations);
             }
-
-            model.addAttribute("reservations", place.getReservations());
+            model.addAttribute("reservations", reservationList);
         }
 
         model.addAttribute("bodyContent", "placeReservations");
@@ -179,9 +179,9 @@ public class PersonController {
     private Integer getPageNumberFromState(Integer page, Integer size, String state, int countReservations) {
         if (state != null) {
             if (state.equals("previous") && page > 1) {
-                page = page -1;
+                page = page - 1;
             } else if (state.equals("next") && page < countReservations / size) {
-                page = page +1;
+                page = page + 1;
             }
         }
         return page;
@@ -189,7 +189,7 @@ public class PersonController {
 
     private void makePaginationBar(Model model, Integer size, Page<Reservation> reservationPage, int countReservations) {
 
-        if(countReservations == -1){
+        if (countReservations == -1) {
             List<Integer> pageNumbers = IntStream.rangeClosed(1, 5)
                     .boxed()
                     .collect(Collectors.toList());
@@ -211,11 +211,11 @@ public class PersonController {
         } else {
             int fromPage = pageNumber;
             int toPage = pageNumber + 3;
-            if (countReservations / size < toPage){
+            if (countReservations / size < toPage) {
                 toPage = countReservations / size;
                 fromPage = toPage - 3;
-                if(fromPage <2){
-                    makePaginationBar(model,size,reservationPage,-1);
+                if (fromPage < 2) {
+                    makePaginationBar(model, size, reservationPage, -1);
                     return;
                 }
             }
