@@ -73,10 +73,5 @@ public class ReservationController {
         return "redirect:/home";
     }
 
-    @GetMapping("/edit/{id}")
-    public String editReservation(@PathVariable Long id) {
-        //TODO edit na rezervacija
-        return null;
-    }
 
 }
