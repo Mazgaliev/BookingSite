@@ -2,10 +2,13 @@ package com.example.bookingsite.Web;
 
 import com.example.bookingsite.Model.Dto.PersonDto;
 import com.example.bookingsite.Model.Enum.Role;
+import com.example.bookingsite.Model.Enum.RoomType;
 import com.example.bookingsite.Model.Place;
+import com.example.bookingsite.Model.Reservation;
 import com.example.bookingsite.Service.PersonService;
 import com.example.bookingsite.Service.PlaceService;
 import com.example.bookingsite.Service.ReservationService;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,6 +32,43 @@ public class PersonController {
         this.reservationService = reservationService;
         this.personService = personService;
         this.placeService = placeService;
+    }
+
+    @GetMapping("/reservations/edit/{id}")
+    public String editReservationPage(@PathVariable Long id, Model model, Authentication authentication) {
+        UserDetails userPrincipal;
+        if (authentication != null) {
+            userPrincipal = (UserDetails) authentication.getPrincipal();
+            PersonDto person = this.personService.findByUsername(userPrincipal.getUsername());
+            model.addAttribute("person", person);
+        }
+        Reservation reservation;
+
+        try {
+            reservation = this.reservationService.findById(id);
+        } catch (Exception exception) {
+            return "redirect:/home";
+        }
+
+
+        model.addAttribute("reservation", reservation);
+        model.addAttribute("bodyContent", "editReservation");
+
+        return "Master-Template";
+    }
+
+    @PostMapping("/edit/reservation")
+    public String editReservation(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate start,
+                                  @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate end,
+                                  @RequestParam Long id,
+                                  @RequestParam(required = false) RoomType roomType) {
+
+        if (roomType == null)
+            this.reservationService.updateVillaReservation(id, start, end);
+        else
+            this.reservationService.updateHotelReservation(id, start, end, roomType);
+
+        return "redirect:/home";
     }
 
     @GetMapping("/reservations")

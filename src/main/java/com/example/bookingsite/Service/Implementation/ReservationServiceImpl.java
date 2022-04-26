@@ -92,13 +92,12 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     @Transactional
-    public Optional<Reservation> updateHotelReservation(Long Id, LocalDate start, LocalDate finish,
-                                                        Long personId, Long hotelId, RoomType roomType) {
-        Hotel hotel = this.hotelRepository.findById(hotelId).orElseThrow(PlaceDoesNotExistException::new);
-        Person person = this.personRepository.findById(personId).orElseThrow(PersonDoesNotExistException::new);
-
-
+    public Optional<Reservation> updateHotelReservation(Long Id, LocalDate start, LocalDate finish, RoomType roomType) {
         Reservation reservation_old = this.reservationRepository.findById(Id).orElseThrow(ReservationDoesNotExist::new);
+        Hotel hotel = this.hotelRepository.findById(reservation_old.getPlaceId().getId()).orElseThrow(PlaceDoesNotExistException::new);
+        Person person = this.personRepository.findById(reservation_old.getPersonId().getId()).orElseThrow(PersonDoesNotExistException::new);
+
+
         reservationRepository.delete(reservation_old);
 
         int numberOfRooms = calculateNumberOdRooms(hotel, start, finish, roomType);
@@ -128,30 +127,28 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     @Transactional
-    public Optional<Reservation> updateVillaReservation(Long Id, LocalDate start, LocalDate finish,
-                                                        Long personId, Long villaId) {
-        Villa villa = this.villaRepository.findById(villaId).orElseThrow(PlaceDoesNotExistException::new);
-        Person person = this.personRepository.findById(personId).orElseThrow(PersonDoesNotExistException::new);
-
+    public Optional<Reservation> updateVillaReservation(Long Id, LocalDate start, LocalDate finish) {
 
         Reservation reservation_old = this.reservationRepository.findById(Id).orElseThrow(ReservationDoesNotExist::new);
-        reservationRepository.delete(reservation_old);
+        Villa villa = this.villaRepository.findById(reservation_old.getPlaceId().getId()).orElseThrow(PlaceDoesNotExistException::new);
+        Person person = this.personRepository.findById(reservation_old.getPersonId().getId()).orElseThrow(PersonDoesNotExistException::new);
+
 
         List<Reservation> reservationList = villa.getReservations();
         for (Reservation reserv : reservationList) {
-            if ((start.isAfter(reserv.getStart()) || start.equals(reserv.getStart())) ||
-                    (finish.isBefore(reserv.getFinish()) || finish.equals(reserv.getFinish()))) {
+            if (isBetween(start, finish, reserv) && Id.equals(reserv.getId())) {
                 reservationRepository.save(reservation_old);
                 throw new VillaRoomNotAbleToUpdate();
             }
         }
         long days = ChronoUnit.DAYS.between(start, finish);
 
-        Reservation reservation = new Reservation(start, finish, person, villa);
-        reservation.setPrice((int) (villa.getPricePerNight() * days));
+        reservation_old.setStart(start);
+        reservation_old.setFinish(finish);
+        reservation_old.setPrice((int) (days * villa.getPricePerNight()));
 
-        this.reservationRepository.save(reservation);
-        return Optional.of(reservation);
+        this.reservationRepository.save(reservation_old);
+        return Optional.of(reservation_old);
     }
 
     @Override
@@ -159,6 +156,11 @@ public class ReservationServiceImpl implements ReservationService {
         Reservation reservation = this.reservationRepository.findById(id).orElseThrow(ReservationDoesNotExist::new);
         reservationRepository.delete(reservation);
         return Optional.of(reservation);
+    }
+
+    @Override
+    public Reservation findById(Long id) {
+        return this.reservationRepository.findById(id).orElseThrow(ReservationDoesNotExist::new);
     }
 
     Integer calculateNumberOdRooms(Hotel hotel, LocalDate start, LocalDate finish, RoomType roomType) {

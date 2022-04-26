@@ -29,16 +29,16 @@ public class RegistrationController {
         return "Master-Template";
     }
 
+
     @PostMapping
     public String registerUser(@RequestParam String name,
                                @RequestParam String surname,
                                @RequestParam String username,
                                @RequestParam String password,
                                @RequestParam String repeatPassword,
-                               @RequestParam String phoneNumber,
-                               @RequestParam Role role) {
+                               @RequestParam String phoneNumber) {
         try {
-            this.personService.register(name, surname, username, password, repeatPassword, phoneNumber, role);
+            this.personService.register(name, surname, username, password, repeatPassword, phoneNumber);
         } catch (InvalidUsernameOrPasswordException | PasswordsDoNotMatchException | UsernameAlreadyExistsException e) {
             String query = "?hasError=true&error=" + e.getMessage().replaceAll(" ", "+");
             return "redirect:/register" + query;

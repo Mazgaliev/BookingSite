@@ -28,6 +28,7 @@ public class PlaceController {
         this.placeService = placeService;
     }
 
+
     @GetMapping("/{id}")
     public String viewPlace(@PathVariable Long id, Authentication authentication,
                             Model model,
@@ -40,17 +41,17 @@ public class PlaceController {
             model.addAttribute("person", person);
         }
         Place place = this.placeService.findById(id).get();
-        if(this.placeService.placeType(place) == PlaceType.VILLA){
+        if (this.placeService.placeType(place) == PlaceType.VILLA) {
             Villa villa = (Villa) place;
             model.addAttribute("price1", villa.getPricePerNight());
-            model.addAttribute("price2",0);
-        }else {
+            model.addAttribute("price2", 0);
+        } else {
             Hotel hotel = (Hotel) place;
             model.addAttribute("price1", hotel.getPriceStandardRoom());
-            model.addAttribute("price2",hotel.getPriceVipRoom());
+            model.addAttribute("price2", hotel.getPriceVipRoom());
         }
-        model.addAttribute("hasError",hasError);
-        model.addAttribute("error",error);
+        model.addAttribute("hasError", hasError);
+        model.addAttribute("error", error);
         model.addAttribute("images", place.getImages());
         model.addAttribute("place", place);
         model.addAttribute("bodyContent", "place");
