@@ -1,5 +1,6 @@
 package com.example.bookingsite.Web;
 
+import com.example.bookingsite.Model.CustomOAuth2User;
 import com.example.bookingsite.Model.Dto.PersonDto;
 import com.example.bookingsite.Model.Enum.PlaceType;
 import com.example.bookingsite.Model.Enum.RoomType;
@@ -57,12 +58,9 @@ public class PlaceController {
                             Model model,
                             @RequestParam(required = false) boolean hasError,
                             @RequestParam(required = false) String error) {
-        UserDetails userPrincipal;
-        if (authentication != null) {
-            userPrincipal = (UserDetails) authentication.getPrincipal();
-            PersonDto person = this.personService.findByUsername(userPrincipal.getUsername());
-            model.addAttribute("person", person);
-        }
+
+        getUserId(model,authentication);
+
         Place place = this.placeService.findById(id).get();
         if (this.placeService.placeType(place) == PlaceType.VILLA) {
             Villa villa = (Villa) place;
@@ -81,5 +79,22 @@ public class PlaceController {
         model.addAttribute("bodyContent", "place");
 
         return "Master-Template";
+    }
+
+    private void getUserId(Model model, Authentication authentication) {
+        UserDetails userPrincipal;
+        CustomOAuth2User oauth2User;
+        if (authentication != null) {
+            if(authentication.getPrincipal() instanceof UserDetails) {
+                userPrincipal = (UserDetails) authentication.getPrincipal();
+                PersonDto person = this.personService.findByUsername(userPrincipal.getUsername());
+                model.addAttribute("person", person);
+            }
+            if(authentication.getPrincipal() instanceof CustomOAuth2User) {
+                oauth2User = (CustomOAuth2User) authentication.getPrincipal();
+                PersonDto person = this.personService.findByUsername(oauth2User.getEmail());
+                model.addAttribute("person", person);
+            }
+        }
     }
 }

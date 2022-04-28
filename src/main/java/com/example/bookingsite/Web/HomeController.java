@@ -132,8 +132,6 @@ public class HomeController {
                              @RequestParam(required = false) Integer page,
                              @RequestParam(required = false) Integer size,
                              @RequestParam(required = false) String state) {
-        UserDetails userPrincipal=null;
-        CustomOAuth2User oauth2User =null;
 
         getUserId(model, authentication);
 

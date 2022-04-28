@@ -42,9 +42,6 @@ public class PersonController {
 
     @GetMapping("/reservations/edit/{id}")
     public String editReservationPage(@PathVariable Long id, Model model, Authentication authentication) {
-        UserDetails userPrincipal = null;
-        CustomOAuth2User oauth2User = null;
-        PersonDto person = null;
 
         getUserId(model, authentication);
 
@@ -120,8 +117,6 @@ public class PersonController {
                                     @RequestParam(required = false) Integer page,
                                     @RequestParam(required = false) Integer size,
                                     @RequestParam(required = false) String state) {
-        UserDetails userPrincipal = null;
-        CustomOAuth2User oauth2User = null;
 
         getUserId(model, authentication);
 
@@ -185,7 +180,7 @@ public class PersonController {
 
         List<String> allRoles = this.personService.getAllRoles();
 
-        PersonDto person = this.personService.findByUsername(userPrincipal.getUsername());
+        //PersonDto person = this.personService.findByUsername(userPrincipal.getUsername());
 
         model.addAttribute("currentRole", roles.get(0));
         model.addAttribute("roles", allRoles);
