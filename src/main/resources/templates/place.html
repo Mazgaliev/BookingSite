@@ -3,31 +3,29 @@
     <div class="row text-center">
         <div class="col-12">
             <h3 th:text="${place.getLocation()}"></h3>
+        </div>
+        <div class="col-12">
             <h5 th:text="${place.getDescription()}"></h5>
-            <h6 th:text="'Standard price:' + ${price1}"></h6>
-            <h5 th:if="${price2}>0" th:text="'VIP price:' + ${price2}"></h5>
         </div>
-        <div class="col-2">
-            <th:block th:each="image:${images}">
-                <img th:src="${image}" style="width: 10em; height: 13em">
-            </th:block>
+        <div class="col-12">
+            <h6 th:text="'Contact us at '+${place.getContactNumber()}+ '/ or '+ ${ownerPhone}"></h6>
         </div>
+    </div>
+    <div class="row">
+        <th:block th:each="image:${images}">
+            <div class="col-4">
+                <div class="responsive">
+                    <div class="gallery">
+                        <a target="_blank" th:href="${image}">
+                            <img th:src="${image}" alt="Clinque Terre" width="400" height="250">
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </th:block>
     </div>
 </section>
 <div class="container">
-    <!--    <div class="row">-->
-    <!--        <div class="col-5">-->
-    <!--            <h3 th:text="${place.getLocation()}"></h3>-->
-    <!--            <h5 th:text="${place.getDescription()}"></h5>-->
-    <!--            <h3 th:text="'Standard price:' + ${price1}"></h3>-->
-    <!--            <h3 th:if="${price2}>0" th:text="'VIP price:' + ${price2}"></h3>-->
-    <!--        </div>-->
-    <!--        <div class="col-7">-->
-    <!--            <th:block th:each="image:${images}">-->
-    <!--                <img th:src="${image}">-->
-    <!--            </th:block>-->
-    <!--        </div>-->
-    <!--    </div>-->
     <div class="border-1" th:if="${#request.getRemoteUser()!=null}">
         <form method="post" action="/reserve">
 
@@ -36,32 +34,46 @@
                     <div class="card-body">
                         <div class="btn-group btn-group-toggle"
                              data-toggle="buttons">
-                            <label class="btn btn-primary" id="label1" onclick="activate()">
+                            <label class="btn btn-primary" id="label1">
                                 <input type="radio" id="roomType1" name="roomType"
-                                       th:value="STANDARD" autocomplete="off">Standard room
+                                       th:value="STANDARD" autocomplete="off" onclick="activate()">Standard room
                             </label>
-                            <label class="btn btn-primary" id="label2" onclick="deactivate()">
+                            <label class="btn btn-primary" id="label2">
                                 <input type="radio" id="roomType2" name="roomType"
-                                       th:value="VIP" autocomplete="off">VIP room
+                                       th:value="VIP" autocomplete="off" onclick="deactivate()" th:text="'VIP room'">
                             </label>
                         </div>
                     </div>
                 </div>
             </div>
-
+            <!--            <div class="row">-->
+            <!--                <div class="col-5">-->
+            <!--                    <h5 th:if="${price2}>0" th:text="'VIP room price:' + ${price2}"></h5>-->
+            <!--                </div>-->
+            <!--                <div class="col-5">-->
+            <!--                    <h6 th:text="'Standard price:' + ${price1}"></h6>-->
+            <!--                </div>-->
+            <!--            </div>-->
+            <div class="row text-center" th:if="${price2}<=0">
+                <div class="col-12" th:text="'Price per night' + ${price1}"></div>
+            </div>
             <div class="row">
                 <div class="md-form md-outline input-with-post-icon datepicker col-6">
-                    <input placeholder="Select date" type="date" id="from" name="from" class="form-control"
-                           aria-placeholder="Starting date">
-                    <label for="from"></label>
+                    <label for="from">Check in</label> <input placeholder="Select date" type="date" id="from"
+                                                              name="from"
+                                                              class="form-control"
+                                                              aria-placeholder="Starting date"
+                                                              required>
+
                 </div>
                 <div class="md-form md-outline input-with-post-icon datepicker col-6">
-                    <input placeholder="Select date" type="date" id="end" name="end" class="form-control"
-                           aria-placeholder="End date">
-                    <label for="end"></label>
+                    <label for="end">Leave</label><input placeholder="Select date" type="date" id="end" name="end"
+                                                         class="form-control"
+                                                         aria-placeholder="End date"
+                                                         required>
+
                 </div>
             </div>
-
             <div class="row">
                 <input hidden th:value="${place.getId()}" th:id="placeId" th:name="placeId">
             </div>

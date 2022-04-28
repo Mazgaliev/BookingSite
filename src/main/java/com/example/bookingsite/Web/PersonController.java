@@ -66,7 +66,7 @@ public class PersonController {
         if (roomType == null) this.reservationService.updateVillaReservation(id, start, end);
         else this.reservationService.updateHotelReservation(id, start, end, roomType);
 
-        return "redirect:/home";
+        return "redirect:/person/reservations";
     }
 
     @GetMapping("/reservations")
@@ -269,6 +269,18 @@ public class PersonController {
         model.addAttribute("bodyContent", "create-place");
         return "Master-Template";
 
+    }
+
+    @GetMapping("/delete")
+    public String deletePerson(Authentication authentication) {
+        UserDetails userPrincipal;
+        if (authentication != null) {
+            userPrincipal = (UserDetails) authentication.getPrincipal();
+            PersonDto person = this.personService.findByUsername(userPrincipal.getUsername());
+            this.personService.deleteUserById(person.getId());
+        }
+
+        return "redirect:/logout";
     }
 
     private void getUserId(Model model, Authentication authentication) {

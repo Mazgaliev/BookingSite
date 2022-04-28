@@ -66,7 +66,7 @@ public class ReservationController {
             String string = placeId + "?hasError=true&error=" + e.getMessage();
             return "redirect:/place/" + string;
         }
-        return "redirect:/home";
+        return "redirect:/person/reservations";
     }
 
     private Long getUserId(Model model, Authentication authentication) {

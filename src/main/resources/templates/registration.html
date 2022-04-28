@@ -27,29 +27,7 @@
                    autofocus="">
         </p>
 
-        <div class="row justify-content-center align-content-center">
-            <label style="color: #6c757d">Chose Role</label>
-        </div>
-
-        <div class="row justify-content-center align-content-center mb-3">
-<!--            <div class="card form-control" style="background-color: #eee">-->
-<!--                <div class="card-body">-->
-                    <div class="btn-group btn-group-toggle"
-                         data-toggle="buttons">
-                        <label class="btn btn-light" style="color: #6c757d" id="label1" onclick="activate_2()">
-                            <input type="radio" id="role1" name="role"
-                                   th:value="ROLE_STANDARD" autocomplete="off">Standard
-                        </label>
-                        <label class="btn btn-light" style="color: #6c757d" id="label2" onclick="deactivate_2()">
-                            <input type="radio" id="role2" name="role"
-                                   th:value="ROLE_OWNER" autocomplete="off">Owner
-                        </label>
-                    </div>
-<!--                </div>-->
-<!--            </div>-->
-        </div>
-
-        <button id="submit" class="btn btn-lg btn-primary btn-block" type="submit">Register</button>
+        <button id="submit" class="btn btn-lg btn-primary btn-block" type="submit" onmouseup="popUp()">Register</button>
         <th:block th:if="${param.hasError}">
             <h2 class="text-danger" th:text="${param.error}"></h2>
         </th:block>

@@ -5,7 +5,8 @@
     <title>Booking Site</title>
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <link rel="stylesheet" href="../../static/css/bootstrap.css">
+    <link rel="stylesheet" href="../static/css/gallery.css">
+    <link rel="stylesheet" href="../static/css/bootstrap.css">
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
             integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
             crossorigin="anonymous"></script>
@@ -41,6 +42,22 @@
             let label2 = document.getElementById('label2');
             label2.className = "btn btn-light active"
             window.location.replace("/person/create?placeType=HOTEL")
+        }
+
+        function activate_3() {
+            let label1 = document.getElementById('label1');
+            label1.className = "btn btn-light active";
+            let label2 = document.getElementById('label2');
+            label2.className = "btn btn-light"
+
+        }
+
+        function deactivate_3() {
+            let label1 = document.getElementById('label1');
+            label1.className = "btn btn-light active";
+            let label2 = document.getElementById('label2');
+            label2.className = "btn btn-light"
+
         }
     </script>
 </head>

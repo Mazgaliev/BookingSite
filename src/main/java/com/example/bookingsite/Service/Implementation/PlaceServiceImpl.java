@@ -195,4 +195,11 @@ public class PlaceServiceImpl implements PlaceService {
         }
         return PlaceType.VILLA;
     }
+
+    @Override
+    public Place deleteById(Long id) {
+        Place place = this.placeRepository.findById(id).orElseThrow(PlaceDoesNotExistException::new);
+        this.placeRepository.delete(place);
+        return place;
+    }
 }

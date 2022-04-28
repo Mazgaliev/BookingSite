@@ -76,6 +76,8 @@ public class PlaceController {
         model.addAttribute("error", error);
         model.addAttribute("images", place.getImages());
         model.addAttribute("place", place);
+        model.addAttribute("ownerPhone", place.getOwner().getPhoneNumber());
+
         model.addAttribute("bodyContent", "place");
 
         return "Master-Template";
@@ -96,5 +98,16 @@ public class PlaceController {
                 model.addAttribute("person", person);
             }
         }
+    }
+
+    @GetMapping("/delete/{id}")
+    public String deletePlace(@PathVariable Long id, Model model) {
+        try {
+            this.placeService.deleteById(id);
+        } catch (Exception exception) {
+            return "Master-Template";
+        }
+
+        return "redirect:/person/places";
     }
 }

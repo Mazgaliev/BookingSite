@@ -53,4 +53,5 @@ public interface PlaceService {
 
     PlaceType placeType(Place place);
 
+    Place deleteById(Long id);
 }
