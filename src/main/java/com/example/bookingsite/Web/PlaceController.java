@@ -9,6 +9,7 @@ import com.example.bookingsite.Model.Place;
 import com.example.bookingsite.Model.Villa;
 import com.example.bookingsite.Service.PersonService;
 import com.example.bookingsite.Service.PlaceService;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.parameters.P;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -64,10 +65,10 @@ public class PlaceController {
                             Model model,
                             @RequestParam(required = false) boolean hasError,
                             @RequestParam(required = false) String error) {
-
-        getUserId(model, authentication);
         Place place;
         try {
+            getUserId(model, authentication);
+
             place = this.placeService.findById(id).get();
         } catch (Exception e) {
             model.addAttribute("getCause", e.getCause());
@@ -102,10 +103,9 @@ public class PlaceController {
                             @RequestParam(required = false) boolean hasError,
                             @RequestParam(required = false) String error) {
 
-
-        getUserId(model, authentication);
-        Place place = new Place();
+        Place place;
         try {
+            getUserId(model, authentication);
             place = this.placeService.findById(id).get();
 
             if (this.placeService.placeType(place) == PlaceType.VILLA) {
@@ -146,13 +146,15 @@ public class PlaceController {
                               Model model) {
 
 
-        Place place = this.placeService.findById(id).get();
-        name = name == "" ? place.getName() : name;
-        description = description == "" ? place.getDescription() : description;
-        contactNumber = contactNumber == "" ? place.getContactNumber() : contactNumber;
-        location = location == "" ? place.getLocation() : location;
-        images = images.size() == 0 ? place.getImages() : images;
         try {
+            Place place = this.placeService.findById(id).get();
+
+            name = name == "" ? place.getName() : name;
+            description = description == "" ? place.getDescription() : description;
+            contactNumber = contactNumber == "" ? place.getContactNumber() : contactNumber;
+            location = location == "" ? place.getLocation() : location;
+            images = images.size() == 0 ? place.getImages() : images;
+
             if (this.placeService.placeType(place) == PlaceType.VILLA) {
                 Villa villa = (Villa) place;
                 pricePerNight = pricePerNight == null ? villa.getPricePerNight() : pricePerNight;
@@ -202,6 +204,8 @@ public class PlaceController {
                 PersonDto person = this.personService.findByUsername(oauth2User.getEmail());
                 model.addAttribute("person", person);
             }
+        } else {
+            throw new AccessDeniedException("You are not authorized to access this page");
         }
     }
 }

@@ -13,6 +13,7 @@ import com.example.bookingsite.Service.ReservationService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -267,7 +268,7 @@ public class PersonController {
         try {
             PersonDto person = this.personService.findById(id);
             this.personService.update(id, person.getName(), person.getSurname(), person.getUsername(), password, repeatPassword, oldPassword, person.getPhoneNumber());
-        }  catch (Exception e) {
+        } catch (Exception e) {
             model.addAttribute("getCause", e.getCause());
             model.addAttribute("exceptionMessage", e.getMessage());
             model.addAttribute("bodyContent", "error-template");
@@ -354,11 +355,12 @@ public class PersonController {
 
     @GetMapping("/delete")
     public String deletePerson(Authentication authentication, Model model) {
-        UserDetails userPrincipal;
+        UserDetails userPrincipal = null;
+        CustomOAuth2User customOAuth2User = null;
+        PersonDto person = null;
         if (authentication != null) {
             try {
-                userPrincipal = (UserDetails) authentication.getPrincipal();
-                PersonDto person = this.personService.findByUsername(userPrincipal.getUsername());
+                person = getPersonDto(model,authentication,userPrincipal,customOAuth2User,person);
                 this.personService.deleteUserById(person.getId());
             } catch (Exception e) {
                 model.addAttribute("getCause", "");
@@ -385,6 +387,8 @@ public class PersonController {
                 PersonDto person = this.personService.findByUsername(oauth2User.getEmail());
                 model.addAttribute("person", person);
             }
+        } else {
+            throw new AccessDeniedException("You are not authorized to access this page");
         }
     }
 
@@ -405,6 +409,8 @@ public class PersonController {
                 person = this.personService.findByUsername(oauth2User.getEmail());
                 model.addAttribute("person", person);
             }
+        } else {
+            throw new AccessDeniedException("You are not authorized to access this page");
         }
         return person;
     }

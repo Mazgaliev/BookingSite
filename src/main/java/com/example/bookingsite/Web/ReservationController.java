@@ -11,6 +11,7 @@ import com.example.bookingsite.Service.PersonService;
 import com.example.bookingsite.Service.PlaceService;
 import com.example.bookingsite.Service.ReservationService;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -104,6 +105,8 @@ public class ReservationController {
                 model.addAttribute("person", person);
                 return person.getId();
             }
+        } else {
+            throw new AccessDeniedException("You are not authorized to access this page");
         }
         return 0L;
     }
