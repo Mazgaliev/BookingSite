@@ -21,6 +21,6 @@ public class BookingSiteApplication {
 
     @Bean
     public PasswordEncoder encoder() {
-        return new BCryptPasswordEncoder(10);
+        return new BCryptPasswordEncoder(15);
     }
 }
