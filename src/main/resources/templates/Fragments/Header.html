@@ -16,7 +16,7 @@
             <ul class="navbar-nav ms-auto">
 
                 <li class="nav-item" th:if="${#request.getRemoteUser()!=null}">
-                    <a class="nav-link" th:href="@{'/person/reservations'}">Your reservations</a>
+                    <a class="nav-link" th:href="@{'/person/reservations'} ">Your reservations</a>
                 </li>
                 <li class="nav-item" th:if="${#request.getRemoteUser()==null}">
                     <a class="nav-link" th:href="@{'/login'}">Login</a>
