@@ -59,9 +59,16 @@ public class PlaceController {
                             @RequestParam(required = false) boolean hasError,
                             @RequestParam(required = false) String error) {
 
-        getUserId(model,authentication);
-
-        Place place = this.placeService.findById(id).get();
+        getUserId(model, authentication);
+        Place place = new Place();
+        try {
+            place = this.placeService.findById(id).get();
+        } catch (Exception e) {
+            model.addAttribute("getCause", e.getCause());
+            model.addAttribute("exceptionMessage", e.getMessage());
+            model.addAttribute("bodyContent", "error-template");
+            return "Master-Template";
+        }
         if (this.placeService.placeType(place) == PlaceType.VILLA) {
             Villa villa = (Villa) place;
 
@@ -87,12 +94,12 @@ public class PlaceController {
         UserDetails userPrincipal;
         CustomOAuth2User oauth2User;
         if (authentication != null) {
-            if(authentication.getPrincipal() instanceof UserDetails) {
+            if (authentication.getPrincipal() instanceof UserDetails) {
                 userPrincipal = (UserDetails) authentication.getPrincipal();
                 PersonDto person = this.personService.findByUsername(userPrincipal.getUsername());
                 model.addAttribute("person", person);
             }
-            if(authentication.getPrincipal() instanceof CustomOAuth2User) {
+            if (authentication.getPrincipal() instanceof CustomOAuth2User) {
                 oauth2User = (CustomOAuth2User) authentication.getPrincipal();
                 PersonDto person = this.personService.findByUsername(oauth2User.getEmail());
                 model.addAttribute("person", person);
@@ -104,10 +111,12 @@ public class PlaceController {
     public String deletePlace(@PathVariable Long id, Model model) {
         try {
             this.placeService.deleteById(id);
-        } catch (Exception exception) {
+        } catch (Exception e) {
+            model.addAttribute("getCause", "");
+            model.addAttribute("exceptionMessage", "Cannot delete place when it still has reservations");
+            model.addAttribute("bodyContent", "error-template");
             return "Master-Template";
         }
-
         return "redirect:/person/places";
     }
 }

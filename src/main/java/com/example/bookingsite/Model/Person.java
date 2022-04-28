@@ -36,7 +36,7 @@ public class Person implements UserDetails {
     @OneToMany(mappedBy = "owner")
     List<Place> owns;
 
-    @OneToMany(mappedBy = "personId", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "personId")
     List<Reservation> reservations;
 
     @Enumerated(EnumType.STRING)

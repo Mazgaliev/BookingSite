@@ -30,7 +30,7 @@ public class Place {
     String location;
 
     String contactNumber;
-    @OneToMany(mappedBy = "placeId", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "placeId", fetch = FetchType.LAZY)
     List<Reservation> reservations;
 
     @ManyToOne

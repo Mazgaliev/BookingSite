@@ -37,17 +37,36 @@ public class HomeController {
         this.personService = personService;
     }
 
+    @GetMapping("/access_denied")
+    public String accessDeniedPage(Model model) {
+        model.addAttribute("exceptionMessage", "Access denied");
+        model.addAttribute("getCause", "");
+        model.addAttribute("bodyContent", "error-template");
+        return "Master-Template";
+    }
+
+    @GetMapping("/user/admin")
+    public String adminView() {
+
+        return "Master-Template";
+    }
+
     @GetMapping
     public String loadPlaces(Model model,
                              Authentication authentication,
                              @RequestParam(required = false) Integer page,
                              @RequestParam(required = false) Integer size,
                              @RequestParam(required = false) String state) {
-        UserDetails userPrincipal=null;
-        CustomOAuth2User oauth2User =null;
-
-        getUserId(model, authentication);
-
+        UserDetails userPrincipal = null;
+        CustomOAuth2User oauth2User = null;
+        try {
+            getUserId(model, authentication);
+        } catch (Exception e) {
+            model.addAttribute("getCause", e.getCause());
+            model.addAttribute("exceptionMessage", e.getMessage());
+            model.addAttribute("bodyContent", "error-template");
+            return "Master-Template";
+        }
         List<Place> placeList;
         Page<Place> placePage;
 
@@ -55,7 +74,7 @@ public class HomeController {
             placePage = this.placeService.findPage(PageRequest.of(0, 5));
             placeList = placePage.toList();
 
-            makePaginationBar(model,size,placePage,-1);
+            makePaginationBar(model, size, placePage, -1);
         } else {
             int countPlaces = (int) this.placeService.countPlaces();
 
@@ -87,8 +106,8 @@ public class HomeController {
                              @RequestParam(required = false) Integer page,
                              @RequestParam(required = false) Integer size,
                              @RequestParam(required = false) String state) {
-        UserDetails userPrincipal=null;
-        CustomOAuth2User oauth2User =null;
+        UserDetails userPrincipal = null;
+        CustomOAuth2User oauth2User = null;
 
         getUserId(model, authentication);
 
@@ -99,7 +118,7 @@ public class HomeController {
             placePage = this.placeService.findPageVillas(PageRequest.of(0, 5));
             villasList = placePage.toList();
 
-            makePaginationBar(model,size,placePage,-1);
+            makePaginationBar(model, size, placePage, -1);
         } else {
             int countPlaces = (int) this.placeService.countVillas();
 
@@ -139,10 +158,11 @@ public class HomeController {
         Page<Hotel> placePage;
 
         if (page == null) {
+
             placePage = this.placeService.findPageHotels(PageRequest.of(0, 5));
             hotelList = placePage.toList();
 
-            makePaginationBar(model,size,placePage,-1);
+            makePaginationBar(model, size, placePage, -1);
         } else {
             int countPlaces = (int) this.placeService.countHotels();
 
@@ -172,9 +192,9 @@ public class HomeController {
     private Integer getPageNumberFromState(Integer page, Integer size, String state, int countPlaces) {
         if (state != null) {
             if (state.equals("previous") && page > 1) {
-                page = page -1;
+                page = page - 1;
             } else if (state.equals("next") && page < countPlaces / size) {
-                page = page +1;
+                page = page + 1;
             }
         }
         return page;
@@ -182,7 +202,7 @@ public class HomeController {
 
     private void makePaginationBar(Model model, Integer size, Page<? extends Place> placePage, int countPlaces) {
 
-        if(countPlaces == -1){
+        if (countPlaces == -1) {
             List<Integer> pageNumbers = IntStream.rangeClosed(1, 5)
                     .boxed()
                     .collect(Collectors.toList());
@@ -204,11 +224,11 @@ public class HomeController {
         } else {
             int fromPage = pageNumber;
             int toPage = pageNumber + 3;
-            if (countPlaces / size < toPage){
+            if (countPlaces / size < toPage) {
                 toPage = countPlaces / size;
                 fromPage = toPage - 3;
-                if(fromPage <2){
-                    makePaginationBar(model,size,placePage,-1);
+                if (fromPage < 2) {
+                    makePaginationBar(model, size, placePage, -1);
                     return;
                 }
             }
@@ -224,12 +244,14 @@ public class HomeController {
         UserDetails userPrincipal;
         CustomOAuth2User oauth2User;
         if (authentication != null) {
-            if(authentication.getPrincipal() instanceof UserDetails) {
+            if (authentication.getPrincipal() instanceof UserDetails) {
                 userPrincipal = (UserDetails) authentication.getPrincipal();
+
                 PersonDto person = this.personService.findByUsername(userPrincipal.getUsername());
+
                 model.addAttribute("person", person);
             }
-            if(authentication.getPrincipal() instanceof CustomOAuth2User) {
+            if (authentication.getPrincipal() instanceof CustomOAuth2User) {
                 oauth2User = (CustomOAuth2User) authentication.getPrincipal();
                 PersonDto person = this.personService.findByUsername(oauth2User.getEmail());
                 model.addAttribute("person", person);

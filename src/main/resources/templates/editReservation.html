@@ -7,11 +7,13 @@
     <form th:method="post" th:action="@{'/person/edit/reservation'}">
         <div class="row">
             <div class="col-3">
-                <label for="start" th:text="${reservation.getStart()} + ' Is the starting date'"></label><input
+                <label class="form-control" for="start"
+                       th:text="${reservation.getStart()} + ' Is the starting date'"></label><input
                     required id="start" name="start" type="date">
             </div>
             <div class="col-3">
-                <label for="end" th:text="${reservation.getFinish()} + ' Is the leaving date'"></label><input
+                <label class="form-control" for="end"
+                       th:text="${reservation.getFinish()} + ' Is the leaving date'"></label><input
                     required id="end" name="end" type="date">
             </div>
             <label hidden for="id"></label><input hidden name="id" id="id" th:value="${reservation.getId()}">

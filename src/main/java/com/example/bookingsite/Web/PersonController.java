@@ -50,9 +50,11 @@ public class PersonController {
         try {
             reservation = this.reservationService.findById(id);
         } catch (Exception exception) {
-            return "redirect:/home";
+            model.addAttribute("getCause", exception.getCause());
+            model.addAttribute("exceptionMessage", exception.getMessage());
+            model.addAttribute("bodyContent", "error-template");
+            return "Master-Template";
         }
-
 
         model.addAttribute("reservation", reservation);
         model.addAttribute("bodyContent", "editReservation");
@@ -61,10 +63,18 @@ public class PersonController {
     }
 
     @PostMapping("/edit/reservation")
-    public String editReservation(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate start, @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate end, @RequestParam Long id, @RequestParam(required = false) RoomType roomType) {
+    public String editReservation(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate start, @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate end, @RequestParam Long id, @RequestParam(required = false) RoomType roomType, Model model) {
 
-        if (roomType == null) this.reservationService.updateVillaReservation(id, start, end);
-        else this.reservationService.updateHotelReservation(id, start, end, roomType);
+        if (roomType == null) {
+            try {
+                this.reservationService.updateVillaReservation(id, start, end);
+            } catch (Exception e) {
+                model.addAttribute("getCause", e.getCause());
+                model.addAttribute("exceptionMessage", e.getMessage());
+                model.addAttribute("bodyContent", "error-template");
+                return "Master-Template";
+            }
+        } else this.reservationService.updateHotelReservation(id, start, end, roomType);
 
         return "redirect:/person/reservations";
     }
@@ -74,9 +84,14 @@ public class PersonController {
         UserDetails userPrincipal = null;
         CustomOAuth2User oauth2User = null;
         PersonDto person = null;
-
-        person = getPersonDto(model, authentication, userPrincipal, oauth2User, person);
-
+        try {
+            person = getPersonDto(model, authentication, userPrincipal, oauth2User, person);
+        } catch (Exception e) {
+            model.addAttribute("getCause", e.getCause());
+            model.addAttribute("exceptionMessage", e.getMessage());
+            model.addAttribute("bodyContent", "error-template");
+            return "Master-Template";
+        }
         model.addAttribute("person", person);
         model.addAttribute("reservations", person.getReservations());
 
@@ -91,9 +106,14 @@ public class PersonController {
         UserDetails userPrincipal = null;
         CustomOAuth2User oauth2User = null;
         PersonDto person = null;
-
-        person = getPersonDto(model, authentication, userPrincipal, oauth2User, person);
-
+        try {
+            person = getPersonDto(model, authentication, userPrincipal, oauth2User, person);
+        } catch (Exception e) {
+            model.addAttribute("getCause", e.getCause());
+            model.addAttribute("exceptionMessage", e.getMessage());
+            model.addAttribute("bodyContent", "error-template");
+            return "Master-Template";
+        }
 
         model.addAttribute("person", person);
         model.addAttribute("places", person.getOwns());
@@ -103,10 +123,15 @@ public class PersonController {
     }
 
     @GetMapping("/reservations/delete/{id}")
-    public String cancelReservation(@PathVariable Long id) {
-
-        this.reservationService.deleteReservation(id);
-
+    public String cancelReservation(@PathVariable Long id, Model model) {
+        try {
+            this.reservationService.deleteReservation(id);
+        } catch (Exception e) {
+            model.addAttribute("getCause", e.getCause());
+            model.addAttribute("exceptionMessage", e.getMessage());
+            model.addAttribute("bodyContent", "error-template");
+            return "Master-Template";
+        }
         return "redirect:/person/reservations";
     }
 
@@ -121,12 +146,17 @@ public class PersonController {
         getUserId(model, authentication);
 
         if (authentication != null) {
-
-            Place place = this.placeService.findById(id).get();
-            model.addAttribute("placeId", place.getId());
-            model.addAttribute("PlaceName", place.getName());
-            // model.addAttribute("person", person);
-
+            try {
+                Place place = this.placeService.findById(id).get();
+                model.addAttribute("placeId", place.getId());
+                model.addAttribute("PlaceName", place.getName());
+                // model.addAttribute("person", person);
+            } catch (Exception e) {
+                model.addAttribute("getCause", e.getCause());
+                model.addAttribute("exceptionMessage", e.getMessage());
+                model.addAttribute("bodyContent", "error-template");
+                return "Master-Template";
+            }
             List<Reservation> reservationList;
             Page<Reservation> reservationPage;
 
@@ -159,20 +189,27 @@ public class PersonController {
         UserDetails userPrincipal = null;
         CustomOAuth2User oauth2User = null;
         List<String> roles = new ArrayList<>();
+        try {
+            if (authentication != null) {
+                if (authentication.getPrincipal() instanceof UserDetails) {
+                    userPrincipal = (UserDetails) authentication.getPrincipal();
 
-        if (authentication != null) {
-            if (authentication.getPrincipal() instanceof UserDetails) {
-                userPrincipal = (UserDetails) authentication.getPrincipal();
-                PersonDto person = this.personService.findByUsername(userPrincipal.getUsername());
-                roles = userPrincipal.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
-                model.addAttribute("person", person);
+                    PersonDto person = this.personService.findByUsername(userPrincipal.getUsername());
+                    roles = userPrincipal.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
+                    model.addAttribute("person", person);
+                }
+                if (authentication.getPrincipal() instanceof CustomOAuth2User) {
+                    oauth2User = (CustomOAuth2User) authentication.getPrincipal();
+                    PersonDto person = this.personService.findByUsername(oauth2User.getEmail());
+                    roles = oauth2User.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
+                    model.addAttribute("person", person);
+                }
             }
-            if (authentication.getPrincipal() instanceof CustomOAuth2User) {
-                oauth2User = (CustomOAuth2User) authentication.getPrincipal();
-                PersonDto person = this.personService.findByUsername(oauth2User.getEmail());
-                roles = oauth2User.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
-                model.addAttribute("person", person);
-            }
+        } catch (Exception e) {
+            model.addAttribute("getCause", e.getCause());
+            model.addAttribute("exceptionMessage", e.getMessage());
+            model.addAttribute("bodyContent", "error-template");
+            return "Master-Template";
         }
 
 //        UserDetails userPrincipal = (UserDetails) authentication.getPrincipal();
@@ -191,12 +228,17 @@ public class PersonController {
     }
 
     @PostMapping("/settings")
-    public String updatePerson(@RequestParam Long id, @RequestParam String name, @RequestParam String surname, @RequestParam String oldPassword, @RequestParam String password, @RequestParam String repeatPassword, @RequestParam String phoneNumber, @RequestParam String username) {
+    public String updatePerson(@RequestParam Long id, @RequestParam String name, @RequestParam String
+            surname, @RequestParam String oldPassword, @RequestParam String password, @RequestParam String
+                                       repeatPassword, @RequestParam String phoneNumber, @RequestParam String username, Model model) {
 
         try {
             this.personService.update(id, name, surname, username, password, repeatPassword, oldPassword, phoneNumber);
-        } catch (Exception exception) {
-            return "redirect:/home";
+        } catch (Exception e) {
+            model.addAttribute("getCause", e.getCause());
+            model.addAttribute("exceptionMessage", e.getMessage());
+            model.addAttribute("bodyContent", "error-template");
+            return "Master-Template";
         }
         return "redirect:/logout";
     }
@@ -212,7 +254,8 @@ public class PersonController {
         return page;
     }
 
-    private void makePaginationBar(Model model, Integer size, Page<Reservation> reservationPage, int countReservations) {
+    private void makePaginationBar(Model model, Integer size, Page<Reservation> reservationPage,
+                                   int countReservations) {
 
         if (countReservations == -1) {
             List<Integer> pageNumbers = IntStream.rangeClosed(1, 5)
@@ -253,13 +296,19 @@ public class PersonController {
     }
 
     @GetMapping("/create")
-    public String viewCreatePage(Model model, Authentication authentication, @RequestParam(required = false) PlaceType placeType) {
+    public String viewCreatePage(Model model, Authentication
+            authentication, @RequestParam(required = false) PlaceType placeType) {
 
         UserDetails userPrincipal = null;
         CustomOAuth2User oauth2User = null;
-
-        getUserId(model, authentication);
-
+        try {
+            getUserId(model, authentication);
+        } catch (Exception e) {
+            model.addAttribute("getCause", e.getCause());
+            model.addAttribute("exceptionMessage", e.getMessage());
+            model.addAttribute("bodyContent", "error-template");
+            return "Master-Template";
+        }
         if (placeType == null || placeType == PlaceType.VILLA) {
             model.addAttribute("isVilla", true);
         } else {
@@ -272,12 +321,19 @@ public class PersonController {
     }
 
     @GetMapping("/delete")
-    public String deletePerson(Authentication authentication) {
+    public String deletePerson(Authentication authentication, Model model) {
         UserDetails userPrincipal;
         if (authentication != null) {
-            userPrincipal = (UserDetails) authentication.getPrincipal();
-            PersonDto person = this.personService.findByUsername(userPrincipal.getUsername());
-            this.personService.deleteUserById(person.getId());
+            try {
+                userPrincipal = (UserDetails) authentication.getPrincipal();
+                PersonDto person = this.personService.findByUsername(userPrincipal.getUsername());
+                this.personService.deleteUserById(person.getId());
+            } catch (Exception e) {
+                model.addAttribute("getCause", "");
+                model.addAttribute("exceptionMessage", "Cannot delete user when he still has reservations");
+                model.addAttribute("bodyContent", "error-template");
+                return "Master-Template";
+            }
         }
 
         return "redirect:/logout";

@@ -22,6 +22,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/", "/login", "/home/*", "/register", "/assets/**").permitAll()
+                .antMatchers("/person/**").hasRole("OWNER")
+                .antMatchers("/user/admin").hasRole("ADMIN")
                 .and()
                 .formLogin()
                 .loginPage("/login").permitAll()
@@ -29,7 +31,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .defaultSuccessUrl("/home")
                 .and()
                 .oauth2Login()
-                .loginPage("/login")
+                .loginPage("/login").permitAll()
+                .failureUrl("/login?error=BadCredentials")
                 .userInfoEndpoint()
                 .userService(oAuth2UserService)
                 .and()
@@ -40,7 +43,9 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .clearAuthentication(true)
                 .invalidateHttpSession(true)
                 .deleteCookies("JSESSIONID")
-                .logoutSuccessUrl("/login");
+                .logoutSuccessUrl("/login")
+                .and()
+                .exceptionHandling().accessDeniedPage("/access_denied");
     }
 
     @Override

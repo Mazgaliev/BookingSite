@@ -45,9 +45,26 @@ public class ReservationController {
         UserDetails userPrincipal = null;
         CustomOAuth2User oauth2User = null;
 
-        Long personId = getUserId(model,authentication);
+        Long personId;
 
-        Place place = this.placeService.findById(placeId).get();
+        try {
+            personId = getUserId(model, authentication);
+        } catch (Exception e) {
+            model.addAttribute("getCause", e.getCause());
+            model.addAttribute("exceptionMessage", e.getMessage());
+            model.addAttribute("bodyContent", "error-template");
+            return "Master-Template";
+        }
+
+        Place place = new Place();
+        try {
+            place = this.placeService.findById(placeId).get();
+        } catch (Exception e) {
+            model.addAttribute("getCause", e.getCause());
+            model.addAttribute("exceptionMessage", e.getMessage());
+            model.addAttribute("bodyContent", "error-template");
+            return "Master-Template";
+        }
         try {
             if (from.isBefore(end)) {
                 if (this.placeService.placeType(place) == PlaceType.VILLA) {
@@ -62,9 +79,11 @@ public class ReservationController {
                 String string = placeId + "?hasError=true&error=Date+from+is+after+date+end";
                 return "redirect:/place/" + string;
             }
-        } catch (HotelRoomNotAvaiable | VillaIsAlreadyReservedException e) {
-            String string = placeId + "?hasError=true&error=" + e.getMessage();
-            return "redirect:/place/" + string;
+        } catch (Exception e) {
+            model.addAttribute("getCause", e.getCause());
+            model.addAttribute("exceptionMessage", e.getMessage());
+            model.addAttribute("bodyContent", "error-template");
+            return "Master-Template";
         }
         return "redirect:/person/reservations";
     }

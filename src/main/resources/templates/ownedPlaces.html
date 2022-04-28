@@ -20,7 +20,8 @@
                 Reservations</a></div>
             <div class="col-2"><a class="btn btn-danger" th:href="@{'/place/delete/{id}'(id=${place.getId()})}">Delete
                 this place</a></div>
-            <div class="col-2"><a class="btn btn-info" th:href="@{'/place/edit/{id}'}">Edit Place</a></div>
+            <div class="col-2"><a class="btn btn-info" th:href="@{'/place/edit/{id}'(id=${place.getId()})}">Edit
+                Place</a></div>
         </div>
         <hr>
     </th:block>
