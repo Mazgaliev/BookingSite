@@ -184,7 +184,7 @@ public class PlaceController {
         } catch (Exception e) {
             model.addAttribute("getCause", "");
             model.addAttribute("exceptionMessage", "Cannot delete place when it still has reservations");
-            model.addAttribute("bodyContent", "error-template");
+            model.addAttribute("bodyContent",   "error-template");
             return "Master-Template";
         }
         return "redirect:/person/places";
