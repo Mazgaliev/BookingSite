@@ -1,0 +1,82 @@
+<section id="header" class="jumbotron text-center">
+    <h1 class="display-3">Edit your own place</h1>
+</section>
+
+
+<div class="container">
+    <form th:method="post" th:action="@{'/place/edit/{id}'(id=${place.id})}">
+        <div class="row">
+            <div class="col-12">
+                <label for="name"></label><input class="input-group-text w-100" type="text" id="name"
+                                                 name="name"
+                                                 th:placeholder="${place.name}?${place.name}:'Name'">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <label for="description"></label><input class="input-group-text w-100" type="text"
+                                                        id="description"
+                                                        name="description"
+                                                        th:placeholder="${place.description}?${place.description}:'Description'">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <label for="contactNumber"></label><input class="input-group-text w-100" id="contactNumber"
+                                                          name="contactNumber"
+                                                          th:placeholder="${place.contactNumber}?${place.contactNumber}:'Contact Number'">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <label for="location"></label><input class="input-group-text w-100" id="location"
+                                                     name="location"
+                                                     th:placeholder="${place.location}?${place.location}:'Location'">
+            </div>
+            <div class="col-6">
+                <label hidden for="id"></label><input hidden id="id" name="id" th:value="${person.getId()}">
+            </div>
+        </div>
+        <div class="row" th:if="${isVilla}">
+            <div class="col-12">
+                <label for="pricePerNight"></label><input class="input-group-text w-100" id="pricePerNight"
+                                                          name="pricePerNight"
+                                                          th:placeholder="${place.pricePerNight}?${place.pricePerNight}:'Price Per Night'">
+            </div>
+        </div>
+        <div th:if="${!isVilla}">
+            <div class="row">
+                <div class="col-12">
+                    <label for="vipRooms"></label><input class="input-group-text w-100" id="vipRooms" name="vipRooms"
+                                                         th:placeholder="${place.vipRooms}?${place.vipRooms}:'Number of VIP rooms'">
+                </div>
+                <div class="col-12">
+                    <label for="priceVipRoom"></label><input class="input-group-text w-100" id="priceVipRoom"
+                                                             name="priceVipRoom"
+                                                             th:placeholder="${place.priceVipRoom}?${place.priceVipRoom}:'Price for VIP rooms'">
+                </div>
+                <div class="col-12">
+                    <label for="standardRooms"></label><input class="input-group-text w-100" id="standardRooms"
+                                                              name="standardRooms"
+                                                              th:placeholder="${place.standardRooms}?${place.standardRooms}:'Number of Standard rooms'">
+                </div>
+                <div class="col-12">
+                    <label for="priceStandardRoom"></label><input class="input-group-text w-100" id="priceStandardRoom"
+                                                                  name="priceStandardRoom"
+                                                                  th:placeholder="${place.priceStandardRoom}?${place.priceStandardRoom}:'Standard Room Price'">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <label for="images"></label><input class="input-group-text w-100" id="images"
+                                                   placeholder="Paste your image links" name="images">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <button class="btn btn-outline-dark w-100">Edit place</button>
+            </div>
+        </div>
+    </form>
+</div>

@@ -23,28 +23,6 @@
             <label hidden for="id"></label><input type="text" hidden id="id" name="id" th:value="${person.getId()}">
         </div>
         <div class="row">
-            <div class="col-4">
-                <h5>Old password</h5>
-                <label for="oldPassword"></label><input required type="password"
-                                                        class="input-group-text bg-transparent w-100"
-                                                        id="oldPassword" name="oldPassword"
-                                                        placeholder="Old Password">
-            </div>
-            <div class="col-4 ">
-                <h5>Password</h5>
-                <label for="password"></label> <input required id="password" name="password"
-                                                      class="input-group-text bg-transparent w-100"
-                                                      type="password" th:placeholder="'Password'">
-            </div>
-            <div class="col-4 ">
-                <h5>Repeat password</h5>
-                <label for="repeatPassword"></label><input required id="repeatPassword" name="repeatPassword"
-
-                                                           class="input-group-text bg-transparent w-100" type="password"
-                                                           th:placeholder="'Repeat password'">
-            </div>
-        </div>
-        <div class="row">
             <div class="col-6">
                 <h5>Phone Number</h5>
                 <label for="phoneNumber"></label><input id="phoneNumber" name="phoneNumber"
@@ -62,6 +40,13 @@
             </div>
         </div>
         <br>
+        <div class="row" th:if="${!googleAcc}">
+            <div class="col-12">
+                <a class="btn btn-outline-primary w-100" href="/person/settings/changePassword">
+                    Change password
+                </a>
+            </div>
+        </div>
         <div class="row">
             <div class="col-12">
                 <button class="btn btn-outline-dark w-100" type="submit">Change information</button>

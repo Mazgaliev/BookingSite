@@ -56,6 +56,7 @@ public class PersonController {
             return "Master-Template";
         }
 
+
         model.addAttribute("reservation", reservation);
         model.addAttribute("bodyContent", "editReservation");
 
@@ -193,16 +194,17 @@ public class PersonController {
             if (authentication != null) {
                 if (authentication.getPrincipal() instanceof UserDetails) {
                     userPrincipal = (UserDetails) authentication.getPrincipal();
-
                     PersonDto person = this.personService.findByUsername(userPrincipal.getUsername());
                     roles = userPrincipal.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
                     model.addAttribute("person", person);
+                    model.addAttribute("googleAcc", false);
                 }
                 if (authentication.getPrincipal() instanceof CustomOAuth2User) {
                     oauth2User = (CustomOAuth2User) authentication.getPrincipal();
                     PersonDto person = this.personService.findByUsername(oauth2User.getEmail());
                     roles = oauth2User.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
                     model.addAttribute("person", person);
+                    model.addAttribute("googleAcc", true);
                 }
             }
         } catch (Exception e) {
@@ -228,13 +230,44 @@ public class PersonController {
     }
 
     @PostMapping("/settings")
-    public String updatePerson(@RequestParam Long id, @RequestParam String name, @RequestParam String
-            surname, @RequestParam String oldPassword, @RequestParam String password, @RequestParam String
-                                       repeatPassword, @RequestParam String phoneNumber, @RequestParam String username, Model model) {
+    public String updatePerson(@RequestParam Long id,
+                               @RequestParam String name,
+                               @RequestParam String surname,
+                               @RequestParam String phoneNumber,
+                               @RequestParam String username,
+                               Model model) {
 
         try {
-            this.personService.update(id, name, surname, username, password, repeatPassword, oldPassword, phoneNumber);
+            this.personService.update(id, name, surname, username, null, null, null, phoneNumber);
         } catch (Exception e) {
+            model.addAttribute("getCause", e.getCause());
+            model.addAttribute("exceptionMessage", e.getMessage());
+            model.addAttribute("bodyContent", "error-template");
+            return "Master-Template";
+        }
+
+        return "redirect:/logout";
+    }
+
+    @GetMapping("/settings/changePassword")
+    public String loadchangePersonPassword(Model model, Authentication authentication) {
+        getUserId(model, authentication);
+
+        model.addAttribute("bodyContent", "changePassword");
+        return "Master-Template";
+    }
+
+    @PostMapping("/settings/changePassword")
+    public String changePersonPassword(@RequestParam Long id,
+                                       @RequestParam String oldPassword,
+                                       @RequestParam String password,
+                                       @RequestParam String repeatPassword,
+                                       Model model) {
+
+        try {
+            PersonDto person = this.personService.findById(id);
+            this.personService.update(id, person.getName(), person.getSurname(), person.getUsername(), password, repeatPassword, oldPassword, person.getPhoneNumber());
+        }  catch (Exception e) {
             model.addAttribute("getCause", e.getCause());
             model.addAttribute("exceptionMessage", e.getMessage());
             model.addAttribute("bodyContent", "error-template");
@@ -254,8 +287,7 @@ public class PersonController {
         return page;
     }
 
-    private void makePaginationBar(Model model, Integer size, Page<Reservation> reservationPage,
-                                   int countReservations) {
+    private void makePaginationBar(Model model, Integer size, Page<Reservation> reservationPage, int countReservations) {
 
         if (countReservations == -1) {
             List<Integer> pageNumbers = IntStream.rangeClosed(1, 5)

@@ -55,16 +55,20 @@ public class PersonServiceImpl implements PersonService {
         if (!person.getUsername().equals(username) && this.personRepository.findByUsername(username).isPresent()) {
             throw new UsernameAlreadyExistsException();
         }
-        if (!password.equals(repeatPassword))
-            throw new PasswordsDoNotMatchException();
-        if (!passwordEncoder.matches(oldPassword, person.getPassword()))
-            throw new WrongOldPasswordException();
+        if(password != null) {
+            if (!password.equals(repeatPassword))
+                throw new PasswordsDoNotMatchException();
+            if (!passwordEncoder.matches(oldPassword, person.getPassword()))
+                throw new WrongOldPasswordException();
+        }
 
         person.setUsername(username);
         person.setName(name);
         person.setSurname(surname);
         person.setPhoneNumber(phoneNumber);
-        person.setPassword(passwordEncoder.encode(password));
+        if(password != null) {
+            person.setPassword(passwordEncoder.encode(password));
+        }
         this.personRepository.save(person);
         return modelMapper.map(person, PersonDto.class);
     }
