@@ -48,7 +48,7 @@ public class DataInitializer {
 //    @PostConstruct
     public void initData() {
 
-        for (int i = 0; i < 1500; i++) {
+        for (int i = 0; i < 200; i++) {
             this.reservationService.createHotelReservation(LocalDate.now(), LocalDate.now().plusDays(1L), 29L, 54L, RoomType.STANDARD);
             this.reservationService.createHotelReservation(LocalDate.now(), LocalDate.now().plusDays(1L), 29L, 54L, RoomType.VIP);
 

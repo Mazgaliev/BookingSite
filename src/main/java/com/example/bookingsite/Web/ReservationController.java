@@ -1,5 +1,6 @@
 package com.example.bookingsite.Web;
 
+import com.example.bookingsite.Model.CustomOAuth2User;
 import com.example.bookingsite.Model.Dto.PersonDto;
 import com.example.bookingsite.Model.Enum.PlaceType;
 import com.example.bookingsite.Model.Enum.RoomType;
@@ -41,15 +42,10 @@ public class ReservationController {
                                   @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
                                   @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate end,
                                   @RequestParam(required = false) RoomType roomType) {
-        UserDetails userPrincipal;
-        Long personId = 0L;
+        UserDetails userPrincipal = null;
+        CustomOAuth2User oauth2User = null;
 
-        if (authentication != null) {
-            userPrincipal = (UserDetails) authentication.getPrincipal();
-            PersonDto person = this.personService.findByUsername(userPrincipal.getUsername());
-            personId = person.getId();
-            model.addAttribute("person", person);
-        }
+        Long personId = getUserId(model,authentication);
 
         Place place = this.placeService.findById(placeId).get();
         try {
@@ -73,5 +69,23 @@ public class ReservationController {
         return "redirect:/home";
     }
 
-
+    private Long getUserId(Model model, Authentication authentication) {
+        UserDetails userPrincipal;
+        CustomOAuth2User oauth2User;
+        if (authentication != null) {
+            if (authentication.getPrincipal() instanceof UserDetails) {
+                userPrincipal = (UserDetails) authentication.getPrincipal();
+                PersonDto person = this.personService.findByUsername(userPrincipal.getUsername());
+                model.addAttribute("person", person);
+                return person.getId();
+            }
+            if (authentication.getPrincipal() instanceof CustomOAuth2User) {
+                oauth2User = (CustomOAuth2User) authentication.getPrincipal();
+                PersonDto person = this.personService.findByUsername(oauth2User.getEmail());
+                model.addAttribute("person", person);
+                return person.getId();
+            }
+        }
+        return 0L;
+    }
 }

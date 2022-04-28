@@ -1,5 +1,7 @@
 package com.example.bookingsite.Configuration;
 
+import com.example.bookingsite.Service.Implementation.CustomOAuth2UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -26,6 +28,13 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .failureUrl("/login")
                 .defaultSuccessUrl("/home")
                 .and()
+                .oauth2Login()
+                .loginPage("/login")
+                .userInfoEndpoint()
+                .userService(oAuth2UserService)
+                .and()
+                .successHandler(oAuthLoginSuccessHandler)
+                .and()
                 .logout()
                 .logoutUrl("/logout")
                 .clearAuthentication(true)
@@ -38,4 +47,10 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(AuthenticationManagerBuilder auth) {
         auth.authenticationProvider(customUsernameAndPasswordAuthProvider);
     }
+
+    @Autowired
+    private CustomOAuth2UserService oAuth2UserService;
+
+    @Autowired
+    private OAuthLoginSuccessHandler oAuthLoginSuccessHandler;
 }

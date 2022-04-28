@@ -1,5 +1,6 @@
 package com.example.bookingsite.Model;
 
+import com.example.bookingsite.Model.Enum.AuthenticationType;
 import com.example.bookingsite.Model.Enum.Role;
 import lombok.Getter;
 import lombok.Setter;
@@ -37,6 +38,10 @@ public class Person implements UserDetails {
 
     @OneToMany(mappedBy = "personId")
     List<Reservation> reservations;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "auth_type")
+    private AuthenticationType authType;
 
     private boolean isAccountNonExpired = true;
     private boolean isAccountNonLocked = true;

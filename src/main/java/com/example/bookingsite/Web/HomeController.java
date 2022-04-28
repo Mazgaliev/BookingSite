@@ -1,5 +1,6 @@
 package com.example.bookingsite.Web;
 
+import com.example.bookingsite.Model.CustomOAuth2User;
 import com.example.bookingsite.Model.Dto.PersonDto;
 import com.example.bookingsite.Model.Hotel;
 import com.example.bookingsite.Model.Place;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.awt.print.Pageable;
+import java.nio.file.attribute.UserPrincipal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -41,13 +43,10 @@ public class HomeController {
                              @RequestParam(required = false) Integer page,
                              @RequestParam(required = false) Integer size,
                              @RequestParam(required = false) String state) {
-        UserDetails userPrincipal;
+        UserDetails userPrincipal=null;
+        CustomOAuth2User oauth2User =null;
 
-        if (authentication != null) {
-            userPrincipal = (UserDetails) authentication.getPrincipal();
-            PersonDto person = this.personService.findByUsername(userPrincipal.getUsername());
-            model.addAttribute("person", person);
-        }
+        getUserId(model, authentication);
 
         List<Place> placeList;
         Page<Place> placePage;
@@ -88,12 +87,10 @@ public class HomeController {
                              @RequestParam(required = false) Integer page,
                              @RequestParam(required = false) Integer size,
                              @RequestParam(required = false) String state) {
-        UserDetails userPrincipal;
-        if (authentication != null) {
-            userPrincipal = (UserDetails) authentication.getPrincipal();
-            PersonDto person = this.personService.findByUsername(userPrincipal.getUsername());
-            model.addAttribute("person", person);
-        }
+        UserDetails userPrincipal=null;
+        CustomOAuth2User oauth2User =null;
+
+        getUserId(model, authentication);
 
         List<Villa> villasList;
         Page<Villa> placePage;
@@ -135,12 +132,10 @@ public class HomeController {
                              @RequestParam(required = false) Integer page,
                              @RequestParam(required = false) Integer size,
                              @RequestParam(required = false) String state) {
-        UserDetails userPrincipal;
-        if (authentication != null) {
-            userPrincipal = (UserDetails) authentication.getPrincipal();
-            PersonDto person = this.personService.findByUsername(userPrincipal.getUsername());
-            model.addAttribute("person", person);
-        }
+        UserDetails userPrincipal=null;
+        CustomOAuth2User oauth2User =null;
+
+        getUserId(model, authentication);
 
         List<Hotel> hotelList;
         Page<Hotel> placePage;
@@ -224,6 +219,23 @@ public class HomeController {
                     .collect(Collectors.toList());
             pageNumbers.add(0, 1);
             model.addAttribute("pageNumbers", pageNumbers);
+        }
+    }
+
+    private void getUserId(Model model, Authentication authentication) {
+        UserDetails userPrincipal;
+        CustomOAuth2User oauth2User;
+        if (authentication != null) {
+            if(authentication.getPrincipal() instanceof UserDetails) {
+                userPrincipal = (UserDetails) authentication.getPrincipal();
+                PersonDto person = this.personService.findByUsername(userPrincipal.getUsername());
+                model.addAttribute("person", person);
+            }
+            if(authentication.getPrincipal() instanceof CustomOAuth2User) {
+                oauth2User = (CustomOAuth2User) authentication.getPrincipal();
+                PersonDto person = this.personService.findByUsername(oauth2User.getEmail());
+                model.addAttribute("person", person);
+            }
         }
     }
 }

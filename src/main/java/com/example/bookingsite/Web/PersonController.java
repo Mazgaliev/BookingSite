@@ -1,5 +1,6 @@
 package com.example.bookingsite.Web;
 
+import com.example.bookingsite.Model.CustomOAuth2User;
 import com.example.bookingsite.Model.Dto.PersonDto;
 import com.example.bookingsite.Model.Enum.PlaceType;
 import com.example.bookingsite.Model.Enum.Role;
@@ -20,6 +21,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -40,12 +42,12 @@ public class PersonController {
 
     @GetMapping("/reservations/edit/{id}")
     public String editReservationPage(@PathVariable Long id, Model model, Authentication authentication) {
-        UserDetails userPrincipal;
-        if (authentication != null) {
-            userPrincipal = (UserDetails) authentication.getPrincipal();
-            PersonDto person = this.personService.findByUsername(userPrincipal.getUsername());
-            model.addAttribute("person", person);
-        }
+        UserDetails userPrincipal = null;
+        CustomOAuth2User oauth2User = null;
+        PersonDto person = null;
+
+        getUserId(model, authentication);
+
         Reservation reservation;
 
         try {
@@ -72,13 +74,15 @@ public class PersonController {
 
     @GetMapping("/reservations")
     public String viewReservations(Model model, Authentication authentication) {
-        UserDetails userPrincipal;
-        if (authentication != null) {
-            userPrincipal = (UserDetails) authentication.getPrincipal();
-            PersonDto person = this.personService.findByUsername(userPrincipal.getUsername());
-            model.addAttribute("person", person);
-            model.addAttribute("reservations", person.getReservations());
-        }
+        UserDetails userPrincipal = null;
+        CustomOAuth2User oauth2User = null;
+        PersonDto person = null;
+
+        person = getPersonDto(model, authentication, userPrincipal, oauth2User, person);
+
+        model.addAttribute("person", person);
+        model.addAttribute("reservations", person.getReservations());
+
 
         model.addAttribute("bodyContent", "reservations");
 
@@ -87,13 +91,15 @@ public class PersonController {
 
     @GetMapping("/places")
     public String viewPlaces(Model model, Authentication authentication) {
-        UserDetails userPrincipal;
-        if (authentication != null) {
-            userPrincipal = (UserDetails) authentication.getPrincipal();
-            PersonDto person = this.personService.findByUsername(userPrincipal.getUsername());
-            model.addAttribute("person", person);
-            model.addAttribute("places", person.getOwns());
-        }
+        UserDetails userPrincipal = null;
+        CustomOAuth2User oauth2User = null;
+        PersonDto person = null;
+
+        person = getPersonDto(model, authentication, userPrincipal, oauth2User, person);
+
+
+        model.addAttribute("person", person);
+        model.addAttribute("places", person.getOwns());
 
         model.addAttribute("bodyContent", "ownedPlaces");
         return "Master-Template";
@@ -114,14 +120,17 @@ public class PersonController {
                                     @RequestParam(required = false) Integer page,
                                     @RequestParam(required = false) Integer size,
                                     @RequestParam(required = false) String state) {
-        UserDetails userPrincipal;
+        UserDetails userPrincipal = null;
+        CustomOAuth2User oauth2User = null;
+
+        getUserId(model, authentication);
+
         if (authentication != null) {
-            userPrincipal = (UserDetails) authentication.getPrincipal();
-            PersonDto person = this.personService.findByUsername(userPrincipal.getUsername());
+
             Place place = this.placeService.findById(id).get();
             model.addAttribute("placeId", place.getId());
             model.addAttribute("PlaceName", place.getName());
-            model.addAttribute("person", person);
+            // model.addAttribute("person", person);
 
             List<Reservation> reservationList;
             Page<Reservation> reservationPage;
@@ -151,15 +160,36 @@ public class PersonController {
 
     @GetMapping("/settings")
     public String loadPersonSettings(Model model, Authentication authentication) {
-        UserDetails userPrincipal = (UserDetails) authentication.getPrincipal();
-        List<String> roles = userPrincipal.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
+
+        UserDetails userPrincipal = null;
+        CustomOAuth2User oauth2User = null;
+        List<String> roles = new ArrayList<>();
+
+        if (authentication != null) {
+            if (authentication.getPrincipal() instanceof UserDetails) {
+                userPrincipal = (UserDetails) authentication.getPrincipal();
+                PersonDto person = this.personService.findByUsername(userPrincipal.getUsername());
+                roles = userPrincipal.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
+                model.addAttribute("person", person);
+            }
+            if (authentication.getPrincipal() instanceof CustomOAuth2User) {
+                oauth2User = (CustomOAuth2User) authentication.getPrincipal();
+                PersonDto person = this.personService.findByUsername(oauth2User.getEmail());
+                roles = oauth2User.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
+                model.addAttribute("person", person);
+            }
+        }
+
+//        UserDetails userPrincipal = (UserDetails) authentication.getPrincipal();
+//        roles = userPrincipal.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
+
         List<String> allRoles = this.personService.getAllRoles();
 
         PersonDto person = this.personService.findByUsername(userPrincipal.getUsername());
 
         model.addAttribute("currentRole", roles.get(0));
         model.addAttribute("roles", allRoles);
-        model.addAttribute("person", person);
+        // model.addAttribute("person", person);
         model.addAttribute("bodyContent", "settings");
 
         return "Master-Template";
@@ -230,12 +260,11 @@ public class PersonController {
     @GetMapping("/create")
     public String viewCreatePage(Model model, Authentication authentication, @RequestParam(required = false) PlaceType placeType) {
 
-        UserDetails userPrincipal;
-        if (authentication != null) {
-            userPrincipal = (UserDetails) authentication.getPrincipal();
-            PersonDto person = this.personService.findByUsername(userPrincipal.getUsername());
-            model.addAttribute("person", person);
-        }
+        UserDetails userPrincipal = null;
+        CustomOAuth2User oauth2User = null;
+
+        getUserId(model, authentication);
+
         if (placeType == null || placeType == PlaceType.VILLA) {
             model.addAttribute("isVilla", true);
         } else {
@@ -245,5 +274,43 @@ public class PersonController {
         model.addAttribute("bodyContent", "create-place");
         return "Master-Template";
 
+    }
+
+    private void getUserId(Model model, Authentication authentication) {
+        UserDetails userPrincipal;
+        CustomOAuth2User oauth2User;
+        if (authentication != null) {
+            if (authentication.getPrincipal() instanceof UserDetails) {
+                userPrincipal = (UserDetails) authentication.getPrincipal();
+                PersonDto person = this.personService.findByUsername(userPrincipal.getUsername());
+                model.addAttribute("person", person);
+            }
+            if (authentication.getPrincipal() instanceof CustomOAuth2User) {
+                oauth2User = (CustomOAuth2User) authentication.getPrincipal();
+                PersonDto person = this.personService.findByUsername(oauth2User.getEmail());
+                model.addAttribute("person", person);
+            }
+        }
+    }
+
+    private PersonDto getPersonDto(Model model,
+                                   Authentication authentication,
+                                   UserDetails userPrincipal,
+                                   CustomOAuth2User oauth2User,
+                                   PersonDto person) {
+        if (authentication != null) {
+            if (authentication.getPrincipal() instanceof UserDetails) {
+                userPrincipal = (UserDetails) authentication.getPrincipal();
+                person = this.personService.findByUsername(userPrincipal.getUsername());
+                model.addAttribute("person", person);
+
+            }
+            if (authentication.getPrincipal() instanceof CustomOAuth2User) {
+                oauth2User = (CustomOAuth2User) authentication.getPrincipal();
+                person = this.personService.findByUsername(oauth2User.getEmail());
+                model.addAttribute("person", person);
+            }
+        }
+        return person;
     }
 }
