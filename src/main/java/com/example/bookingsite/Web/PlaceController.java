@@ -30,7 +30,6 @@ public class PlaceController {
         this.placeService = placeService;
     }
 
-
     @PostMapping("/create")
     public String createPlace(@RequestParam String name,
                               @RequestParam String description,

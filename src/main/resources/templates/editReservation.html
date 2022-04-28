@@ -5,14 +5,14 @@
 
 <div class="container">
     <form th:method="post" th:action="@{'/person/edit/reservation'}">
-        <div class="row">
+        <div class="row text-center">
             <div class="col-3">
-                <label class="form-control" for="start"
+                <label for="start"
                        th:text="${reservation.getStart()} + ' Is the starting date'"></label><input
                     required id="start" name="start" type="date">
             </div>
             <div class="col-3">
-                <label class="form-control" for="end"
+                <label for="end"
                        th:text="${reservation.getFinish()} + ' Is the leaving date'"></label><input
                     required id="end" name="end" type="date">
             </div>

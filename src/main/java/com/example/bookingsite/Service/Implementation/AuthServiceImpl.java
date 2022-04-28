@@ -30,20 +30,18 @@ public class AuthServiceImpl implements AuthService {
 
     public void updateAuthenticationType(String username, String oauth2ClientName) {
         AuthenticationType authType = AuthenticationType.valueOf(oauth2ClientName.toUpperCase());
-            Optional<Person> existUser = personRepository.findByUsername(username);
+        Optional<Person> existUser = personRepository.findByUsername(username);
 
-            if (existUser.isEmpty()) {
-                Person newUser = new Person();
-                newUser.setUsername(username);
-                newUser.setAuthType(AuthenticationType.GOOGLE);
-                newUser.setEnabled(true);
-                newUser.setUserRole(Role.ROLE_OWNER);
+        if (existUser.isEmpty()) {
+            Person newUser = new Person();
+            newUser.setUsername(username);
+            newUser.setAuthType(AuthenticationType.GOOGLE);
+            newUser.setEnabled(true);
 
-                personRepository.save(newUser);
-            }
-            else {
-                existUser.get().setAuthType(AuthenticationType.GOOGLE);
-                //personRepository.updateAuthenticationType(username, authType);
-            }
+            personRepository.save(newUser);
+        } else {
+            existUser.get().setAuthType(AuthenticationType.GOOGLE);
+            //personRepository.updateAuthenticationType(username, authType);
+        }
     }
 }

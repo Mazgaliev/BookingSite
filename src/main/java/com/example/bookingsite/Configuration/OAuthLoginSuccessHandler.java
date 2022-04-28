@@ -15,8 +15,12 @@ import java.io.IOException;
 @Component
 public class OAuthLoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
 
-    @Autowired
+    final
     AuthServiceImpl authService;
+
+    public OAuthLoginSuccessHandler(AuthServiceImpl authService) {
+        this.authService = authService;
+    }
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
