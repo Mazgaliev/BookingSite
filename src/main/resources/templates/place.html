@@ -12,17 +12,36 @@
         </div>
     </div>
     <div class="row">
-        <th:block th:each="image:${images}">
-            <div class="col-4">
-                <div class="responsive">
-                    <div class="gallery">
-                        <a target="_blank" th:href="${image}">
-                            <img th:src="${image}" alt="Clinque Terre" width="400" height="250">
+        <div class="col-2"></div>
+        <div class="col">
+            <div class="responsive">
+                <div class="gallery">
+                    <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+                        <ol class="carousel-indicators">
+                            <li data-target="#carouselExampleIndicators" th:data-slide-to="${row.index}"
+                                th:each="image, row :${images}" th:class="${row.index} == 0 ?'active':''"></li>
+                        </ol>
+                        <div class="carousel-inner">
+                            <div class="carousel-item" th:each="image, row :${images}"
+                                 th:classappend="${row.index} == 0 ? 'active':''">
+                                <img class="d-block img-fluid h-100 w-100" th:src="${image}" style="height: 350px" alt="slide">
+                            </div>
+                        </div>
+                        <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button"
+            e               data-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="carousel-control-next" href="#carouselExampleIndicators" role="button"
+                           data-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Next</span>
                         </a>
                     </div>
                 </div>
             </div>
-        </th:block>
+        </div>
+        <div class="col-2"></div>
     </div>
 </section>
 <div class="container">
