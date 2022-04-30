@@ -158,14 +158,14 @@ public class PlaceController {
             if (this.placeService.placeType(place) == PlaceType.VILLA) {
                 Villa villa = (Villa) place;
                 pricePerNight = pricePerNight == null ? villa.getPricePerNight() : pricePerNight;
-                this.placeService.updateVilla(id, name, location, contactNumber, place.getOwner().getId(), description, pricePerNight);
+                this.placeService.updateVilla(id, name, location, contactNumber, place.getOwner().getId(), description, pricePerNight, images);
             } else {
                 Hotel hotel = (Hotel) place;
                 vipRooms = vipRooms == null ? hotel.getVipRooms() : vipRooms;
                 priceVipRoom = priceVipRoom == null ? hotel.getPriceVipRoom() : priceVipRoom;
                 standardRooms = standardRooms == null ? hotel.getStandardRooms() : standardRooms;
                 priceStandardRoom = priceStandardRoom == null ? hotel.getPriceStandardRoom() : priceStandardRoom;
-                this.placeService.updateHotel(id, name, location, contactNumber, place.getOwner().getId(), description, vipRooms, standardRooms, priceVipRoom, priceStandardRoom);
+                this.placeService.updateHotel(id, name, location, contactNumber, place.getOwner().getId(), description, vipRooms, standardRooms, priceVipRoom, priceStandardRoom, images);
             }
         } catch (Exception e) {
             model.addAttribute("getCause", e.getCause());
@@ -184,7 +184,7 @@ public class PlaceController {
         } catch (Exception e) {
             model.addAttribute("getCause", "");
             model.addAttribute("exceptionMessage", "Cannot delete place when it still has reservations");
-            model.addAttribute("bodyContent",   "error-template");
+            model.addAttribute("bodyContent", "error-template");
             return "Master-Template";
         }
         return "redirect:/person/places";

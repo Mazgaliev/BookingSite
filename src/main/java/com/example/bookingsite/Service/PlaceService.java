@@ -22,10 +22,10 @@ public interface PlaceService {
 
     Optional<Hotel> updateHotel(Long id, String name, String location, String contactNumber,
                                 Long ownerId, String description, Integer vipRooms, Integer standardRooms,
-                                Integer priceVipRoom, Integer priceStandardRoom);
+                                Integer priceVipRoom, Integer priceStandardRoom, List<String> images);
 
     Optional<Villa> updateVilla(Long id, String name, String location, String contactNumber,
-                                Long ownerId, String description, Integer pricePerNight);
+                                Long ownerId, String description, Integer pricePerNight, List<String> images);
 
     Optional<Place> addImages(Long placeId, List<String> images);
 

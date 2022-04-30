@@ -15,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.awt.*;
 import java.util.List;
 import java.util.Optional;
 
@@ -76,13 +77,16 @@ public class PlaceServiceImpl implements PlaceService {
     @Override
     public Optional<Hotel> updateHotel(Long id, String name, String location, String contactNumber,
                                        Long ownerId, String description, Integer vipRooms, Integer standardRooms,
-                                       Integer priceVipRoom, Integer priceStandardRoom) {
+                                       Integer priceVipRoom, Integer priceStandardRoom, List<String> images) {
 
         Hotel hotel = this.hotelRepository.findById(id).orElseThrow(PlaceDoesNotExistException::new);
         Person owner = this.personRepository.findById(ownerId).orElseThrow(PersonDoesNotExistException::new);
-        if (this.placeRepository.findByName(name).isPresent()) {
+
+        if (!hotel.getName().equals(name) && this.placeRepository.findByName(name).isPresent()) {
             throw new PlaceAlreadyExistsException();
         }
+        List<String> currentImages = hotel.getImages();
+        currentImages.addAll(images);
         hotel.setName(name);
         hotel.setLocation(location);
         hotel.setOwner(owner);
@@ -92,27 +96,32 @@ public class PlaceServiceImpl implements PlaceService {
         hotel.setStandardRooms(standardRooms);
         hotel.setPriceStandardRoom(priceStandardRoom);
         hotel.setPriceVipRoom(priceVipRoom);
-
+        hotel.setImages(currentImages);
         this.hotelRepository.save(hotel);
         return Optional.of(hotel);
     }
 
     @Override
     public Optional<Villa> updateVilla(Long id, String name, String location, String contactNumber, Long ownerId,
-                                       String description, Integer pricePerNight) {
+                                       String description, Integer pricePerNight, List<String> images) {
 
         Villa villa = this.villaRepository.findById(id).orElseThrow(PlaceDoesNotExistException::new);
         Person owner = this.personRepository.findById(ownerId).orElseThrow(PersonDoesNotExistException::new);
-        if (this.placeRepository.findByName(name).isPresent()) {
+
+        if (this.placeRepository.findByName(name).isPresent() && !villa.getName().equals(name)) {
             throw new PlaceAlreadyExistsException();
         }
 
+        List<String> currentImages = villa.getImages();
+        currentImages.addAll(images);
         villa.setName(name);
         villa.setLocation(location);
         villa.setOwner(owner);
         villa.setContactNumber(contactNumber);
         villa.setDescription(description);
         villa.setPricePerNight(pricePerNight);
+        villa.setImages(currentImages);
+
         this.villaRepository.save(villa);
 
         return Optional.of(villa);
