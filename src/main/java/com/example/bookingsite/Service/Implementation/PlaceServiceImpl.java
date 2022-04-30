@@ -85,6 +85,7 @@ public class PlaceServiceImpl implements PlaceService {
         if (!hotel.getName().equals(name) && this.placeRepository.findByName(name).isPresent()) {
             throw new PlaceAlreadyExistsException();
         }
+    
         List<String> currentImages = hotel.getImages();
         currentImages.addAll(images);
         hotel.setName(name);

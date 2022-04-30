@@ -8,7 +8,7 @@ import javax.persistence.Entity;
 @Entity
 @Getter
 @Setter
-public class Hotel extends Place{
+public class Hotel extends Place {
 
     Integer vipRooms;
     Integer standardRooms;

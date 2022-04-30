@@ -14,6 +14,7 @@ import java.util.List;
 @Setter
 @Inheritance(strategy = InheritanceType.JOINED)
 public class Place {
+    //TODO implementiranje na lajk komentari rating
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     Long id;
