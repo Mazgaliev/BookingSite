@@ -23,6 +23,8 @@ public class Place {
 
     String description;
 
+    Short rating;
+
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "Images", joinColumns = @JoinColumn(name = "id"))
     @Column(name = "Images")
@@ -36,6 +38,9 @@ public class Place {
 
     @ManyToOne
     Person owner;
+
+    @OneToMany(mappedBy = "place")
+    List<Comment> comments;
 
     public Place(String name, String location, String description, String contactNumber, Person owner) {
         this.name = name;

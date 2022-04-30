@@ -16,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.awt.*;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -85,8 +86,10 @@ public class PlaceServiceImpl implements PlaceService {
         if (!hotel.getName().equals(name) && this.placeRepository.findByName(name).isPresent()) {
             throw new PlaceAlreadyExistsException();
         }
-    
+
         List<String> currentImages = hotel.getImages();
+        images.removeIf(currentImages::contains);
+
         currentImages.addAll(images);
         hotel.setName(name);
         hotel.setLocation(location);

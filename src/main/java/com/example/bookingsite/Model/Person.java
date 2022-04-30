@@ -39,6 +39,9 @@ public class Person implements UserDetails {
     @OneToMany(mappedBy = "personId")
     List<Reservation> reservations;
 
+    @OneToMany(mappedBy = "person")
+    List<Comment> comments;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "auth_type")
     private AuthenticationType authType;

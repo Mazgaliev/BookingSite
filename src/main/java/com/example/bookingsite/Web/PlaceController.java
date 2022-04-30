@@ -1,17 +1,13 @@
 package com.example.bookingsite.Web;
 
-import com.example.bookingsite.Model.CustomOAuth2User;
+import com.example.bookingsite.Model.*;
 import com.example.bookingsite.Model.Dto.PersonDto;
 import com.example.bookingsite.Model.Enum.PlaceType;
-import com.example.bookingsite.Model.Enum.RoomType;
-import com.example.bookingsite.Model.Hotel;
-import com.example.bookingsite.Model.Place;
-import com.example.bookingsite.Model.Villa;
+import com.example.bookingsite.Service.CommentService;
 import com.example.bookingsite.Service.PersonService;
 import com.example.bookingsite.Service.PlaceService;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.parameters.P;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,9 +22,12 @@ public class PlaceController {
 
     private final PlaceService placeService;
 
-    public PlaceController(PersonService personService, PlaceService placeService) {
+    private final CommentService commentService;
+
+    public PlaceController(PersonService personService, PlaceService placeService, CommentService commentService) {
         this.personService = personService;
         this.placeService = placeService;
+        this.commentService = commentService;
     }
 
     @PostMapping("/create")
@@ -86,12 +85,13 @@ public class PlaceController {
             model.addAttribute("price1", hotel.getPriceStandardRoom());
             model.addAttribute("price2", hotel.getPriceVipRoom());
         }
+        List<Comment> comments = this.commentService.findCommentsByPlaceId(id);
         model.addAttribute("hasError", hasError);
         model.addAttribute("error", error);
         model.addAttribute("images", place.getImages());
         model.addAttribute("place", place);
         model.addAttribute("ownerPhone", place.getOwner().getPhoneNumber());
-
+        model.addAttribute("comments", comments.size() == 0 ? comments : null);
         model.addAttribute("bodyContent", "place");
 
         return "Master-Template";
