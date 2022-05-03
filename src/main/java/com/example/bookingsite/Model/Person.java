@@ -40,7 +40,7 @@ public class Person implements UserDetails {
     List<Reservation> reservations;
 
     @OneToMany(mappedBy = "person")
-    List<Comment> comments;
+    List<Review> reviews;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "auth_type")

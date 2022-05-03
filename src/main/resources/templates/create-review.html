@@ -1,0 +1,31 @@
+<section id="header" class="jumbotron text-center">
+    <h1 class="display-3" th:text="'Share your experience visiting ' + ${placeName}"></h1>
+
+</section>
+
+<div class="container">
+    <form th:method="post" th:action="@{'/review'}">
+        <div class="row">
+
+            <div class="col-12">
+                <labe for="description">Describe your experience</labe>
+                <input id="description" name="description" type="text" class="form-text w-100">
+            </div>
+            <div class="col-12">
+                <labe for="rating">On a scale from 1 to 5 how much did you like it here</labe>
+                <input type="number" class="form-text w-100" id="rating" name="rating" required>
+            </div>
+            <div class="col-12" hidden>
+                <labe for="placeId">On a scale from 1 to 5 how much did you like it here</labe>
+                <input th:value="${placeId}" class="form-text w-100" id="placeId" name="placeId" hidden>
+            </div>
+            <div class="col-12" hidden>
+                <labe for="personId">On a scale from 1 to 5 how much did you like it here</labe>
+                <input th:value="${person.getId()}" class="form-text w-100" id="personId" name="personId" hidden>
+            </div>
+            <div class="col-12">
+                <button class="btn btn-outline-dark w-100" type="submit"> Submit your review</button>
+            </div>
+        </div>
+    </form>
+</div>

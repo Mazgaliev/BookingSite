@@ -3,7 +3,7 @@ package com.example.bookingsite.Web;
 import com.example.bookingsite.Model.*;
 import com.example.bookingsite.Model.Dto.PersonDto;
 import com.example.bookingsite.Model.Enum.PlaceType;
-import com.example.bookingsite.Service.CommentService;
+import com.example.bookingsite.Service.ReviewService;
 import com.example.bookingsite.Service.PersonService;
 import com.example.bookingsite.Service.PlaceService;
 import org.springframework.security.access.AccessDeniedException;
@@ -22,12 +22,12 @@ public class PlaceController {
 
     private final PlaceService placeService;
 
-    private final CommentService commentService;
+    private final ReviewService reviewService;
 
-    public PlaceController(PersonService personService, PlaceService placeService, CommentService commentService) {
+    public PlaceController(PersonService personService, PlaceService placeService, ReviewService reviewService) {
         this.personService = personService;
         this.placeService = placeService;
-        this.commentService = commentService;
+        this.reviewService = reviewService;
     }
 
     @PostMapping("/create")
@@ -65,16 +65,11 @@ public class PlaceController {
                             @RequestParam(required = false) boolean hasError,
                             @RequestParam(required = false) String error) {
         Place place;
-        try {
+
             getUserId(model, authentication);
 
             place = this.placeService.findById(id).get();
-        } catch (Exception e) {
-            model.addAttribute("getCause", e.getCause());
-            model.addAttribute("exceptionMessage", e.getMessage());
-            model.addAttribute("bodyContent", "error-template");
-            return "Master-Template";
-        }
+
         if (this.placeService.placeType(place) == PlaceType.VILLA) {
             Villa villa = (Villa) place;
 
@@ -85,13 +80,13 @@ public class PlaceController {
             model.addAttribute("price1", hotel.getPriceStandardRoom());
             model.addAttribute("price2", hotel.getPriceVipRoom());
         }
-        List<Comment> comments = this.commentService.findCommentsByPlaceId(id);
+        List<Review> reviews = this.reviewService.findCommentsByPlaceId(id);
         model.addAttribute("hasError", hasError);
         model.addAttribute("error", error);
         model.addAttribute("images", place.getImages());
         model.addAttribute("place", place);
         model.addAttribute("ownerPhone", place.getOwner().getPhoneNumber());
-        model.addAttribute("comments", comments.size() == 0 ? comments : null);
+        model.addAttribute("reviews", reviews.size() == 0 ? null : reviews);
         model.addAttribute("bodyContent", "place");
 
         return "Master-Template";

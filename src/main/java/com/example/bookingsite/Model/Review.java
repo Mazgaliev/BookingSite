@@ -9,7 +9,7 @@ import javax.persistence.*;
 @Entity
 @Getter
 @Setter
-public class Comment {
+public class Review {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     Long id;
@@ -24,7 +24,7 @@ public class Comment {
     @ManyToOne
     Place place;
 
-    public Comment(String description, Person person, Place place, Short rating) {
+    public Review(String description, Person person, Place place, Short rating) {
         this.description = description;
         this.person = person;
         this.place = place;
@@ -33,7 +33,7 @@ public class Comment {
         this.rating = rating;
     }
 
-    public Comment() {
+    public Review() {
 
     }
 }

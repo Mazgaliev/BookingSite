@@ -3,10 +3,8 @@ package com.example.bookingsite.Model;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.repository.cdi.Eager;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -23,7 +21,7 @@ public class Place {
 
     String description;
 
-    Short rating;
+    Double rating;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "Images", joinColumns = @JoinColumn(name = "id"))
@@ -40,7 +38,7 @@ public class Place {
     Person owner;
 
     @OneToMany(mappedBy = "place")
-    List<Comment> comments;
+    List<Review> reviews;
 
     public Place(String name, String location, String description, String contactNumber, Person owner) {
         this.name = name;

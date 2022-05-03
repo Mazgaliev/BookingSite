@@ -94,27 +94,6 @@
 
                 </div>
             </div>
-
-            <div class="container" th:if="${comments!=null}">
-                <h3>Comments</h3>
-                <div class="row">
-                    <th:block th:each="comment:${comments}">
-                        <div class="col-2">
-                            <div class="card">
-                                <div class="card-header">
-                                    <h4 class="card-title" th:text="${comment.getPerson().getName()}"></h4>
-                                </div>
-                                <div class="card-body">
-                                    <div class="card-subtitle">
-                                        <p class="card-text" th:text="'Rating: ' + ${comment.getRating()}"></p>
-                                    </div>
-                                    <p class="card-text" th:text="${comment.getDescription()}"></p>
-                                </div>
-                            </div>
-                        </div>
-                    </th:block>
-                </div>
-            </div>
             <div class="row">
                 <input hidden th:value="${place.getId()}" th:id="placeId" th:name="placeId">
             </div>
@@ -122,6 +101,40 @@
             <th:block th:if="${param.hasError}">
                 <h2 class="text-danger" th:text="${param.error}"></h2>
             </th:block>
+
         </form>
+        </br></br>
+        <div class="container" th:if="${reviews==null}">
+            <div class="row">
+                <div class="col-7">
+                    <p>There are no reviews for this place, <a th:href="@{'/review/{id}' (id=${place.getId()})}"
+                                                               th:text="'share your experience visiting ' +${place.getName()}"></a>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="container" th:if="${reviews!=null}">
+            <h3>Reviews</h3>
+            <p><a th:text="'Share your experience visiting '+${place.getName()}"
+                  th:href="@{'/review/{id}'(id=${place.getId()})}"></a></p>
+            <div class="row">
+                <th:block th:each="review:${reviews}">
+                    <div class="col-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title" th:text="${review.getPerson().getName()}"></h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="card-subtitle">
+                                    <p class="card-text" th:text="'Rating: ' + ${review.getRating()}"></p>
+                                </div>
+                                <p class="card-text" th:text="${review.getDescription()}"></p>
+                            </div>
+                        </div>
+                    </div>
+                </th:block>
+            </div>
+        </div>
     </div>
 </div>
