@@ -1,5 +1,7 @@
 package com.example.bookingsite.Service.Implementation;
 
+import com.example.bookingsite.Model.Exception.PlaceHasNoReservationsException;
+import com.example.bookingsite.Model.Reservation;
 import com.example.bookingsite.Model.Review;
 import com.example.bookingsite.Model.Exception.PersonDoesNotExistException;
 import com.example.bookingsite.Model.Exception.PlaceDoesNotExistException;
@@ -33,6 +35,10 @@ public class ReviewServiceImpl implements ReviewService {
         Place place = this.placeRepository.findById(placeId).orElseThrow(PlaceDoesNotExistException::new);
         Review review = new Review(description, person, place, rating);
         this.reviewRepository.save(review);
+        List<Review> reviews = place.getReviews();
+        Double newRating = newReviewValue(reviews);
+        place.setRating(newRating);
+        this.placeRepository.save(place);
         return review;
     }
 
@@ -44,5 +50,10 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     public Review findByPlaceIdAndPersonId(Long placeId, Long personId) {
         return this.reviewRepository.findByPerson_IdAndPlace_Id(personId, placeId).orElseThrow();
+    }
+
+    private double newReviewValue(List<Review> reviews) {
+
+        return reviews.stream().mapToDouble(Review::getRating).average().orElseThrow(PlaceHasNoReservationsException::new);
     }
 }

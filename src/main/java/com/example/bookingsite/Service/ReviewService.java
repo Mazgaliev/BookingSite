@@ -12,4 +12,6 @@ public interface ReviewService {
     List<Review> findCommentsByPlaceId(Long id);
 
     Review findByPlaceIdAndPersonId(Long placeId, Long personId);
+
+
 }
