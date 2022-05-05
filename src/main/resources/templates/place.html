@@ -16,15 +16,16 @@
         <div class="col">
             <div class="responsive">
                 <div class="gallery">
-                    <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+                    <div id="carouselExampleIndicators" class="carousel slide w-100" data-ride="carousel">
                         <ol class="carousel-indicators">
                             <li data-target="#carouselExampleIndicators" th:data-slide-to="${row.index}"
                                 th:each="image, row :${images}" th:class="${row.index} == 0 ?'active':''"></li>
                         </ol>
                         <div class="carousel-inner">
                             <div class="carousel-item" th:each="image, row :${images}"
-                                 th:classappend="${row.index} == 0 ? 'active':''">
-                                <img class="d-block img-fluid h-100 w-100" th:src="${image}" style="height: 350px"
+                                 th:classappend="${row.index} == 0 ? 'active':''"
+                                 style="aspect-ratio: 1/0.6">
+                                <img class="img-fluid h-100 w-100" th:src="${image}" style="height: 350px"
                                      alt="slide">
                             </div>
                         </div>
@@ -49,7 +50,7 @@
     <div class="border-1" th:if="${#request.getRemoteUser()!=null}">
         <form method="post" action="/reserve">
 
-            <div class="row  justify-content-center align-content-center m-5">
+            <div class="row text-center m-5">
                 <div class="card shadow" th:if="${price2} > 0">
                     <div class="card-body">
                         <div class="btn-group btn-group-toggle"

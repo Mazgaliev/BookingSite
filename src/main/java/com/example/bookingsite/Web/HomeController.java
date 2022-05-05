@@ -1,15 +1,12 @@
 package com.example.bookingsite.Web;
 
-import com.example.bookingsite.Model.CustomOAuth2User;
+import com.example.bookingsite.Model.*;
 import com.example.bookingsite.Model.Dto.PersonDto;
-import com.example.bookingsite.Model.Hotel;
-import com.example.bookingsite.Model.Place;
-import com.example.bookingsite.Model.Villa;
-import com.example.bookingsite.Repository.VillaRepository;
 import com.example.bookingsite.Service.PersonService;
 import com.example.bookingsite.Service.PlaceService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -18,10 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.awt.print.Pageable;
-import java.nio.file.attribute.UserPrincipal;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -31,7 +25,7 @@ public class HomeController {
 
     private final PlaceService placeService;
     private final PersonService personService;
-
+    
     public HomeController(PlaceService placeService, PersonService personService) {
         this.placeService = placeService;
         this.personService = personService;
@@ -57,8 +51,7 @@ public class HomeController {
                              @RequestParam(required = false) Integer page,
                              @RequestParam(required = false) Integer size,
                              @RequestParam(required = false) String state) {
-        UserDetails userPrincipal = null;
-        CustomOAuth2User oauth2User = null;
+
         try {
             getUserId(model, authentication);
         } catch (Exception e) {
@@ -69,9 +62,11 @@ public class HomeController {
         }
         List<Place> placeList;
         Page<Place> placePage;
+        Sort.Order order = new Sort.Order(Sort.Direction.DESC,"rating");
 
         if (page == null) {
-            placePage = this.placeService.findPage(PageRequest.of(0, 5));
+            String string;
+            placePage = this.placeService.findPage(PageRequest.of(0, 5,Sort.by(order)));
             placeList = placePage.toList();
 
             makePaginationBar(model, size, placePage, -1);
@@ -80,13 +75,15 @@ public class HomeController {
 
             page = getPageNumberFromState(page, size, state, countPlaces);
 
-            placePage = this.placeService.findPage(PageRequest.of(page - 1, size));
+            placePage = this.placeService.findPage(PageRequest.of(page - 1, size,Sort.by(order)));
+
             placeList = placePage.toList();
 
             makePaginationBar(model, size, placePage, countPlaces);
         }
 
-        HashMap<Place, String> placeMap = new HashMap<>();
+        LinkedHashMap<Place, String> placeMap = new LinkedHashMap<>();
+
         for (Place place : placeList) {
             if (place.getImages() == null || place.getImages().isEmpty()) {
                 placeMap.put(place, "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse1.mm.bing.net%2Fth%3Fid%3DOIP.mQSPWpQZPJ3szYgasgF40wHaFj%26pid%3DApi&f=1");
@@ -109,13 +106,21 @@ public class HomeController {
         UserDetails userPrincipal = null;
         CustomOAuth2User oauth2User = null;
 
-        getUserId(model, authentication);
+        try {
+            getUserId(model, authentication);
+        } catch (Exception e) {
+            model.addAttribute("getCause", e.getCause());
+            model.addAttribute("exceptionMessage", e.getMessage());
+            model.addAttribute("bodyContent", "error-template");
+            return "Master-Template";
+        }
 
         List<Villa> villasList;
         Page<Villa> placePage;
+        Sort.Order order = new Sort.Order(Sort.Direction.DESC,"rating");
 
         if (page == null) {
-            placePage = this.placeService.findPageVillas(PageRequest.of(0, 5));
+            placePage = this.placeService.findPageVillas(PageRequest.of(0, 5,Sort.by(order)));
             villasList = placePage.toList();
 
             makePaginationBar(model, size, placePage, -1);
@@ -124,7 +129,7 @@ public class HomeController {
 
             page = getPageNumberFromState(page, size, state, countPlaces);
 
-            placePage = this.placeService.findPageVillas(PageRequest.of(page - 1, size));
+            placePage = this.placeService.findPageVillas(PageRequest.of(page - 1, size,Sort.by(order)));
             villasList = placePage.toList();
 
             makePaginationBar(model, size, placePage, countPlaces);
@@ -152,14 +157,22 @@ public class HomeController {
                              @RequestParam(required = false) Integer size,
                              @RequestParam(required = false) String state) {
 
-        getUserId(model, authentication);
+        try {
+            getUserId(model, authentication);
+        } catch (Exception e) {
+            model.addAttribute("getCause", e.getCause());
+            model.addAttribute("exceptionMessage", e.getMessage());
+            model.addAttribute("bodyContent", "error-template");
+            return "Master-Template";
+        }
 
         List<Hotel> hotelList;
         Page<Hotel> placePage;
+        Sort.Order order = new Sort.Order(Sort.Direction.DESC,"rating");
 
         if (page == null) {
 
-            placePage = this.placeService.findPageHotels(PageRequest.of(0, 5));
+            placePage = this.placeService.findPageHotels(PageRequest.of(0, 5,Sort.by(order)));
             hotelList = placePage.toList();
 
             makePaginationBar(model, size, placePage, -1);
@@ -168,13 +181,13 @@ public class HomeController {
 
             page = getPageNumberFromState(page, size, state, countPlaces);
 
-            placePage = this.placeService.findPageHotels(PageRequest.of(page - 1, size));
+            placePage = this.placeService.findPageHotels(PageRequest.of(page - 1, size,Sort.by(order)));
             hotelList = placePage.toList();
 
             makePaginationBar(model, size, placePage, countPlaces);
         }
 
-        HashMap<Hotel, String> hotels = new HashMap<>();
+        LinkedHashMap<Hotel, String> hotels = new LinkedHashMap<>();
         for (Hotel hotel : hotelList) {
             if (hotel.getImages() == null || hotel.getImages().isEmpty()) {
                 hotels.put(hotel, "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse1.mm.bing.net%2Fth%3Fid%3DOIP.mQSPWpQZPJ3szYgasgF40wHaFj%26pid%3DApi&f=1");
@@ -189,13 +202,13 @@ public class HomeController {
         return "Master-Template";
     }
 
-    //TODO bug: cannot page next page even if it has item
-    //TODO img:carosel
+    //TODO: copy paste makePaginationBar and getPageNuber
+
     private Integer getPageNumberFromState(Integer page, Integer size, String state, int countPlaces) {
         if (state != null) {
             if (state.equals("previous") && page > 1) {
                 page = page - 1;
-            } else if (state.equals("next") && page < countPlaces / size) {
+            } else if (state.equals("next") && page < Math.ceil(countPlaces / (double)size)) {
                 page = page + 1;
             }
         }
@@ -226,8 +239,8 @@ public class HomeController {
         } else {
             int fromPage = pageNumber;
             int toPage = pageNumber + 3;
-            if (countPlaces / size < toPage) {
-                toPage = countPlaces / size;
+            if (Math.ceil(countPlaces / (double)size) < toPage) {
+                toPage = (int) Math.ceil(countPlaces / (double)size);
                 fromPage = toPage - 3;
                 if (fromPage < 2) {
                     makePaginationBar(model, size, placePage, -1);
@@ -260,4 +273,5 @@ public class HomeController {
             }
         }
     }
+
 }
