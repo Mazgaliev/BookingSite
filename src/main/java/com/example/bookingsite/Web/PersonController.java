@@ -188,8 +188,8 @@ public class PersonController {
     @GetMapping("/settings")
     public String loadPersonSettings(Model model, Authentication authentication) {
 
-        UserDetails userPrincipal = null;
-        CustomOAuth2User oauth2User = null;
+        UserDetails userPrincipal;
+        CustomOAuth2User oauth2User;
         List<String> roles = new ArrayList<>();
         try {
             if (authentication != null) {
@@ -277,57 +277,6 @@ public class PersonController {
         return "redirect:/logout";
     }
 
-    private Integer getPageNumberFromState(Integer page, Integer size, String state, int countReservations) {
-        if (state != null) {
-            if (state.equals("previous") && page > 1) {
-                page = page - 1;
-            } else if (state.equals("next") && page < countReservations / size) {
-                page = page + 1;
-            }
-        }
-        return page;
-    }
-
-    private void makePaginationBar(Model model, Integer size, Page<Reservation> reservationPage, int countReservations) {
-
-        if (countReservations == -1) {
-            List<Integer> pageNumbers = IntStream.rangeClosed(1, 5)
-                    .boxed()
-                    .collect(Collectors.toList());
-            model.addAttribute("pageNumbers", pageNumbers);
-            model.addAttribute("placePageSize", reservationPage.getSize());
-            model.addAttribute("placePageNumber", reservationPage.getNumber());
-            return;
-        }
-
-        model.addAttribute("placePageSize", reservationPage.getSize());
-        model.addAttribute("placePageNumber", reservationPage.getNumber());
-        int pageNumber = reservationPage.getNumber();
-
-        if (pageNumber < 3) {
-            List<Integer> pageNumbers = IntStream.rangeClosed(1, 5)
-                    .boxed()
-                    .collect(Collectors.toList());
-            model.addAttribute("pageNumbers", pageNumbers);
-        } else {
-            int fromPage = pageNumber;
-            int toPage = pageNumber + 3;
-            if (countReservations / size < toPage) {
-                toPage = countReservations / size;
-                fromPage = toPage - 3;
-                if (fromPage < 2) {
-                    makePaginationBar(model, size, reservationPage, -1);
-                    return;
-                }
-            }
-            List<Integer> pageNumbers = IntStream.rangeClosed(fromPage, toPage)
-                    .boxed()
-                    .collect(Collectors.toList());
-            pageNumbers.add(0, 1);
-            model.addAttribute("pageNumbers", pageNumbers);
-        }
-    }
-
     @GetMapping("/create")
     public String viewCreatePage(Model model, Authentication
             authentication, @RequestParam(required = false) PlaceType placeType) {
@@ -371,6 +320,57 @@ public class PersonController {
         }
 
         return "redirect:/logout";
+    }
+
+    private Integer getPageNumberFromState(Integer page, Integer size, String state, int countReservations) {
+        if (state != null) {
+            if (state.equals("previous") && page > 1) {
+                page = page - 1;
+            } else if (state.equals("next") && page < Math.ceil(countReservations / (double)size)) {
+                page = page + 1;
+            }
+        }
+        return page;
+    }
+
+    private void makePaginationBar(Model model, Integer size, Page<Reservation> reservationPage, int countReservations) {
+
+        if (countReservations == -1) {
+            List<Integer> pageNumbers = IntStream.rangeClosed(1, 5)
+                    .boxed()
+                    .collect(Collectors.toList());
+            model.addAttribute("pageNumbers", pageNumbers);
+            model.addAttribute("placePageSize", reservationPage.getSize());
+            model.addAttribute("placePageNumber", reservationPage.getNumber());
+            return;
+        }
+
+        model.addAttribute("placePageSize", reservationPage.getSize());
+        model.addAttribute("placePageNumber", reservationPage.getNumber());
+        int pageNumber = reservationPage.getNumber();
+
+        if (pageNumber < 3) {
+            List<Integer> pageNumbers = IntStream.rangeClosed(1, 5)
+                    .boxed()
+                    .collect(Collectors.toList());
+            model.addAttribute("pageNumbers", pageNumbers);
+        } else {
+            int fromPage = pageNumber;
+            int toPage = pageNumber + 3;
+            if (Math.ceil(countReservations / (double)size) < toPage) {
+                toPage = (int) Math.ceil(countReservations / (double)size);
+                fromPage = toPage - 3;
+                if (fromPage < 2) {
+                    makePaginationBar(model, size, reservationPage, -1);
+                    return;
+                }
+            }
+            List<Integer> pageNumbers = IntStream.rangeClosed(fromPage, toPage)
+                    .boxed()
+                    .collect(Collectors.toList());
+            pageNumbers.add(0, 1);
+            model.addAttribute("pageNumbers", pageNumbers);
+        }
     }
 
     private void getUserId(Model model, Authentication authentication) {

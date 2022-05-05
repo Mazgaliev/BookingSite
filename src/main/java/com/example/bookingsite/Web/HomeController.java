@@ -202,8 +202,6 @@ public class HomeController {
         return "Master-Template";
     }
 
-    //TODO: copy paste makePaginationBar and getPageNuber
-
     private Integer getPageNumberFromState(Integer page, Integer size, String state, int countPlaces) {
         if (state != null) {
             if (state.equals("previous") && page > 1) {

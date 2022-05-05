@@ -50,8 +50,8 @@
     <div class="border-1" th:if="${#request.getRemoteUser()!=null}">
         <form method="post" action="/reserve">
 
-            <div class="row text-center m-5">
-                <div class="card shadow" th:if="${price2} > 0">
+            <div class="row justify-content-center text-center align-content-center m-5">
+                <div class="card shadow w-25" th:if="${price2} > 0">
                     <div class="card-body">
                         <div class="btn-group btn-group-toggle"
                              data-toggle="buttons">
@@ -67,14 +67,7 @@
                     </div>
                 </div>
             </div>
-            <!--            <div class="row">-->
-            <!--                <div class="col-5">-->
-            <!--                    <h5 th:if="${price2}>0" th:text="'VIP room price:' + ${price2}"></h5>-->
-            <!--                </div>-->
-            <!--                <div class="col-5">-->
-            <!--                    <h6 th:text="'Standard price:' + ${price1}"></h6>-->
-            <!--                </div>-->
-            <!--            </div>-->
+
             <div class="row text-center" th:if="${price2}<=0">
                 <div class="col-12" th:text="'Price per night' + ${price1}"></div>
             </div>
