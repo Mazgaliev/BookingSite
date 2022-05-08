@@ -5,20 +5,9 @@
 
 <div class="container">
     <form th:method="post" th:action="@{'/person/edit/reservation'}">
-        <div class="row text-center">
-            <div class="col-3">
-                <label for="start"
-                       th:text="${reservation.getStart()} + ' Is the starting date'"></label><input
-                    required id="start" name="start" type="date">
-            </div>
-            <div class="col-3">
-                <label for="end"
-                       th:text="${reservation.getFinish()} + ' Is the leaving date'"></label><input
-                    required id="end" name="end" type="date">
-            </div>
-            <label hidden for="id"></label><input hidden name="id" id="id" th:value="${reservation.getId()}">
-            <div class="col-3">
-                <div class="card shadow card-" th:if="${reservation.getRoomType()} != null">
+        <div class="row justify-content-center text-center align-content-center m-5">
+
+                <div class="card shadow w-25" th:if="${reservation.getRoomType()} != null">
                     <div class="card-body">
                         <div class="btn-group btn-group-toggle"
                              data-toggle="buttons">
@@ -33,7 +22,19 @@
                         </div>
                     </div>
                 </div>
+        </div>
+        <div class="row text-center mb-5">
+            <div class="col">
+                <label for="start"
+                       th:text="${reservation.getStart()} + ' Is the starting date'"></label><input
+                    required id="start" name="start" type="date">
             </div>
+            <div class="col">
+                <label for="end"
+                       th:text="${reservation.getFinish()} + ' Is the leaving date'"></label><input
+                    required id="end" name="end" type="date">
+            </div>
+            <label hidden for="id"></label><input hidden name="id" id="id" th:value="${reservation.getId()}">
         </div>
         <div class="row">
             <div class="col-12">
