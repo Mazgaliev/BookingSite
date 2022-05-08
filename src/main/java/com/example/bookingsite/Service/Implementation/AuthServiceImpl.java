@@ -36,6 +36,7 @@ public class AuthServiceImpl implements AuthService {
             Person newUser = new Person();
             newUser.setUsername(username);
             newUser.setAuthType(AuthenticationType.GOOGLE);
+            newUser.setUserRole(Role.ROLE_USER);
             newUser.setEnabled(true);
 
             personRepository.save(newUser);

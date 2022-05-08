@@ -30,8 +30,8 @@
                 <li class="nav-item" th:if="${#request.getRemoteUser()!=null}">
                     <a class="nav-link" th:href="@{'/person/reservations'} ">Your reservations</a>
                 </li>
-                <li class="nav-item" th:if="${#request.getRemoteUser()!=null}">
-                    <a class="nav-link" sec:authenticate="hasRole('ROLE_OWNER')" th:href="@{'/person/places'}">Owned
+                <li class="nav-item" sec:authorize="hasRole('ROLE_OWNER')" th:if="${#request.getRemoteUser()!=null}">
+                    <a class="nav-link" th:href="@{'/person/places'}">Owned
                         places</a>
                 </li>
                 <li class="nav-item" th:if="${#request.getRemoteUser()==null}">
@@ -45,7 +45,7 @@
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                         <a class="nav-link dropdown-item" th:href="@{'/person/settings'}">Settings</a>
-                        <a class="nav-link dropdown-item" sec:authenticate="hasRole('ROLE_OWNER')"
+                        <a class="nav-link dropdown-item" sec:authorize="hasRole('ROLE_OWNER')"
                            th:href="@{'/person/create'}">Put your own place</a>
                         <a class="nav-link dropdown-item" th:href="@{'/logout'}">Logout</a>
                     </div>
