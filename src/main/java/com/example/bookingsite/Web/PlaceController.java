@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -87,6 +88,25 @@ public class PlaceController {
         model.addAttribute("place", place);
         model.addAttribute("ownerPhone", place.getOwner().getPhoneNumber());
         model.addAttribute("reviews", reviews.size() == 0 ? null : reviews);
+
+        List<String> stars = new ArrayList<>();
+        reviews.forEach(r -> {
+            String string = "<span style='font-size:200%;color:red;'>";
+            for(int star = (int) r.getRating(); star !=0; star--){
+                string = string+"&bigstar;";
+            }
+            string = string + "</span>";
+            stars.add(string);
+        });
+
+        String placeStars = "<span style='font-size:200%;color:red;'>";
+        for(int star = (int) Math.floor(place.getRating()); star !=0; star--){
+            placeStars = placeStars + "&bigstar;";
+        }
+        placeStars = placeStars + "</span>";
+
+        model.addAttribute("reviewStars",placeStars);
+        model.addAttribute("reviewsStars",stars);
         model.addAttribute("bodyContent", "place");
 
         return "Master-Template";
