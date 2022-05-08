@@ -32,7 +32,7 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
-    public Person register(String name, String surname, String username, String password, String repeatPassword, String phoneNumber) {
+    public Person register(String name, String surname, String username, String password, String repeatPassword, String phoneNumber, Role role) {
 
         if (username == null || username.isEmpty() || password == null || password.isEmpty())
             throw new InvalidUsernameOrPasswordException();
@@ -42,7 +42,7 @@ public class PersonServiceImpl implements PersonService {
             throw new UsernameAlreadyExistsException();
 
         String encodedPassword = passwordEncoder.encode(password);
-        Person person = new Person(name, surname, username, encodedPassword, phoneNumber);
+        Person person = new Person(name, surname, username, encodedPassword, phoneNumber,role);
 
         this.personRepository.save(person);
 

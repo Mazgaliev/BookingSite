@@ -23,18 +23,24 @@
                     </div>
                 </div>
         </div>
-        <div class="row text-center mb-5">
+        <div class="row text-center">
             <div class="col">
-                <label for="start"
-                       th:text="${reservation.getStart()} + ' Is the starting date'"></label><input
-                    required id="start" name="start" type="date">
+                <label th:text="${reservation.getStart()} + ' Is the starting date'"></label>
+
             </div>
             <div class="col">
-                <label for="end"
-                       th:text="${reservation.getFinish()} + ' Is the leaving date'"></label><input
-                    required id="end" name="end" type="date">
+                <label th:text="${reservation.getFinish()} + ' Is the leaving date'"></label>
+
             </div>
             <label hidden for="id"></label><input hidden name="id" id="id" th:value="${reservation.getId()}">
+        </div>
+        <div class="row text-center mb-5">
+            <div class="col">
+                <input required id="start" name="start" type="date">
+            </div>
+            <div class="col">
+                <input required id="end" name="end" type="date">
+            </div>
         </div>
         <div class="row">
             <div class="col-12">

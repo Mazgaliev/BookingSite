@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public interface PersonService extends UserDetailsService {
 
-    Person register(String name, String surname, String username, String password, String repeatPassword, String phoneNumber);
+    Person register(String name, String surname, String username, String password, String repeatPassword, String phoneNumber, Role role);
 
     PersonDto update(Long personId, String name, String surname, String username, String password, String repeatPassword, String oldPassword, String phoneNumber);
 

@@ -53,12 +53,12 @@ public class Person implements UserDetails {
     private boolean isEnabled = true;
 
 
-    public Person(String name, String surname, String username, String password, String phoneNumber) {
+    public Person(String name, String surname, String username, String password, String phoneNumber, Role userRole) {
         this.name = name;
         this.username = username;
         this.password = password;
         this.phoneNumber = phoneNumber;
-        this.userRole = Role.ROLE_OWNER;
+        this.userRole = userRole;
         this.surname = surname;
     }
 

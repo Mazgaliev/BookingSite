@@ -36,9 +36,12 @@ public class RegistrationController {
                                @RequestParam String username,
                                @RequestParam String password,
                                @RequestParam String repeatPassword,
-                               @RequestParam String phoneNumber) {
+                               @RequestParam String phoneNumber,
+                               @RequestParam String role) {
         try {
-            this.personService.register(name, surname, username, password, repeatPassword, phoneNumber);
+            Role user_role = Role.getRoleFromString(role);
+            System.out.println(user_role);
+            this.personService.register(name, surname, username, password, repeatPassword, phoneNumber, user_role);
         } catch (InvalidUsernameOrPasswordException | PasswordsDoNotMatchException | UsernameAlreadyExistsException e) {
             String query = "?hasError=true&error=" + e.getMessage().replaceAll(" ", "+");
             return "redirect:/register" + query;
