@@ -23,6 +23,8 @@ public interface ReservationService {
 
     Optional<Reservation> deleteReservation(Long Id);
 
+    void checkOverlappingSelf(Long personId, Long placeId);
+
     Page<Reservation> findReservationPage(Long placeId, Pageable pageable);
 
     long countPlaceReservations(Long placeId);

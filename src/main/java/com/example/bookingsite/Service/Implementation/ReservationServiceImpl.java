@@ -167,24 +167,31 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
+    public void checkOverlappingSelf(Long personId, Long placeId) {
+        Reservation reservation = this.reservationRepository.findByPersonIdAndPlaceId(personId, placeId);
+        if (reservation != null)
+            throw new RuntimeException("Can not reserve twice");
+    }
+
+    @Override
     public Page<Reservation> findReservationPage(Long placeId, Pageable pageable) {
         Optional<Place> placeOptional = this.placeService.findById(placeId);
         Place place;
-        if (placeOptional.isPresent()){
+        if (placeOptional.isPresent()) {
             place = placeOptional.get();
-        }else {
+        } else {
             throw new PlaceDoesNotExistException();
         }
-        return this.reservationRepository.findByPlaceId(place,pageable);
+        return this.reservationRepository.findByPlaceId(place, pageable);
     }
 
     @Override
     public long countPlaceReservations(Long placeId) {
         Optional<Place> placeOptional = this.placeService.findById(placeId);
         Place place;
-        if (placeOptional.isPresent()){
+        if (placeOptional.isPresent()) {
             place = placeOptional.get();
-        }else {
+        } else {
             throw new PlaceDoesNotExistException();
         }
         return this.reservationRepository.countByPlaceId(place);

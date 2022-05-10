@@ -43,7 +43,7 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public List<Review> findCommentsByPlaceId(Long id) {
+    public List<Review> findReviewsByPlaceId(Long id) {
         return this.reviewRepository.findAllByPlaceId(id);
     }
 

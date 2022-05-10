@@ -66,6 +66,7 @@ public class ReservationController {
             model.addAttribute("bodyContent", "error-template");
             return "Master-Template";
         }
+        this.reservationService.checkOverlappingSelf(personId, placeId);
         try {
             if (from.isBefore(end)) {
                 if (this.placeService.placeType(place) == PlaceType.VILLA) {

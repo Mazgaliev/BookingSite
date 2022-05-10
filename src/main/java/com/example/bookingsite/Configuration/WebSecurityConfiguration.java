@@ -21,9 +21,9 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/", "/login", "/home/*", "/place/{id}", "/register", "/assets/**","../resources/static/css","../resources/static/css/place.css").permitAll()
-                .antMatchers("/person/settings","/person/reservations/**","/person/edit/reservation","/person/delete").hasAnyRole("USER","OWNER")
-                .antMatchers("/person/**","/place/**").hasRole("OWNER")
+                .antMatchers("/", "/login", "/home/*", "/place/{id}", "/register", "/assets/**", "../resources/static/css", "../resources/static/css/place.css").permitAll()
+                .antMatchers("/person/settings", "/person/reservations/**", "/person/edit/reservation", "/person/delete").hasAnyRole("USER", "OWNER")
+                .antMatchers("/person/**", "/place/**").hasRole("OWNER")
                 .antMatchers("/user/admin").hasRole("ADMIN")
                 .and()
                 .formLogin()

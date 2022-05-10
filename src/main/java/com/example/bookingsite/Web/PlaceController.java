@@ -6,7 +6,6 @@ import com.example.bookingsite.Model.Enum.PlaceType;
 import com.example.bookingsite.Service.ReviewService;
 import com.example.bookingsite.Service.PersonService;
 import com.example.bookingsite.Service.PlaceService;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -67,9 +66,9 @@ public class PlaceController {
                             @RequestParam(required = false) String error) {
         Place place;
 
-            getUserId(model, authentication);
+        getUserId(model, authentication);
 
-            place = this.placeService.findById(id).get();
+        place = this.placeService.findById(id).get();
 
         if (this.placeService.placeType(place) == PlaceType.VILLA) {
             Villa villa = (Villa) place;
@@ -81,7 +80,7 @@ public class PlaceController {
             model.addAttribute("price1", hotel.getPriceStandardRoom());
             model.addAttribute("price2", hotel.getPriceVipRoom());
         }
-        List<Review> reviews = this.reviewService.findCommentsByPlaceId(id);
+        List<Review> reviews = this.reviewService.findReviewsByPlaceId(id);
         model.addAttribute("hasError", hasError);
         model.addAttribute("error", error);
         model.addAttribute("images", place.getImages());
@@ -92,23 +91,24 @@ public class PlaceController {
         List<String> stars = new ArrayList<>();
         reviews.forEach(r -> {
             String string = "<span style='font-size:200%;color:red;'>";
-            for(int star = (int) r.getRating(); star !=0; star--){
-                string = string+"&bigstar;";
+            for (int star = (int) r.getRating(); star != 0; star--) {
+                string = string + "&bigstar;";
             }
             string = string + "</span>";
             stars.add(string);
         });
 
         String placeStars = "<span style='font-size:200%;color:red;'>";
-        for(int star = (int) Math.floor(place.getRating()); star !=0; star--){
-            placeStars = placeStars + "&bigstar;";
+        if (place.getRating() != null) {
+            for (int star = (int) Math.floor(place.getRating()); star != 0; star--) {
+                placeStars = placeStars + "&bigstar;";
+            }
+            placeStars = placeStars + "</span>";
+
+            model.addAttribute("reviewStars", placeStars);
+            model.addAttribute("reviewsStars", stars);
         }
-        placeStars = placeStars + "</span>";
-
-        model.addAttribute("reviewStars",placeStars);
-        model.addAttribute("reviewsStars",stars);
         model.addAttribute("bodyContent", "place");
-
         return "Master-Template";
     }
 
@@ -219,8 +219,6 @@ public class PlaceController {
                 PersonDto person = this.personService.findByUsername(oauth2User.getEmail());
                 model.addAttribute("person", person);
             }
-        } else {
-            throw new AccessDeniedException("You are not authorized to access this page");
         }
     }
 }

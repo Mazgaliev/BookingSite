@@ -9,7 +9,7 @@ public interface ReviewService {
 
     Review createReview(Long personId, Long placeId, String description, Short rating);
 
-    List<Review> findCommentsByPlaceId(Long id);
+    List<Review> findReviewsByPlaceId(Long id);
 
     Review findByPlaceIdAndPersonId(Long placeId, Long personId);
 

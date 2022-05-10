@@ -26,5 +26,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 
     Page<Reservation> findByPlaceId(Place place, Pageable pageable);
 
+    Reservation findByPersonIdAndPlaceId(Long personId, Long placeId);
+
     long countByPlaceId(Place place);
 }
