@@ -4,8 +4,6 @@ import com.example.bookingsite.Model.CustomOAuth2User;
 import com.example.bookingsite.Model.Dto.PersonDto;
 import com.example.bookingsite.Model.Enum.PlaceType;
 import com.example.bookingsite.Model.Enum.RoomType;
-import com.example.bookingsite.Model.Exception.HotelRoomNotAvaiable;
-import com.example.bookingsite.Model.Exception.VillaIsAlreadyReservedException;
 import com.example.bookingsite.Model.Place;
 import com.example.bookingsite.Service.PersonService;
 import com.example.bookingsite.Service.PlaceService;
@@ -16,11 +14,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Date;
 
 @Controller
 @RequestMapping("/reserve")
@@ -37,12 +35,7 @@ public class ReservationController {
     }
 
     @PostMapping
-    public String makeReservation(Model model,
-                                  Authentication authentication,
-                                  @RequestParam Long placeId,
-                                  @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
-                                  @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate end,
-                                  @RequestParam(required = false) RoomType roomType) {
+    public String makeReservation(Model model, Authentication authentication, @RequestParam Long placeId, @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from, @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate end, @RequestParam(required = false) RoomType roomType) {
         UserDetails userPrincipal = null;
         CustomOAuth2User oauth2User = null;
 
@@ -66,8 +59,8 @@ public class ReservationController {
             model.addAttribute("bodyContent", "error-template");
             return "Master-Template";
         }
-        this.reservationService.checkOverlappingSelf(personId, placeId);
         try {
+//            this.reservationService.checkOverlappingSelf(personId, placeId);
             if (from.isBefore(end)) {
                 if (this.placeService.placeType(place) == PlaceType.VILLA) {
                     this.reservationService.createVillaReservation(from, end, personId, place.getId());

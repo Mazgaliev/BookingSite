@@ -37,7 +37,7 @@ public class Place {
     @ManyToOne
     Person owner;
 
-    @OneToMany(mappedBy = "place")
+    @OneToMany(mappedBy = "place", cascade = CascadeType.ALL)
     List<Review> reviews;
 
     public Place(String name, String location, String description, String contactNumber, Person owner) {
