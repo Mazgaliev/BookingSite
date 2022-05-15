@@ -155,34 +155,85 @@
         <div class="row">
             <div class="col-7">
                 <p>There are no reviews for this place</p>
-                <p th:if="${#request.getRemoteUser()!=null}"><a
-                        th:text="'Share your experience visiting '+${place.getName()}"
-                        th:href="@{'/review/{id}'(id=${place.getId()})}"></a></p>
+                <p th:if="${#request.getRemoteUser()!=null}">
+                    <button type="button" class="btn btn-link" data-toggle="modal" data-target="#create-review"
+                            th:text="'Share your experience visiting '+${place.getName()}">
+                </button>
+                </p>
             </div>
         </div>
     </div>
 
-    <div class="container" th:if="${reviews!=null}">
-        <h3>Reviews</h3>
-        <p th:if="${#request.getRemoteUser()!=null}"><a th:text="'Share your experience visiting '+${place.getName()}"
-                                                        th:href="@{'/review/{id}'(id=${place.getId()})}"></a></p>
-        <div class="row">
-            <th:block th:each="review, row:${reviews}">
-                <div class="col-4">
-                    <div class="card">
-                        <div class="card-header">
-                            <h4 class="card-title" th:text="${review.getPerson().getName()}"></h4>
-                        </div>
-                        <div class="card-body">
-                            <div class="card-subtitle">
-                                <p class="card-text" style=""
-                                   th:utext="'Rating: ' + ${reviewsStars[row.index]}"></p>
+        <div class="container" th:if="${reviews!=null}">
+            <h3>Reviews</h3>
+            <p>
+                <button type="button" class="btn btn-link" data-toggle="modal" data-target="#create-review"
+                       th:text="'Share your experience visiting '+${place.getName()}">
+                </button>
+            </p>
+            <div class="row">
+                <th:block th:each="review, row:${reviews}">
+                    <div class="col-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title" th:text="${review.getPerson().getName()}"></h4>
                             </div>
-                            <p class="card-text" th:text="${review.getDescription()}"></p>
+                            <div class="card-body">
+                                <div class="card-subtitle">
+                                    <p class="card-text" style=""
+                                       th:utext="'Rating: ' + ${reviewsStars[row.index]}"></p>
+                                </div>
+                                <p class="card-text" th:text="${review.getDescription()}"></p>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </th:block>
+                </th:block>
+            </div>
         </div>
     </div>
 </div>
+
+<!-- Modal -->
+<th:block th:if="${person!=null}">
+    <form th:method="post" th:action="@{'/review'}">
+    <div class="modal fade" th:id="create-review" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Review</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container">
+                            <div class="row">
+
+                                <div class="col-12">
+                                    <labe for="description">Describe your experience</labe>
+                                    <input id="description" name="description" type="text" class="form-text w-100">
+                                </div>
+                                <div class="col-12">
+                                    <labe for="rating">On a scale from 1 to 5 how much did you like it here</labe>
+                                    <input type="number" class="form-text w-100" id="rating" name="rating" required>
+                                </div>
+                                <div class="col-12" hidden>
+                                    <labe for="placeId">On a scale from 1 to 5 how much did you like it here</labe>
+                                    <input th:value="${place.getId()}" class="form-text w-100" id="placeId" name="placeId" hidden>
+                                </div>
+                                <div class="col-12" hidden>
+                                    <labe for="personId">On a scale from 1 to 5 how much did you like it here</labe>
+                                    <input th:value="${person.getId()}" class="form-text w-100" id="personId" name="personId" hidden>
+                                </div>
+                            </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-outline-dark">Submit your review</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    </form>
+</th:block>
