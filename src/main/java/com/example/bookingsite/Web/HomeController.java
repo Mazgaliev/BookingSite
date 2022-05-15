@@ -135,7 +135,7 @@ public class HomeController {
             makePaginationBar(model, size, placePage, countPlaces);
         }
 
-        HashMap<Villa, String> villas = new HashMap<>();
+        LinkedHashMap<Villa, String> villas = new LinkedHashMap<>();
         for (Villa villa : villasList) {
             if (villa.getImages() == null || villa.getImages().isEmpty()) {
                 villas.put(villa, "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse1.mm.bing.net%2Fth%3Fid%3DOIP.mQSPWpQZPJ3szYgasgF40wHaFj%26pid%3DApi&f=1");

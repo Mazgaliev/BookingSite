@@ -1,7 +1,7 @@
 package com.example.bookingsite.Model.Exception;
 
-public class HotelRoomNotAvaiable extends RuntimeException{
+public class HotelRoomNotAvaiable extends RuntimeException {
     public HotelRoomNotAvaiable() {
-        super("Hotel rooms of are full");
+        super("Current selection of rooms are full for these dates");
     }
 }

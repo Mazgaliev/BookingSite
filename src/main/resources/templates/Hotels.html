@@ -5,8 +5,10 @@
 
 <section id="gallery">
     <th:block th:each="mapEntity, row :${hotels}">
+        <hr>
         <div class="container">
             <div class="row">
+                <div class="col-4"></div>
                 <div class="col-lg-4 mb-4">
                     <div class="card">
                         <img th:src="${mapEntity.getValue()}"
@@ -19,6 +21,7 @@
                         </div>
                     </div>
                 </div>
+                <div class="col-4"></div>
             </div>
         </div>
     </th:block>

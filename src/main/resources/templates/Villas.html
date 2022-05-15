@@ -1,12 +1,14 @@
 <section id="header" class="jumbotron text-center">
     <h1 class="display-3">VILLAS</h1>
-    <p class="lead">In this section you will find all the nearby villas</p>
+    <p class="lead">In this section you will find all the best rated villas</p>
 </section>
 
 <section id="gallery">
     <th:block th:each="mapEntity, row :${villas}">
+        <hr>
         <div class="container">
             <div class="row">
+                <div class="col-4"></div>
                 <div class="col-lg-4 mb-4">
                     <div class="card">
                         <img th:src="${mapEntity.getValue()}"
@@ -19,6 +21,7 @@
                         </div>
                     </div>
                 </div>
+                <div class="col-4"></div>
             </div>
         </div>
     </th:block>

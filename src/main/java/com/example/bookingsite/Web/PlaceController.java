@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Controller
 @RequestMapping("/place")
@@ -164,11 +165,10 @@ public class PlaceController {
         try {
             Place place = this.placeService.findById(id).get();
 
-            name = name == "" ? place.getName() : name;
-            description = description == "" ? place.getDescription() : description;
-            contactNumber = contactNumber == "" ? place.getContactNumber() : contactNumber;
-            location = location == "" ? place.getLocation() : location;
-            images = images.size() == 0 ? place.getImages() : images;
+            name = Objects.equals(name, "") ? place.getName() : name;
+            description = Objects.equals(description, "") ? place.getDescription() : description;
+            contactNumber = Objects.equals(contactNumber, "") ? place.getContactNumber() : contactNumber;
+            location = Objects.equals(location, "") ? place.getLocation() : location;
 
             if (this.placeService.placeType(place) == PlaceType.VILLA) {
                 Villa villa = (Villa) place;
